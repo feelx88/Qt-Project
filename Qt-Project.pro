@@ -10,10 +10,13 @@ TARGET = Qt-Project
 TEMPLATE = app
 
 
-SOURCES += \ 
-    main.cpp
+SOURCES += main.cpp \
+    MainWindow.cpp
 
-HEADERS  +=
+HEADERS  += MainWindow.h
 
-FORMS    +=
+FORMS    += MainWindow.ui
+
+
+
 
