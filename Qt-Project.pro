@@ -4,20 +4,24 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 TARGET = Qt-Project
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
-    MainWindow.cpp \
-    GraphicsEngine.cpp
+SOURCES += src/main.cpp \
+    src/ui/MainWindow.cpp \
+    src/GraphicsEngine.cpp \
+    src/core/GLRenderer.cpp
 
-HEADERS  += MainWindow.h \
-    GraphicsEngine.h
+HEADERS  += src/ui/MainWindow.h \
+    src/GraphicsEngine.h \
+    src/core/GLRenderer.h
 
-FORMS    += MainWindow.ui
+FORMS    += src/ui/MainWindow.ui
+
+
 
 
 
