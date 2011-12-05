@@ -9,9 +9,15 @@ class GLRenderer : public QGLWidget
 public:
     explicit GLRenderer(QWidget *parent = 0);
 
-signals:
+protected:
+    //Initialize the drawing surface
+    void initializeGL();
 
-public slots:
+    //Set the correct
+    void resizeGL(int w, int h);
+    void paintGL();
+
+    float x;
 
 };
 

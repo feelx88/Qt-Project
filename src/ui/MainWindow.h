@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include "src/core/GLRenderer.h"
 
 namespace Ui {
     class MainWindow;
@@ -17,6 +18,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    //Main renderer
+    GLRenderer *mRenderer;
 };
 
 #endif // MAINWINDOW_H
