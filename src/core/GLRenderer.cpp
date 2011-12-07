@@ -18,6 +18,7 @@ void GLRenderer::resizeGL(int w, int h)
 
 void GLRenderer::paintGL()
 {
+    //Test code
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
     glBegin(GL_TRIANGLES);
