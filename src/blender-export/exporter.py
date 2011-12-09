@@ -3,28 +3,31 @@ import struct
 
 def write_bmd(context, filepath):
     print("running write_bmd...")
+    
+    #test for valid selection
+    object = bpy.context.selected_objects[0]
+    
+    if object.type != 'MESH':
+        print( 'Error: Not a Mesh!' )
+        return {'FAILURE'}
+    
     file = open(filepath, 'w+b')
     
     #Magic number
     file.write( struct.pack( 'ii', 42, 11 ) )
     
-    #Header
-    numObjects = 0
-    for object in bpy.data.objects:
-        if object.type == 'MESH':
-            numObjects++
-            
-    file.write( struct.pack( 'i', numObjects ) )
+    #Write object data
+    file.write( struct.pack( 'ii', len( object.data.faces ) * 3 ), len( object.data.uv_textures ) )
     
-    #Iterate over all objects
-    for object in bpy.data.objects:
-        if object.type == 'MESH':
-            file.write( struct.pack( 'i', len( object.data.faces ) ) )
-            for face in object.data.faces:
-                for index in face.vertices:
-                    vertex = object.data.vertices[index]
-                    file.write( struct.pack( 'fff', vertex.co[0], vertex.co[1], vertex.co[2] ) )
-                    file.write( struct.pack( 'fff', vertex.normal[0], vertex.normal[1], vertex.normal[2] ) )
+    for face in object.data.faces:
+        for index in face.vertices:
+            vertex = object.data.vertices[index]
+            file.write( struct.pack( 'fff', vertex.co[0], vertex.co[1], vertex.co[2] ) )
+            file.write( struct.pack( 'fff', vertex.normal[0], vertex.normal[1], vertex.normal[2] ) )
+            
+            for texture in object.data.uv_textures:
+                uv = texture.data[index]
+                file.write( struct.pack( 'ff', uv[0][0], uv[0][1] )
 
     file.close()
     return {'FINISHED'}

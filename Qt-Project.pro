@@ -23,12 +23,14 @@ HEADERS  += src/ui/MainWindow.h \
     src/ui/GLRenderer.h \
     src/scene/BMDImport.h \
     src/scene/Node.h \
-    src/scene/GLNode.h
+    src/scene/GLNode.h \
+    src/core/Buffer.h
 
 FORMS    += src/ui/MainWindow.ui
 
 OTHER_FILES += \
     src/blender-export/exporter.py
+
 
 
 

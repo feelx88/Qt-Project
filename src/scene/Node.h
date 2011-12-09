@@ -8,9 +8,12 @@ class Node
 {
 public:
     Node()
-    {
+        : mPosition( glm::vec3() ), mRotation( glm::quat() )
+    {}
 
-    }
+    Node( const glm::vec3& position, const glm::quat& rotation )
+        : mPosition( position ), mRotation( rotation )
+    {}
 
     virtual ~Node(){}
 
