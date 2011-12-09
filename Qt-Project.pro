@@ -9,20 +9,37 @@ QT       += core gui opengl
 TARGET = Qt-Project
 TEMPLATE = app
 
+INCLUDEPATH += ./include
 
 SOURCES += src/main.cpp \
     src/ui/MainWindow.cpp \
     src/GraphicsEngine.cpp \
-    src/core/GLRenderer.cpp
+    src/ui/GLRenderer.cpp \
+    src/scene/BMDImport.cpp \
+    src/scene/GLNode.cpp
 
 HEADERS  += src/ui/MainWindow.h \
     src/GraphicsEngine.h \
-    src/core/GLRenderer.h
+    src/ui/GLRenderer.h \
+    src/scene/BMDImport.h \
+    src/scene/Node.h \
+    src/scene/GLNode.h
 
 FORMS    += src/ui/MainWindow.ui
 
 OTHER_FILES += \
     src/blender-export/exporter.py
+
+
+
+
+
+
+
+
+
+
+
 
 
 
