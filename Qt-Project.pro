@@ -30,7 +30,15 @@ FORMS    += src/ui/MainWindow.ui
 
 OTHER_FILES += \
     src/blender-export/exporter.py \
-    README
+    README \
+    raw/vadertie.blend \
+    raw/x-wing.blend \
+    raw/vader_tie_fighter.blend \
+    raw/tie_fighter.blend
+
+
+
+
 
 
 
