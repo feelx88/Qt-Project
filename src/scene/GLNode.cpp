@@ -70,6 +70,6 @@ void GLNode::setData( unsigned int vertexCount, unsigned int textureCount,
     {
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[x] );
         mTextures[x] = new QImage( QString( mTextureFileNames[x].c_str() ) );
-        QGLWidget::convertToGLFormat( *mTextures[x] );
+        //QGLWidget::convertToGLFormat( *mTextures[x] );
     }
 }

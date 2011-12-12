@@ -29,7 +29,9 @@ HEADERS  += src/ui/MainWindow.h \
 FORMS    += src/ui/MainWindow.ui
 
 OTHER_FILES += \
-    src/blender-export/exporter.py
+    src/blender-export/exporter.py \
+    README
+
 
 
 

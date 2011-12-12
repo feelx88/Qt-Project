@@ -30,9 +30,7 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
     string *textureFileNames = new string[textureCount];
 
     for( int x = 0; x < textureCount; x++ )
-    {
         textureFileNames[x] = string( sBuffer.getFromStream() );
-    }
 
     for( int x = 0; x < vertexCount * 3; x += 3 )
     {
