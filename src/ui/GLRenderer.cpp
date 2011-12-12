@@ -10,7 +10,7 @@ GLRenderer::GLRenderer(QWidget *parent) :
 void GLRenderer::initializeGL()
 {
     glEnable( GL_DEPTH_TEST );
-    //glEnable( GL_CULL_FACE );
+    glEnable( GL_CULL_FACE );
     glCullFace( GL_BACK );
 
     node = new GLNode( glm::vec3( 0, 0, 0 ), glm::quat( glm::vec3( 0, 0, 0 ) ) );

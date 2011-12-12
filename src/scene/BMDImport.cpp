@@ -32,7 +32,7 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
     for( int x = 0; x < textureCount; x++ )
         textureFileNames[x] = string( sBuffer.getFromStream() );
 
-    for( int x = 0; x < vertexCount * 3; x += 3 )
+    for( int x = 0, y = 0; x < vertexCount * 3; x += 3, y += 2 )
     {
         vertices[x] = fBuffer.convertFromStream<float>();
         vertices[x + 1] = fBuffer.convertFromStream<float>();
@@ -42,15 +42,17 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
         normals[x + 1] = fBuffer.convertFromStream<float>();
         normals[x + 2] = fBuffer.convertFromStream<float>();
 
-        for( int y = 0; y < textureCount * 2; y += 2 )
+        for( int z = 0; z < textureCount; z++ )
         {
-            uvs[x + y] = fBuffer.convertFromStream<float>();
-            uvs[x + 1 + y] = fBuffer.convertFromStream<float>();
+            uvs[y + z] = fBuffer.convertFromStream<float>();
+            uvs[y + 1 + z] = fBuffer.convertFromStream<float>();
         }
     }
 
     node->setData( vertexCount, textureCount, vertices, normals, uvs,
                    textureFileNames );
+
+    file.close();
 
     return true;
 }

@@ -33,20 +33,30 @@ void GLNode::update()
 
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_NORMAL_ARRAY );
-    if( mTextureCount > 0 )
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
     glVertexPointer( 3, GL_FLOAT, 0, mVertices );
     glNormalPointer( GL_FLOAT, 0, mNormals );
+
     if( mTextureCount > 0 )
+    {
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
         glTexCoordPointer( 2, GL_FLOAT, 0, mUVs );
+
+        glEnable( GL_TEXTURE_2D );
+
+        glBindTexture( GL_TEXTURE_2D, mTextureHandles[0] );
+    }
 
     glDrawArrays( GL_TRIANGLES, 0, mVertexCount );
 
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_NORMAL_ARRAY );
+
     if( mTextureCount > 0 )
+    {
         glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+        glDisable( GL_TEXTURE_2D );
+    }
 
     glPopMatrix();
 }
@@ -70,6 +80,10 @@ void GLNode::setData( unsigned int vertexCount, unsigned int textureCount,
     {
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[x] );
         mTextures[x] = new QImage( QString( mTextureFileNames[x].c_str() ) );
-        //QGLWidget::convertToGLFormat( *mTextures[x] );
+        QGLWidget::convertToGLFormat( *mTextures[x] );
+
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                      mTextures[0]->width(), mTextures[0]->height(), 0, GL_RGBA,
+                      GL_UNSIGNED_BYTE, mTextures[0]->bits() );
     }
 }
