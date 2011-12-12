@@ -4,6 +4,8 @@
 #include "Node.h"
 #include <string>
 
+class QImage;
+
 class GLNode : public Node
 {
 public:
@@ -12,17 +14,21 @@ public:
 
     virtual ~GLNode();
 
+    virtual void init();
+
     virtual void update();
 
-    void setData( int vertexCount, int textureCount, float *vertices,
-                  float *normals, float *uvs, std::string *textureFileNames );
+    void setData( unsigned int vertexCount, unsigned int textureCount,
+                  float *vertices, float *normals, float *uvs,
+                  std::string *textureFileNames );
 
 protected:
-    int mVertexCount;
+    unsigned int mVertexCount, mTextureCount, *mTextureHandles;
     float *mVertices;
     float *mNormals;
     float *mUVs;
     std::string *mTextureFileNames;
+    QImage **mTextures;
 };
 
 #endif // GLNODE_H

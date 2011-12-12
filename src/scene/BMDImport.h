@@ -8,7 +8,7 @@ class GLNode;
 class BMDImport
 {
 public:
-    static GLNode* loadFromFile( std::string fileName );
+    static bool loadFromFile( GLNode *node, std::string fileName );
 };
 
 #endif // BMDIMPORT_H

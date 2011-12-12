@@ -45,6 +45,9 @@ public:
     template <class T>
     T convert()
     {
+        //DEBUG
+        //std::cout << *reinterpret_cast<T*>( mBuffer ) << std::endl;
+
         return *reinterpret_cast<T*>( mBuffer );
     }
 
@@ -58,7 +61,6 @@ public:
     template <class T>
     T convertFromStream( std::fstream& stream )
     {
-        clear();
         readFromStream( stream );
         return convert<T>();
     }
@@ -67,6 +69,22 @@ public:
     T convertFromStream()
     {
         return convertFromStream<T>( *mStream );
+    }
+
+    const char* get()
+    {
+        return mBuffer;
+    }
+
+    const char* getFromStream( std::fstream& stream )
+    {
+        readFromStream( stream );
+        return get();
+    }
+
+    const char* getFromStream()
+    {
+        return getFromStream( *mStream );
     }
 
 protected:

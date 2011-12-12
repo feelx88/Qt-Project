@@ -17,6 +17,8 @@ public:
 
     virtual ~Node(){}
 
+    virtual void init(){}
+
     virtual void update(){}
 
     void setPosition( const glm::vec3& position )

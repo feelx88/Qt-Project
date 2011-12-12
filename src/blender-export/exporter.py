@@ -7,18 +7,35 @@ def write_bmd(context, filepath):
     #test for valid selection
     object = bpy.context.selected_objects[0]
     
+    #convert to triangles
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.mesh.quads_convert_to_tris()
+    bpy.ops.object.editmode_toggle()
+    
+    #test for mesh
     if object.type != 'MESH':
         print( 'Error: Not a Mesh!' )
         return {'FAILURE'}
     
+    #open file
     file = open(filepath, 'w+b')
     
     #Magic number
     file.write( struct.pack( 'ii', 42, 11 ) )
     
     #Write object data
-    file.write( struct.pack( 'ii', len( object.data.faces ) * 3 ), len( object.data.uv_textures ) )
+    file.write( struct.pack( 'ii', len( object.data.faces ) * 3, len( object.data.uv_textures ) ) )
     
+    #512 byte texture names
+    for texture in object.data.uv_textures:
+        path = object.data.uv_textures[0].data[0].image.filepath
+        length = len( path )
+        for byte in range( 0, length ):
+            file.write( struct.pack( 'c', bytes( path[byte], 'ascii' ) ) )
+        for byte in range( length, 512 ):
+            file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
+    
+    #geometry data
     for face in object.data.faces:
         for index in face.vertices:
             vertex = object.data.vertices[index]
@@ -27,7 +44,7 @@ def write_bmd(context, filepath):
             
             for texture in object.data.uv_textures:
                 uv = texture.data[index]
-                file.write( struct.pack( 'ff', uv[0][0], uv[0][1] )
+                file.write( struct.pack( 'ff', uv.uv[0][0], uv.uv[0][1] ) )
 
     file.close()
     return {'FINISHED'}

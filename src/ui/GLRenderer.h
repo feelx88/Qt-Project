@@ -3,6 +3,8 @@
 
 #include <QtOpenGL/QGLWidget>
 
+class GLNode;
+
 class GLRenderer : public QGLWidget
 {
     Q_OBJECT
@@ -19,6 +21,10 @@ protected:
 
     //Here everything gets drawn
     void paintGL();
+
+    GLNode *node;
+
+    float x;
 
 };
 
