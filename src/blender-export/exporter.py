@@ -1,50 +1,101 @@
+# bmd structure
+#
+#           _
+# 4 char: b, m, d, \0
+#
+# 1 int: faceCount
+# 1 int: texCount
+#
+# texCount times =>
+#   512 char: texName
+#
+# faceCount times =>
+# 1 int: texture num
+#   3 times =>
+#     3 float: vertex coordinates
+#     3 float: vertex normals
+#     2 float: uv coordinates
+
 import bpy
 import struct
 
 def write_bmd(context, filepath):
     print("running write_bmd...")
     
-    #test for valid selection
-    object = bpy.context.selected_objects[0]
+    xx = 0
+    yx = 2
+    zx = 1
     
+    xm = -1
+    ym = +1
+    zm = +1
+    
+    ux = 1
+    vx = 0
+    
+    um = +1
+    vm = -1
+    
+
+    #test for valid selection
+    ob = bpy.context.selected_objects[0]
+
     #convert to triangles
+    if bpy.context.mode == 'EDIT_MESH':
+        bpy.ops.object.editmode_toggle()
     bpy.ops.object.editmode_toggle()
     bpy.ops.mesh.quads_convert_to_tris()
     bpy.ops.object.editmode_toggle()
-    
+
     #test for mesh
-    if object.type != 'MESH':
+    if ob.type != 'MESH':
         print( 'Error: Not a Mesh!' )
         return {'FAILURE'}
-    
+
     #open file
     file = open(filepath, 'w+b')
-    
+
     #Magic number
-    file.write( struct.pack( 'ii', 42, 11 ) )
-    
+    file.write( struct.pack( 'cccc', 
+        bytes( 'b', 'ascii' ), 
+        bytes( 'm', 'ascii' ), 
+        bytes( 'd', 'ascii' ),
+        bytes( '\0', 'ascii' ) ) )
+
     #Write object data
-    file.write( struct.pack( 'ii', len( object.data.faces ) * 3, len( object.data.uv_textures ) ) )
-    
+    file.write( struct.pack( 'ii', len( ob.data.faces ), len( ob.data.uv_textures ) ) )
+
+    texNums = {}
+
     #512 byte texture names
-    for texture in object.data.uv_textures:
-        path = object.data.uv_textures[0].data[0].image.filepath
+    for texture in ob.data.uv_textures:
+        path = ob.data.uv_textures[0].data[0].image.filepath
+
+        #save texture number
+        texNums[ob.data.uv_textures[0].data[0].image] = len( texNums )
+
         length = len( path )
         for byte in range( 0, length ):
             file.write( struct.pack( 'c', bytes( path[byte], 'ascii' ) ) )
         for byte in range( length, 512 ):
             file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
-    
+
     #geometry data
-    for face in object.data.faces:
-        for index in face.vertices:
-            vertex = object.data.vertices[index]
-            file.write( struct.pack( 'fff', vertex.co[0], vertex.co[1], vertex.co[2] ) )
-            file.write( struct.pack( 'fff', vertex.normal[0], vertex.normal[1], vertex.normal[2] ) )
-            
-            for texture in object.data.uv_textures:
-                texdata = texture.data[index]
-                file.write( struct.pack( 'ff', texdata.uv1[0], texdata.uv1[1] ) )
+    for faceNum in range( 0, len( ob.data.faces ) ):
+        file.write( struct.pack( 'i', texNums[ob.data.uv_textures[0].data[faceNum].image] ) )
+        for x in range(0,3):
+            vertex = ob.data.vertices[ob.data.faces[faceNum].vertices[x]]
+            file.write( struct.pack( 'fff',
+                vertex.co[xx] * xm,
+                vertex.co[yx] * ym,
+                vertex.co[zx] * zm ) )
+            file.write( struct.pack( 'fff',
+                vertex.normal[xx] * xm,
+                vertex.normal[yx] * ym,
+                vertex.normal[zx] * zm ) )
+
+            uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
+            file.write( struct.pack( 'ff', uvdata[ux] * um, uvdata[vx] * vm ) )
 
     file.close()
     return {'FINISHED'}

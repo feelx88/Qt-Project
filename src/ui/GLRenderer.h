@@ -25,7 +25,6 @@ protected:
     GLNode *node;
 
     float x;
-
 };
 
 #endif // GLRENDERER_H

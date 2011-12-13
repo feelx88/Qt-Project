@@ -58,6 +58,11 @@ public:
         return true;
     }
 
+    bool readFromStream()
+    {
+        return readFromStream( *mStream );
+    }
+
     template <class T>
     T convertFromStream( std::fstream& stream )
     {

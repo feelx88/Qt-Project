@@ -12,44 +12,47 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
     //create buffers
     Buffer iBuffer( sizeof( int ), file );
     Buffer fBuffer( sizeof( float ), file );
-    Buffer sBuffer( 512, file );
+    Buffer sBuffer( sizeof( char ) * 512, file );
+    Buffer cBuffer( sizeof( char ), file );
 
-    //test magic numbers
-    int magicOne = iBuffer.convertFromStream<int>();
-    int magicTwo = iBuffer.convertFromStream<int>();
-
-    if( magicOne != 42 || magicTwo != 11 )
+    if( cBuffer.convertFromStream<char>() == 'b' &&
+            cBuffer.convertFromStream<char>() == 'm' &&
+            cBuffer.convertFromStream<char>() == 'd' )
+        cBuffer.readFromStream();
+    else
         return false;
 
-    int vertexCount = iBuffer.convertFromStream<int>();
+    int faceCount = iBuffer.convertFromStream<int>();
     int textureCount = iBuffer.convertFromStream<int>();
 
-    float *vertices = new float[vertexCount * 3];
-    float *normals = new float[vertexCount * 3];
-    float *uvs = new float[vertexCount * 2 * textureCount];
+    float *vertices = new float[faceCount * 3 * 3];
+    float *normals = new float[faceCount * 3 * 3];
+    float *uvs = new float[faceCount * 3 * 2 * textureCount];
     string *textureFileNames = new string[textureCount];
 
     for( int x = 0; x < textureCount; x++ )
         textureFileNames[x] = string( sBuffer.getFromStream() );
 
-    for( int x = 0, y = 0; x < vertexCount * 3; x += 3, y += 2 )
+    for( int face = 0, x = 0; face < faceCount * 3 * 3; face += 3 * 3, x += 3 * 2 )
     {
-        vertices[x] = fBuffer.convertFromStream<float>();
-        vertices[x + 1] = fBuffer.convertFromStream<float>();
-        vertices[x + 2] = fBuffer.convertFromStream<float>();
+        iBuffer.readFromStream();
 
-        normals[x] = fBuffer.convertFromStream<float>();
-        normals[x + 1] = fBuffer.convertFromStream<float>();
-        normals[x + 2] = fBuffer.convertFromStream<float>();
-
-        for( int z = 0; z < textureCount; z++ )
+        for( int vert = 0, uv = 0; vert < 9; vert += 3, uv += 2 )
         {
-            uvs[y + z] = fBuffer.convertFromStream<float>();
-            uvs[y + 1 + z] = fBuffer.convertFromStream<float>();
+            vertices[face + vert] = fBuffer.convertFromStream<float>();
+            vertices[face + vert + 1] = fBuffer.convertFromStream<float>();
+            vertices[face + vert + 2] = fBuffer.convertFromStream<float>();
+
+            normals[face + vert] = fBuffer.convertFromStream<float>();
+            normals[face + vert + 1] = fBuffer.convertFromStream<float>();
+            normals[face + vert + 2] = fBuffer.convertFromStream<float>();
+
+            uvs[x + uv] = fBuffer.convertFromStream<float>();
+            uvs[x + uv + 1] = fBuffer.convertFromStream<float>();
         }
     }
 
-    node->setData( vertexCount, textureCount, vertices, normals, uvs,
+    node->setData( faceCount, textureCount, vertices, normals, uvs,
                    textureFileNames );
 
     file.close();

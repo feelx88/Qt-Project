@@ -18,12 +18,12 @@ public:
 
     virtual void update();
 
-    void setData( unsigned int vertexCount, unsigned int textureCount,
+    void setData( unsigned int faceCount, unsigned int textureCount,
                   float *vertices, float *normals, float *uvs,
                   std::string *textureFileNames );
 
 protected:
-    unsigned int mVertexCount, mTextureCount, *mTextureHandles;
+    unsigned int mFaceCount, mTextureCount, *mTextureHandles;
     float *mVertices;
     float *mNormals;
     float *mUVs;

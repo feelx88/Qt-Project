@@ -1,6 +1,8 @@
 #include "GLNode.h"
 #include <QtOpenGL>
 
+#include "../ui/GLRenderer.h"
+
 GLNode::GLNode()
     : Node()
 {}
@@ -11,7 +13,7 @@ GLNode::GLNode( const glm::vec3& position, const glm::quat& rotation )
 
 GLNode::~GLNode()
 {
-    mVertexCount = 0;
+    mFaceCount = 0;
     mTextureCount = 0;
     delete[] mVertices;
     delete[] mNormals;
@@ -48,7 +50,7 @@ void GLNode::update()
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[0] );
     }
 
-    glDrawArrays( GL_TRIANGLES, 0, mVertexCount );
+    glDrawArrays( GL_TRIANGLES, 0, mFaceCount * 3 );
 
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_NORMAL_ARRAY );
@@ -62,11 +64,11 @@ void GLNode::update()
     glPopMatrix();
 }
 
-void GLNode::setData( unsigned int vertexCount, unsigned int textureCount,
+void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
                       float *vertices, float *normals, float *uvs,
                       std::string *textureFileNames )
 {
-    mVertexCount = vertexCount;
+    mFaceCount = faceCount;
     mTextureCount = textureCount;
     mVertices = vertices;
     mNormals = normals;
@@ -85,10 +87,8 @@ void GLNode::setData( unsigned int vertexCount, unsigned int textureCount,
         QGLWidget::convertToGLFormat( *mTextures[x] );
 
         gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, mTextures[x]->width(),
-                           mTextures[x]->height(), GL_RGBA, GL_UNSIGNED_SHORT,
+                           mTextures[x]->height(), GL_RGBA, GL_UNSIGNED_BYTE,
                            mTextures[x]->bits() );
-
-        std::cout << std::cout.hex << mTextures[x]->bits() << std::endl;
 
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                          GL_LINEAR );
