@@ -17,6 +17,7 @@ GLNode::~GLNode()
     delete[] mNormals;
     delete[] mUVs;
     delete[] mTextureFileNames;
+    delete[] mTextures;
 }
 
 void GLNode::init()
@@ -27,7 +28,7 @@ void GLNode::update()
     glPushMatrix();
 
     glTranslatef( mPosition.x, mPosition.y, mPosition.z );
-    float angle, x, y, z;
+    float angle = 0.f, x = 0.f, y = 0.f, z = 0.f;
     glm::gtx::quaternion::angleAxis( angle, x, y, z );
     glRotatef( angle, x, y, z );
 
@@ -39,10 +40,10 @@ void GLNode::update()
 
     if( mTextureCount > 0 )
     {
+        glEnable( GL_TEXTURE_2D );
+
         glEnableClientState( GL_TEXTURE_COORD_ARRAY );
         glTexCoordPointer( 2, GL_FLOAT, 0, mUVs );
-
-        glEnable( GL_TEXTURE_2D );
 
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[0] );
     }
@@ -80,10 +81,18 @@ void GLNode::setData( unsigned int vertexCount, unsigned int textureCount,
     {
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[x] );
         mTextures[x] = new QImage( QString( mTextureFileNames[x].c_str() ) );
+
         QGLWidget::convertToGLFormat( *mTextures[x] );
 
-        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
-                      mTextures[0]->width(), mTextures[0]->height(), 0, GL_RGBA,
-                      GL_UNSIGNED_BYTE, mTextures[0]->bits() );
+        gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, mTextures[x]->width(),
+                           mTextures[x]->height(), GL_RGBA, GL_UNSIGNED_SHORT,
+                           mTextures[x]->bits() );
+
+        std::cout << std::cout.hex << mTextures[x]->bits() << std::endl;
+
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                         GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                         GL_LINEAR );
     }
 }

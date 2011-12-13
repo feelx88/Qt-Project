@@ -43,8 +43,8 @@ def write_bmd(context, filepath):
             file.write( struct.pack( 'fff', vertex.normal[0], vertex.normal[1], vertex.normal[2] ) )
             
             for texture in object.data.uv_textures:
-                uv = texture.data[index]
-                file.write( struct.pack( 'ff', uv.uv[0][0], uv.uv[0][1] ) )
+                texdata = texture.data[index]
+                file.write( struct.pack( 'ff', texdata.uv1[0], texdata.uv1[1] ) )
 
     file.close()
     return {'FINISHED'}

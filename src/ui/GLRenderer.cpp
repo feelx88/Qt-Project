@@ -3,7 +3,7 @@
 #include "../scene/BMDImport.h"
 
 GLRenderer::GLRenderer(QWidget *parent) :
-    QGLWidget(parent)
+    QGLWidget(parent), x( 0 )
 {
 }
 
@@ -12,6 +12,7 @@ void GLRenderer::initializeGL()
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
     glCullFace( GL_BACK );
+    glEnable( GL_BLEND );
 
     node = new GLNode( glm::vec3( 0, 0, 0 ), glm::quat( glm::vec3( 0, 0, 0 ) ) );
     BMDImport::loadFromFile( node, "/home/feelx/devel/Qt-Project/untitled.bmd" );
@@ -24,7 +25,7 @@ void GLRenderer::resizeGL(int w, int h)
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
 
-    gluPerspective( 45.f, (float)w / (float)h, 0.1f, 100.f );
+    gluPerspective( 45.f, (float)w / (float)h, 0.1f, 500.f );
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
@@ -39,9 +40,9 @@ void GLRenderer::paintGL()
 
     glLoadIdentity();
 
-    gluLookAt( glm::sin( x ) * 10, 5, glm::cos( x ) * 10, 0, 0, 0, 0, 1, 0 );
-
     x += 0.001;
+
+    gluLookAt( glm::sin( x ) * 10, 5, glm::cos( x ) * 10, 0, 0, 0, 0, 1, 0 );
 
     node->update();
 }
