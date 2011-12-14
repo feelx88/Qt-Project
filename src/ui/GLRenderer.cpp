@@ -42,7 +42,7 @@ void GLRenderer::paintGL()
 
     x += 0.001;
 
-    gluLookAt( glm::sin( x ) * 10, 5, glm::cos( x ) * 10, 0, 0, 0, 0, 1, 0 );
+    gluLookAt( 0, 5, -10, 0, 0, 0, 0, 1, 0 );
 
     node->update();
 }

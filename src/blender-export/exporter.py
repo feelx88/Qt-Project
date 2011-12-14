@@ -23,13 +23,13 @@ def write_bmd(context, filepath):
     print("running write_bmd...")
 
     #prepare axes
-    xx = 1
+    xx = 0
     yx = 2
-    zx = 0
+    zx = 1
     
-    xm = -1
+    xm = +1
     ym = +1
-    zm = -1
+    zm = +1
     
     ux = 0
     vx = 1
@@ -83,7 +83,7 @@ def write_bmd(context, filepath):
     #geometry data
     for faceNum in range( 0, len( ob.data.faces ) ):
         file.write( struct.pack( 'i', texNums[ob.data.uv_textures[0].data[faceNum].image] ) )
-        for x in range(0,3):
+        for x in range(2,-1,-1):
             vertex = ob.data.vertices[ob.data.faces[faceNum].vertices[x]]
             file.write( struct.pack( 'fff',
                 vertex.co[xx] * xm,

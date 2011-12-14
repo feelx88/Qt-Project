@@ -91,8 +91,8 @@ void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
                            mTextures[x]->bits() );
 
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                         GL_LINEAR );
+                         GL_LINEAR_MIPMAP_LINEAR );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                         GL_LINEAR );
+                         GL_LINEAR_MIPMAP_LINEAR );
     }
 }
