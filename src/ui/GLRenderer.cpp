@@ -15,7 +15,7 @@ void GLRenderer::initializeGL()
     glEnable( GL_BLEND );
 
     node = new GLNode( glm::vec3( 0, 0, 0 ), glm::quat( glm::vec3( 0, 0, 0 ) ) );
-    BMDImport::loadFromFile( node, "/home/feelx/devel/Qt-Project/untitled.bmd" );
+    BMDImport::loadFromFile( node, "raw/ship.bmd" );
 }
 
 void GLRenderer::resizeGL(int w, int h)

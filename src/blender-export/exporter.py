@@ -21,21 +21,21 @@ import struct
 
 def write_bmd(context, filepath):
     print("running write_bmd...")
-    
-    xx = 0
+
+    #prepare axes
+    xx = 1
     yx = 2
-    zx = 1
+    zx = 0
     
     xm = -1
     ym = +1
-    zm = +1
+    zm = -1
     
-    ux = 1
-    vx = 0
+    ux = 0
+    vx = 1
     
     um = +1
     vm = -1
-    
 
     #test for valid selection
     ob = bpy.context.selected_objects[0]

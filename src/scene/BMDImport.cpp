@@ -6,6 +6,12 @@ using namespace std;
 
 bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
 {
+    //prepare file name
+    string filePath = fileName;
+
+    if( fileName.rfind( '/' ) != string::npos )
+        filePath = filePath.substr( 0, fileName.rfind( '/' ) + 1 );
+
     //open file
     fstream file( fileName.c_str(), fstream::in | fstream::binary );
 
@@ -31,7 +37,12 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
     string *textureFileNames = new string[textureCount];
 
     for( int x = 0; x < textureCount; x++ )
+    {
         textureFileNames[x] = string( sBuffer.getFromStream() );
+        if( textureFileNames[x].substr( 0, 2 ) == "//" )
+            textureFileNames[x] = textureFileNames[x].substr( 2 );
+        textureFileNames[x] = filePath + textureFileNames[x];
+    }
 
     for( int face = 0, x = 0; face < faceCount * 3 * 3; face += 3 * 3, x += 3 * 2 )
     {
