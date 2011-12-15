@@ -3,7 +3,7 @@
 
 #include <QtOpenGL/QGLWidget>
 
-class GLNode;
+class Node;
 
 class GLRenderer : public QGLWidget
 {
@@ -11,6 +11,11 @@ class GLRenderer : public QGLWidget
 public:
     //Default Qt contructor
     explicit GLRenderer(QWidget *parent = 0);
+
+    static Node* getRootNode()
+    {
+        return sRootNode;
+    }
 
 protected:
     //Initialize the drawing surface
@@ -22,9 +27,7 @@ protected:
     //Here everything gets drawn
     void paintGL();
 
-    GLNode *node;
-
-    float x;
+    static Node* sRootNode;
 };
 
 #endif // GLRENDERER_H

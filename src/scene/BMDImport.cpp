@@ -44,7 +44,8 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
         textureFileNames[x] = filePath + textureFileNames[x];
     }
 
-    for( int face = 0, x = 0; face < faceCount * 3 * 3; face += 3 * 3, x += 3 * 2 )
+    for( int face = 0, x = 0; face < faceCount * 3 * 3;
+         face += 3 * 3, x += 3 * 2 )
     {
         iBuffer.readFromStream();
 

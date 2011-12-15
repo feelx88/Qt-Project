@@ -16,7 +16,8 @@ SOURCES += src/main.cpp \
     src/GraphicsEngine.cpp \
     src/ui/GLRenderer.cpp \
     src/scene/BMDImport.cpp \
-    src/scene/GLNode.cpp
+    src/scene/GLNode.cpp \
+    src/scene/GLCameraNode.cpp
 
 HEADERS  += src/ui/MainWindow.h \
     src/GraphicsEngine.h \
@@ -24,7 +25,8 @@ HEADERS  += src/ui/MainWindow.h \
     src/scene/BMDImport.h \
     src/scene/Node.h \
     src/scene/GLNode.h \
-    src/core/Buffer.h
+    src/core/Buffer.h \
+    src/scene/GLCameraNode.h
 
 FORMS    += src/ui/MainWindow.ui
 

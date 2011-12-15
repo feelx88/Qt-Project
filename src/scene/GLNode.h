@@ -9,8 +9,13 @@ class QImage;
 class GLNode : public Node
 {
 public:
-    GLNode();
-    GLNode( const glm::vec3& position, const glm::quat& rotation );
+    GLNode( Node* parent )
+        : Node( parent )
+    {}
+
+    GLNode( Node* parent, const glm::vec3& position, const glm::quat& rotation )
+        : Node( parent, position, rotation )
+    {}
 
     virtual ~GLNode();
 

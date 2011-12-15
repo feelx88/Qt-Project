@@ -3,6 +3,8 @@
 
 #include <QTimer>
 
+#include "../ui/GLRenderer.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWindow),
@@ -11,13 +13,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Get Renderer from ui
-    mRenderer = findChild<GLRenderer*>( "renderer" );
+    GLRenderer* mRenderer = findChild<GLRenderer*>( "renderer" );
 
-    //Set Timer for repainting the grpahics
+    //Set Timer for repainting the graphics
     QTimer *timer = new QTimer( this );
     timer->setSingleShot( false );
     timer->setInterval( 0 );
     connect( timer, SIGNAL(timeout()), mRenderer, SLOT(repaint()) );
+
     timer->start();
 }
 

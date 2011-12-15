@@ -1,10 +1,16 @@
 #include "GLRenderer.h"
+
+#include "../scene/Node.h"
+#include "../scene/GLCameraNode.h"
 #include "../scene/GLNode.h"
 #include "../scene/BMDImport.h"
 
+Node* GLRenderer::sRootNode = 0;
+
 GLRenderer::GLRenderer(QWidget *parent) :
-    QGLWidget(parent), x( 0 )
+    QGLWidget(parent)
 {
+    sRootNode = new Node( 0 );
 }
 
 void GLRenderer::initializeGL()
@@ -14,7 +20,12 @@ void GLRenderer::initializeGL()
     glCullFace( GL_BACK );
     glEnable( GL_BLEND );
 
-    node = new GLNode( glm::vec3( 0, 0, 0 ), glm::quat( glm::vec3( 0, 0, 0 ) ) );
+    new GLCameraNode( GLRenderer::getRootNode(), glm::vec3( 0, 0, 10 ),
+                      glm::quat() );
+
+    GLNode *node = new GLNode( GLRenderer::getRootNode(), glm::vec3( 0, 0, 0 ),
+                               glm::gtx::quaternion::angleAxis(
+                                   45.f, 0.f, 1.f, 0.f ) );
     BMDImport::loadFromFile( node, "raw/ship.bmd" );
 }
 
@@ -30,21 +41,16 @@ void GLRenderer::resizeGL(int w, int h)
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
-    glClearColor( 0.0f, 0.0f, 1.0f, 1.0f );
+    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 }
 
 void GLRenderer::paintGL()
 {
-    //Test code
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glLoadIdentity();
 
-    x += 0.001;
-
-    gluLookAt( 0, 5, -10, 0, 0, 0, 0, 1, 0 );
-
-    node->update();
+    sRootNode->update();
 }
 
 /* Nice effect :D, at setinterval(10)

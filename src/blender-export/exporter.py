@@ -29,13 +29,7 @@ def write_bmd(context, filepath):
     
     xm = +1
     ym = +1
-    zm = +1
-    
-    ux = 0
-    vx = 1
-    
-    um = +1
-    vm = -1
+    zm = -1
 
     #test for valid selection
     ob = bpy.context.selected_objects[0]
@@ -83,7 +77,7 @@ def write_bmd(context, filepath):
     #geometry data
     for faceNum in range( 0, len( ob.data.faces ) ):
         file.write( struct.pack( 'i', texNums[ob.data.uv_textures[0].data[faceNum].image] ) )
-        for x in range(2,-1,-1):
+        for x in range(0,3):
             vertex = ob.data.vertices[ob.data.faces[faceNum].vertices[x]]
             file.write( struct.pack( 'fff',
                 vertex.co[xx] * xm,
@@ -95,7 +89,7 @@ def write_bmd(context, filepath):
                 vertex.normal[zx] * zm ) )
 
             uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
-            file.write( struct.pack( 'ff', uvdata[ux] * um, uvdata[vx] * vm ) )
+            file.write( struct.pack( 'ff', 1 - uvdata[0], 1 - uvdata[1] ) )
 
     file.close()
     return {'FINISHED'}

@@ -3,14 +3,6 @@
 
 #include "../ui/GLRenderer.h"
 
-GLNode::GLNode()
-    : Node()
-{}
-
-GLNode::GLNode( const glm::vec3& position, const glm::quat& rotation )
-    : Node( position, rotation )
-{}
-
 GLNode::~GLNode()
 {
     mFaceCount = 0;
@@ -30,9 +22,9 @@ void GLNode::update()
     glPushMatrix();
 
     glTranslatef( mPosition.x, mPosition.y, mPosition.z );
-    float angle = 0.f, x = 0.f, y = 0.f, z = 0.f;
-    glm::gtx::quaternion::angleAxis( angle, x, y, z );
-    glRotatef( angle, x, y, z );
+    float angle = glm::gtx::quaternion::angle( mRotation );
+    glm::vec3 axis = glm::gtx::quaternion::axis( mRotation );
+    glRotatef( angle, axis.x, axis.y, axis.z );
 
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_NORMAL_ARRAY );
