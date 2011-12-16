@@ -4,6 +4,7 @@
 #include <QtOpenGL/QGLWidget>
 
 class Node;
+class Game;
 
 class GLRenderer : public QGLWidget
 {
@@ -28,6 +29,8 @@ protected:
     void paintGL();
 
     static Node* sRootNode;
+
+    Game *mGame;
 };
 
 #endif // GLRENDERER_H

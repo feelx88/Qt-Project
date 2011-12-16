@@ -16,6 +16,19 @@
 #     3 float: vertex normals
 #     2 float: uv coordinates
 
+bl_info = {
+    "name": "BMD exporter",
+    "description": "Export selected object to a simple binary format.",
+    "author": "Felix Müller",
+    "version": (1, 0),
+    "blender": (2, 61, 0),
+    "api": 1,
+    "location": "File > Export",
+    "warning": "", # used for warning icon and text in addons panel
+    "wiki_url" : "",
+    "tracker_url": "",
+    "category": "Import-Export"}
+
 import bpy
 import struct
 
@@ -26,7 +39,7 @@ def write_bmd(context, filepath):
     xx = 0
     yx = 2
     zx = 1
-    
+
     xm = +1
     ym = +1
     zm = -1
@@ -50,9 +63,9 @@ def write_bmd(context, filepath):
     file = open(filepath, 'w+b')
 
     #Magic number
-    file.write( struct.pack( 'cccc', 
-        bytes( 'b', 'ascii' ), 
-        bytes( 'm', 'ascii' ), 
+    file.write( struct.pack( 'cccc',
+        bytes( 'b', 'ascii' ),
+        bytes( 'm', 'ascii' ),
         bytes( 'd', 'ascii' ),
         bytes( '\0', 'ascii' ) ) )
 
@@ -145,16 +158,16 @@ def menu_func_export(self, context):
 
 def register():
     bpy.utils.register_class(ExportBMD)
-    #bpy.types.INFO_MT_file_export.append(menu_func_export)
+    bpy.types.INFO_MT_file_export.append(menu_func_export)
 
 
 def unregister():
     try:
         bpy.utils.unregister_class(ExportBMD)
-        #bpy.types.INFO_MT_file_export.remove(menu_func_export)
+        bpy.types.INFO_MT_file_export.remove(menu_func_export)
     except:
         pass
 
 if __name__ == "__main__":
     register()
-    bpy.ops.export.bmd('INVOKE_DEFAULT')
+    #bpy.ops.export.bmd('INVOKE_DEFAULT')
