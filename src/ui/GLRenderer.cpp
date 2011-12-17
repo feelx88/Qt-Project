@@ -1,7 +1,8 @@
 #include "GLRenderer.h"
 
-#include "../game/Game.h"
+#include <QKeyEvent>
 
+#include "../game/Game.h"
 #include "../scene/Node.h"
 
 Node* GLRenderer::sRootNode = 0;
@@ -10,6 +11,16 @@ GLRenderer::GLRenderer(QWidget *parent) :
     QGLWidget(parent), mGame( new Game() )
 {
     sRootNode = new Node( 0 );
+}
+
+void GLRenderer::keyPressEvent( QKeyEvent *evt )
+{
+    mGame->processKeyEvents( evt, true );
+}
+
+void GLRenderer::keyReleaseEvent(QKeyEvent *evt)
+{
+    mGame->processKeyEvents( evt, false );
 }
 
 void GLRenderer::initializeGL()

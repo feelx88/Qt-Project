@@ -15,12 +15,12 @@ public:
 
     virtual void update();
 
-    void setLookAt( glm::vec3 &lookAt )
+    void setLookAt( const glm::vec3 &lookAt )
     {
         mLookAt = lookAt;
     }
 
-    void setUpVector( glm::vec3 &upVector )
+    void setUpVector( const glm::vec3 &upVector )
     {
         mUpVector = upVector;
     }

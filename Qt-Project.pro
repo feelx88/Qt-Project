@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT       += core gui opengl xml
 
 TARGET = Qt-Project
 TEMPLATE = app
@@ -13,7 +13,6 @@ INCLUDEPATH += ./include
 
 SOURCES += src/main.cpp \
     src/ui/MainWindow.cpp \
-    src/GraphicsEngine.cpp \
     src/ui/GLRenderer.cpp \
     src/scene/BMDImport.cpp \
     src/scene/GLNode.cpp \
@@ -21,7 +20,6 @@ SOURCES += src/main.cpp \
     src/game/Game.cpp
 
 HEADERS  += src/ui/MainWindow.h \
-    src/GraphicsEngine.h \
     src/ui/GLRenderer.h \
     src/scene/BMDImport.h \
     src/scene/Node.h \

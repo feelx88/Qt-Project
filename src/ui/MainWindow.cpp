@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Get Renderer from ui
-    GLRenderer* mRenderer = findChild<GLRenderer*>( "renderer" );
+    mRenderer = findChild<GLRenderer*>( "renderer" );
 
     //Set Timer for repainting the graphics
     QTimer *timer = new QTimer( this );
@@ -27,4 +27,16 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *evt)
+{
+    if( mRenderer )
+        mRenderer->keyPressEvent( evt );
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *evt)
+{
+    if( mRenderer )
+        mRenderer->keyReleaseEvent( evt );
 }

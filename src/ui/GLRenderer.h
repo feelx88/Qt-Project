@@ -3,6 +3,9 @@
 
 #include <QtOpenGL/QGLWidget>
 
+class QKeyEvent;
+class QEvent;
+
 class Node;
 class Game;
 
@@ -17,6 +20,9 @@ public:
     {
         return sRootNode;
     }
+
+    void keyPressEvent( QKeyEvent *evt );
+    void keyReleaseEvent( QKeyEvent *evt );
 
 protected:
     //Initialize the drawing surface
