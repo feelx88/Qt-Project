@@ -17,7 +17,9 @@ SOURCES += src/main.cpp \
     src/scene/BMDImport.cpp \
     src/scene/GLNode.cpp \
     src/scene/GLCameraNode.cpp \
-    src/game/Game.cpp
+    src/game/Game.cpp \
+    src/game/Level.cpp \
+    src/game/PlayerShip.cpp
 
 HEADERS  += src/ui/MainWindow.h \
     src/ui/GLRenderer.h \
@@ -26,7 +28,9 @@ HEADERS  += src/ui/MainWindow.h \
     src/scene/GLNode.h \
     src/core/Buffer.h \
     src/scene/GLCameraNode.h \
-    src/game/Game.h
+    src/game/Game.h \
+    src/game/Level.h \
+    src/game/PlayerShip.h
 
 FORMS    += src/ui/MainWindow.ui
 

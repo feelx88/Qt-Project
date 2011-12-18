@@ -1,24 +1,18 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "PlayerShip.h"
+
 class QKeyEvent;
+class QSettings;
+
+class GLCameraNode;
+
+class Level;
 
 class Game
 {
 public:
-
-    enum KEY_ACTIONS
-    {
-        ACTION_MOVE_FASTER = 0,
-        ACTION_MOVE_SLOWER,
-        ACTION_MOVE_UP,
-        ACTION_MOVE_DOWN,
-        ACTION_MOVE_LEFT,
-        ACTION_MOVE_RIGHT,
-        ACTION_FIRE_PRIMARY,
-        ACTION_FIRE_SECONDARY,
-        ACTION_COUNT
-    };
 
     Game();
 
@@ -29,8 +23,13 @@ public:
     void processKeyEvents( QKeyEvent *evt, bool pressed );
 
 protected:
-    bool mActionTriggered[ACTION_COUNT];
-    int mActionMap[ACTION_COUNT];
+    bool mActionTriggered[PlayerShip::ACTION_COUNT];
+    int mActionMap[PlayerShip::ACTION_COUNT];
+
+    GLCameraNode *mCamera;
+
+    Level *mActiveLevel;
+    PlayerShip *mActiveShip;
 };
 
 #endif // GAME_H

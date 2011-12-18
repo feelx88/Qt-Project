@@ -9,49 +9,54 @@
 #include "../scene/GLNode.h"
 #include "../scene/BMDImport.h"
 
+#include "Level.h"
+#include "PlayerShip.h"
+
 #include <iostream>
 
 Game::Game()
 {
+    for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
+    {
+        mActionMap[x] = 0;
+        mActionTriggered[x] = false;
+    }
 }
-
-GLNode *node = 0;
-GLCameraNode *cam = 0;
 
 void Game::init()
 {
     QSettings settings( "raw/config.ini", QSettings::IniFormat );
 
-    cam = new GLCameraNode( GLRenderer::getRootNode(), glm::vec3( 0, 10, 10 ),
+    mActionMap[PlayerShip::ACTION_MOVE_UP] =
+            settings.value( "ActionMoveUp", Qt::Key_Up ).toInt();
+    mActionMap[PlayerShip::ACTION_MOVE_DOWN] =
+            settings.value( "ActionMoveDown", Qt::Key_Down ).toInt();
+    mActionMap[PlayerShip::ACTION_MOVE_LEFT] =
+            settings.value( "ActionMoveLeft", Qt::Key_Left ).toInt();
+    mActionMap[PlayerShip::ACTION_MOVE_RIGHT] =
+            settings.value( "ActionMoveRight", Qt::Key_Right ).toInt();
+
+    mCamera = new GLCameraNode( GLRenderer::getRootNode(), glm::vec3( 0, 20, 10 ),
                       glm::quat() );
 
-    node = new GLNode( GLRenderer::getRootNode(), glm::vec3(), glm::quat() );
-    BMDImport::loadFromFile( node, "raw/ship.bmd" );
+    mActiveShip = new PlayerShip( "raw/ship.bmd", mCamera );
+    mActiveLevel = new Level( "raw/testlevel.bmd" );
 }
 
 void Game::run()
 {
-    cam->setLookAt( node->getPosition() );
-
-    if( mActionTriggered[ACTION_MOVE_UP] )
-        node->setPosition( node->getPosition() + glm::vec3( 0, 0, -0.01 ) );
-    if( mActionTriggered[ACTION_MOVE_DOWN] )
-        node->setPosition( node->getPosition() + glm::vec3( 0, 0, 0.01 ) );
-    if( mActionTriggered[ACTION_MOVE_LEFT] )
-        node->setPosition( node->getPosition() + glm::vec3( -0.01, 0, 0 ) );
-    if( mActionTriggered[ACTION_MOVE_RIGHT] )
-        node->setPosition( node->getPosition() + glm::vec3( 0.01, 0, 0 ) );
-
+    for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
+    {
+        if( mActionTriggered[x] )
+            mActiveShip->action( (PlayerShip::SHIP_ACTIONS)x );
+    }
 }
 
 void Game::processKeyEvents( QKeyEvent *evt, bool pressed )
 {
-    if( evt->key() == Qt::Key_Up )
-        mActionTriggered[ACTION_MOVE_UP] = pressed;
-    if( evt->key() == Qt::Key_Down )
-        mActionTriggered[ACTION_MOVE_DOWN] = pressed;
-    if( evt->key() == Qt::Key_Left )
-        mActionTriggered[ACTION_MOVE_LEFT] = pressed;
-    if( evt->key() == Qt::Key_Right )
-        mActionTriggered[ACTION_MOVE_RIGHT] = pressed;
+    for( int x = 0 ; x < PlayerShip::ACTION_COUNT; x++ )
+    {
+        if( evt->key() == mActionMap[x] )
+            mActionTriggered[x] = pressed;
+    }
 }
