@@ -34,8 +34,7 @@ protected:
     GLNode *mShipModel;
     GLCameraNode *mCamera;
 
-    glm::quat curRot;
-    bool rot;
+    glm::vec3 delta;
 };
 
 #endif // PLAYERSHIP_H
