@@ -79,7 +79,7 @@ void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
         QGLWidget::convertToGLFormat( *mTextures[x] );
 
         gluBuild2DMipmaps( GL_TEXTURE_2D, GL_RGBA, mTextures[x]->width(),
-                           mTextures[x]->height(), GL_RGBA, GL_UNSIGNED_BYTE,
+                           mTextures[x]->height(), GL_BGRA, GL_UNSIGNED_BYTE,
                            mTextures[x]->bits() );
 
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,

@@ -40,7 +40,7 @@ void Game::init()
                       glm::quat() );
 
     mActiveShip = new PlayerShip( GLRenderer::getRootNode(),
-                                  "raw/x-wing.bmd", mCamera );
+                                  "raw/ship1.bmd", mCamera );
     mActiveLevel = new Level( "raw/testlevel.bmd" );
 }
 
