@@ -39,7 +39,8 @@ void Game::init()
     mCamera = new GLCameraNode( GLRenderer::getRootNode(), glm::vec3( 0, 20, 10 ),
                       glm::quat() );
 
-    mActiveShip = new PlayerShip( "raw/ship.bmd", mCamera );
+    mActiveShip = new PlayerShip( GLRenderer::getRootNode(),
+                                  "raw/x-wing.bmd", mCamera );
     mActiveLevel = new Level( "raw/testlevel.bmd" );
 }
 

@@ -1,12 +1,14 @@
 #ifndef PLAYERSHIP_H
 #define PLAYERSHIP_H
 
+#include "../scene/Node.h"
+
 #include <string>
 
 class GLNode;
 class GLCameraNode;
 
-class PlayerShip
+class PlayerShip : public Node
 {
 public:
     enum SHIP_ACTIONS
@@ -22,9 +24,11 @@ public:
         ACTION_COUNT
     };
 
-    PlayerShip( std::string fileName, GLCameraNode *camera );
+    PlayerShip( Node *parent, std::string fileName, GLCameraNode *camera );
 
     void action( SHIP_ACTIONS action );
+
+    void update();
 
 protected:
     GLNode *mShipModel;
