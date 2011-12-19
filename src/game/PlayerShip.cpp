@@ -6,7 +6,7 @@
 #include "../scene/BMDImport.h"
 
 PlayerShip::PlayerShip( Node *parent, std::string fileName, GLCameraNode *camera )
-    : Node( parent ), mCamera( camera )
+    : Node( parent ), mCamera( camera ), rot( false )
 {
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
@@ -33,19 +33,23 @@ void PlayerShip::action(PlayerShip::SHIP_ACTIONS action)
         break;
     case ACTION_MOVE_UP:
         position += glm::vec3( 0, 0.01, 0 );
-        rotation = glm::gtc::quaternion::rotate( rotation, 10.f, glm::vec3( 1, 0, 0 ) );
+        curRot = glm::gtc::quaternion::rotate( rotation, 10.f, glm::vec3( 1, 0, 0 ) );
+        rot = true;
         break;
     case ACTION_MOVE_DOWN:
         position += glm::vec3( 0, -0.01, 0 );
-        rotation = glm::gtc::quaternion::rotate( rotation, -10.f, glm::vec3( 1, 0, 0 ) );
+        curRot = glm::gtc::quaternion::rotate( rotation, -10.f, glm::vec3( 1, 0, 0 ) );
+        rot = true;
         break;
     case ACTION_MOVE_LEFT:
         position += glm::vec3( -0.01, 0, 0 );
-        rotation = glm::gtc::quaternion::rotate( rotation, 20.f, glm::vec3( 0, 0, 1 ) );
+        curRot = glm::gtc::quaternion::rotate( rotation, 20.f, glm::vec3( 0, 0, 1 ) );
+        rot = true;
         break;
     case ACTION_MOVE_RIGHT:
         position += glm::vec3( 0.01, 0, 0 );
-        rotation = glm::gtc::quaternion::rotate( rotation, -20.f, glm::vec3( 0, 0, 1 ) );
+        curRot = glm::gtc::quaternion::rotate( rotation, -20.f, glm::vec3( 0, 0, 1 ) );
+        rot = true;
         break;
     case ACTION_FIRE_PRIMARY:
         break;
@@ -63,6 +67,14 @@ void PlayerShip::update()
 
     if( position.z < -200 )
         position.z = 0;
+
+    if( rot )
+    {
+        mShipModel->setRotation( curRot );
+        rot = false;
+    }
+    else
+        mShipModel->setRotation( glm::quat() );
 
     mShipModel->setPosition( position + glm::vec3( 0, 0, -0.01 ) );
 
