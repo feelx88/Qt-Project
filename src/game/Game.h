@@ -30,6 +30,8 @@ protected:
 
     Level *mActiveLevel;
     PlayerShip *mActiveShip;
+
+    int mDeltaMSec;
 };
 
 #endif // GAME_H

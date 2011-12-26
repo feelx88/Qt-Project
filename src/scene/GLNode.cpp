@@ -1,5 +1,6 @@
 #include "GLNode.h"
 #include <QtOpenGL>
+#include <GL/glu.h>
 
 #include "../ui/GLRenderer.h"
 
@@ -17,8 +18,10 @@ GLNode::~GLNode()
 void GLNode::init()
 {}
 
-void GLNode::update()
+void GLNode::update( int deltaNSec )
 {
+    Node::update( deltaNSec );
+
     glPushMatrix();
 
     glTranslatef( mPosition.x, mPosition.y, mPosition.z );

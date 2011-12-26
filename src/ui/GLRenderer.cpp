@@ -1,14 +1,18 @@
 #include "GLRenderer.h"
 
+#include <GL/glu.h>
+
 #include <QKeyEvent>
+
+#include "../core/Clock.h"
 
 #include "../game/Game.h"
 #include "../scene/Node.h"
 
 Node* GLRenderer::sRootNode = 0;
 
-GLRenderer::GLRenderer(QWidget *parent) :
-    QGLWidget(parent), mGame( new Game() )
+GLRenderer::GLRenderer(QWidget *parent)
+    : QGLWidget(parent), mGame( new Game() ), oldNSec( 0 )
 {
     sRootNode = new Node( 0 );
 }
@@ -29,6 +33,7 @@ void GLRenderer::initializeGL()
     glEnable( GL_CULL_FACE );
     glCullFace( GL_BACK );
     glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     mGame->init();
 }
@@ -50,13 +55,15 @@ void GLRenderer::resizeGL(int w, int h)
 
 void GLRenderer::paintGL()
 {
+    int nSec = Clock::getTime();
+
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glLoadIdentity();
 
-    sRootNode->update();
-
     mGame->run();
+
+    sRootNode->update( Clock::getTime() - nSec );
 }
 
 /* Nice effect :D, at setinterval(10)

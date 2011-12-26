@@ -15,6 +15,7 @@
 #include <iostream>
 
 Game::Game()
+    : mCamera( 0 ), mActiveLevel( 0 ), mActiveShip( 0 ), mDeltaMSec( 0 )
 {
     for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
     {
@@ -36,12 +37,13 @@ void Game::init()
     mActionMap[PlayerShip::ACTION_MOVE_RIGHT] =
             settings.value( "ActionMoveRight", Qt::Key_Right ).toInt();
 
-    mCamera = new GLCameraNode( GLRenderer::getRootNode(), glm::vec3( 0, 20, 10 ),
-                      glm::quat() );
+    mCamera = new GLCameraNode( GLRenderer::getRootNode(),
+                                glm::vec3( 0, 20, 10 ), glm::quat() );
+
+    mActiveLevel = new Level( "raw/testlevel.bmd" );
 
     mActiveShip = new PlayerShip( GLRenderer::getRootNode(),
                                   "raw/ship1.bmd", mCamera );
-    mActiveLevel = new Level( "raw/testlevel.bmd" );
 }
 
 void Game::run()

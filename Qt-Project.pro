@@ -19,7 +19,8 @@ SOURCES += src/main.cpp \
     src/scene/GLCameraNode.cpp \
     src/game/Game.cpp \
     src/game/Level.cpp \
-    src/game/PlayerShip.cpp
+    src/game/PlayerShip.cpp \
+    src/core/Clock.cpp
 
 HEADERS  += src/ui/MainWindow.h \
     src/ui/GLRenderer.h \
@@ -30,7 +31,8 @@ HEADERS  += src/ui/MainWindow.h \
     src/scene/GLCameraNode.h \
     src/game/Game.h \
     src/game/Level.h \
-    src/game/PlayerShip.h
+    src/game/PlayerShip.h \
+    src/core/Clock.h
 
 FORMS    += src/ui/MainWindow.ui
 
@@ -41,6 +43,8 @@ OTHER_FILES += \
     raw/x-wing.blend \
     raw/vader_tie_fighter.blend \
     raw/tie_fighter.blend
+
+LIBS += -lGLU
 
 
 

@@ -5,6 +5,8 @@
 
 #include "../ui/GLRenderer.h"
 
+QTimer* timer;
+
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWindow),
@@ -16,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mRenderer = findChild<GLRenderer*>( "renderer" );
 
     //Set Timer for repainting the graphics
-    QTimer *timer = new QTimer( this );
+    timer = new QTimer( this );
     timer->setSingleShot( false );
     timer->setInterval( 0 );
     connect( timer, SIGNAL(timeout()), mRenderer, SLOT(repaint()) );
@@ -33,6 +35,13 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
 {
     if( mRenderer )
         mRenderer->keyPressEvent( evt );
+
+    if( evt->key() == Qt::Key_Tab )
+        timer->setInterval( 10 );
+    if( evt->key() == Qt::Key_Q )
+        timer->setInterval( 100 );
+    if( evt->key() == Qt::Key_W )
+        timer->setInterval( 0 );
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *evt)

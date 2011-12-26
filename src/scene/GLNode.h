@@ -21,7 +21,7 @@ public:
 
     virtual void init();
 
-    virtual void update();
+    virtual void update( int deltaNSec );
 
     void setData( unsigned int faceCount, unsigned int textureCount,
                   float *vertices, float *normals, float *uvs,

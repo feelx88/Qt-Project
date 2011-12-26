@@ -37,6 +37,8 @@ protected:
     static Node* sRootNode;
 
     Game *mGame;
+
+    int oldNSec;
 };
 
 #endif // GLRENDERER_H

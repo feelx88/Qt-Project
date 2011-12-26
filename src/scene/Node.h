@@ -10,7 +10,7 @@ class Node
 {
 public:
     Node( Node* parent )
-        : mPosition( glm::vec3() ), mRotation( glm::quat() )
+        : mPosition( glm::vec3() ), mRotation( glm::quat() ), mParent( parent )
     {
         if( parent )
             parent->addChild( this );
@@ -27,11 +27,11 @@ public:
 
     virtual void init(){}
 
-    virtual void update()
+    virtual void update( int deltaNSec )
     {
         for( std::deque<Node*>::iterator x = mChildren.begin();
              x != mChildren.end(); x++ )
-            (*x)->update();
+            (*x)->update( deltaNSec );
     }
 
     void setPosition( const glm::vec3& position )
@@ -63,6 +63,7 @@ protected:
     glm::vec3 mPosition;
     glm::quat mRotation;
 
+    Node *mParent;
     std::deque<Node*> mChildren;
 };
 

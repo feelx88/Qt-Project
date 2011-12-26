@@ -28,13 +28,13 @@ public:
 
     void action( SHIP_ACTIONS action );
 
-    void update();
+    void update( int deltaNSec );
 
 protected:
     GLNode *mShipModel;
     GLCameraNode *mCamera;
 
-    glm::vec3 delta;
+    glm::vec3 delta, movement, rotation;
 };
 
 #endif // PLAYERSHIP_H

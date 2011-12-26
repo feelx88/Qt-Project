@@ -1,6 +1,8 @@
 #include "GLCameraNode.h"
 #include <QtOpenGL>
 
+#include <GL/glu.h>
+
 GLCameraNode::GLCameraNode( Node *parent )
     : Node( parent ), mLookAt( glm::vec3( 0.f, 0.f, 0.f ) ),
       mUpVector( glm::vec3( 0.f, 0.f, 0.f ) )
@@ -18,8 +20,10 @@ GLCameraNode::~GLCameraNode()
 {
 }
 
-void GLCameraNode::update()
+void GLCameraNode::update( int deltaNSec )
 {
+    Node::update( deltaNSec );
+
     gluLookAt( mPosition.x, mPosition.y, mPosition.z,
                mLookAt.x, mLookAt.y, mLookAt.z,
                mUpVector.x, mUpVector.y, mUpVector.z);
