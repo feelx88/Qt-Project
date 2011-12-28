@@ -23,6 +23,15 @@ public:
 
     void processKeyEvents( QKeyEvent *evt, bool pressed );
 
+    //frames per sec
+    static const int frameRate;
+    //maximum frames to be skipped on slow down
+    static const int maxFrameSkip;
+    //length of one frame
+    static const int frameLength;
+    //for calculations of speed, acceleration etc.
+    static const float frameRateMultiplicator;
+
 protected:
     bool mActionTriggered[PlayerShip::ACTION_COUNT];
     int mActionMap[PlayerShip::ACTION_COUNT];
@@ -33,10 +42,6 @@ protected:
     PlayerShip *mActiveShip;
 
     int mNextFrame;
-
-    const int mFrameRate; //frames per sec
-    const int mMaxFrameSkip; //maximum frames to be skipped on slow down
-    const int mFrameLength;
 };
 
 #endif // GAME_H

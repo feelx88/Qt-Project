@@ -14,10 +14,14 @@
 
 #include <iostream>
 
+const int Game::frameRate = 30;
+const int Game::maxFrameSkip = 5;
+const int Game::frameLength = Clock::ticksPerSecond / Game::frameRate;
+const float Game::frameRateMultiplicator = 1.f / (float)Game::frameRate;
+
 Game::Game()
     : mCamera( 0 ), mActiveLevel( 0 ), mActiveShip( 0 ),
-      mNextFrame( 0 ), mFrameRate( 25 ), mMaxFrameSkip( 5 ),
-      mFrameLength( Clock::ticksPerSecond / mFrameRate )
+      mNextFrame( 0 )
 {
     for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
     {
@@ -53,7 +57,7 @@ void Game::run()
 {
     int framesSkipped = 0;
 
-    if( Clock::getTime() > mNextFrame && framesSkipped < mMaxFrameSkip )
+    if( Clock::getTime() > mNextFrame && framesSkipped < maxFrameSkip )
     {
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {
@@ -61,7 +65,7 @@ void Game::run()
                 mActiveShip->action( (PlayerShip::SHIP_ACTIONS)x );
         }
         mActiveShip->update();
-        mNextFrame += mFrameLength;
+        mNextFrame += frameLength;
         framesSkipped++;
     }
 }

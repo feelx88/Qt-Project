@@ -7,6 +7,8 @@
 #include "../scene/GLCameraNode.h"
 #include "../scene/BMDImport.h"
 
+#include "../game/Game.h"
+
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( glm::vec3( 0, 0, -0.5 ) )
 {
@@ -23,7 +25,7 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
 void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
 {
-    const float timeFactor = 1.f / 25.f;
+    const float timeFactor = Game::frameRateMultiplicator;
 
     switch( action )
     {
@@ -55,7 +57,7 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
 
 void PlayerShip::update()
 {
-    const float timeFactor = 1.f / 25.f;
+    const float timeFactor = Game::frameRateMultiplicator;
 
     glm::vec3 position = mShipModel->getPosition();
 
@@ -65,7 +67,7 @@ void PlayerShip::update()
 
     glm::quat rotation;
     rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.x * -60,
+                                             mCurAcceleration.x * -90,
                                              glm::vec3( 0, 0, 1 ) );
     rotation = glm::gtc::quaternion::rotate( rotation,
                                              mCurAcceleration.x * -30,

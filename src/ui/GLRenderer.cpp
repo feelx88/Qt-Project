@@ -13,6 +13,7 @@ GLRenderer::GLRenderer(QWidget *parent)
     : QGLWidget(parent), mGame( new Game() ), oldNSec( 0 )
 {
     sRootNode = new Node( 0 );
+    setAutoBufferSwap( true );
 }
 
 void GLRenderer::keyPressEvent( QKeyEvent *evt )
