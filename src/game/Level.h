@@ -10,6 +10,8 @@ class Level
 public:
     Level( std::string fileName );
 
+    void update();
+
 protected:
     GLNode *mLevelModel;
 };

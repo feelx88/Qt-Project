@@ -20,7 +20,8 @@ SOURCES += src/main.cpp \
     src/game/Game.cpp \
     src/game/Level.cpp \
     src/game/PlayerShip.cpp \
-    src/core/Clock.cpp
+    src/core/Clock.cpp \
+    src/game/Weapon.cpp
 
 HEADERS  += src/ui/MainWindow.h \
     src/ui/GLRenderer.h \
@@ -32,7 +33,8 @@ HEADERS  += src/ui/MainWindow.h \
     src/game/Game.h \
     src/game/Level.h \
     src/game/PlayerShip.h \
-    src/core/Clock.h
+    src/core/Clock.h \
+    src/game/Weapon.h
 
 FORMS    += src/ui/MainWindow.ui
 

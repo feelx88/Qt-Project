@@ -9,3 +9,7 @@ Level::Level( std::string fileName )
     mLevelModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mLevelModel, fileName );
 }
+
+void Level::update()
+{
+}

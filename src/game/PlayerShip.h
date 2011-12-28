@@ -9,6 +9,8 @@
 class GLNode;
 class GLCameraNode;
 
+class Weapon;
+
 class PlayerShip
 {
 public:
@@ -34,6 +36,8 @@ public:
 protected:
     GLNode *mShipModel;
     GLCameraNode *mCamera;
+
+    Weapon *mPrimaryWeapon, *mSecondaryWeapon;
 
     glm::vec3 mCurAcceleration;
 };

@@ -22,6 +22,9 @@ void GLNode::update()
 {
     Node::update();
 
+    if( !mVisible )
+        return;
+
     glPushMatrix();
 
     glTranslatef( mPosition.x, mPosition.y, mPosition.z );

@@ -7,7 +7,8 @@
 #include "../scene/GLCameraNode.h"
 #include "../scene/BMDImport.h"
 
-#include "../game/Game.h"
+#include "Game.h"
+#include "Weapon.h"
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( glm::vec3( 0, 0, -0.5 ) )
@@ -21,6 +22,10 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 10, 10 ) );
+
+    //Not yet working
+    //mPrimaryWeapon = new Weapon( 10, "raw/rayOne.bmd" );
+    //mSecondaryWeapon = new Weapon( 10, "raw/rayTwo.bmd" );
 }
 
 void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
@@ -67,15 +72,19 @@ void PlayerShip::update()
 
     glm::quat rotation;
     rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.x * -90,
-                                             glm::vec3( 0, 0, 1 ) );
+                                             mCurAcceleration.y * 20.f *
+                                             Game::frameRate / 10.f,
+                                             glm::vec3( 1, 0, 0 ) );
     rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.x * -30,
+                                             mCurAcceleration.x * -10.f *
+                                             Game::frameRate / 10.f,
                                              glm::vec3( 0, 1, 0 ) );
     rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.y * 40,
-                                             glm::vec3( 1, 0, 0 ) );
+                                             mCurAcceleration.x * -30.f *
+                                             Game::frameRate / 10.f,
+                                             glm::vec3( 0, 0, 1 ) );
 
+    //Only for testing
     //----------------------
     if( position.z < -200 )
         position.z = 0;
@@ -84,7 +93,7 @@ void PlayerShip::update()
     mShipModel->setPosition( position );
     mShipModel->setRotation( rotation );
 
-    mCurAcceleration -= mCurAcceleration * 0.1f;
+    mCurAcceleration -= mCurAcceleration * timeFactor * 10.f;
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 2, 10 ) );

@@ -64,7 +64,11 @@ void Game::run()
             if( mActionTriggered[x] )
                 mActiveShip->action( (PlayerShip::SHIP_ACTIONS)x );
         }
+
+        mActiveLevel->update();
+
         mActiveShip->update();
+
         mNextFrame += frameLength;
         framesSkipped++;
     }
