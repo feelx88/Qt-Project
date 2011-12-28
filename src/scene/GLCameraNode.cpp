@@ -20,9 +20,9 @@ GLCameraNode::~GLCameraNode()
 {
 }
 
-void GLCameraNode::update( int deltaNSec )
+void GLCameraNode::update()
 {
-    Node::update( deltaNSec );
+    Node::update();
 
     gluLookAt( mPosition.x, mPosition.y, mPosition.z,
                mLookAt.x, mLookAt.y, mLookAt.z,

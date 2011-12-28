@@ -15,7 +15,9 @@
 #include <iostream>
 
 Game::Game()
-    : mCamera( 0 ), mActiveLevel( 0 ), mActiveShip( 0 ), mDeltaMSec( 0 )
+    : mCamera( 0 ), mActiveLevel( 0 ), mActiveShip( 0 ),
+      mNextFrame( 0 ), mFrameRate( 25 ), mMaxFrameSkip( 5 ),
+      mFrameLength( Clock::ticksPerSecond / mFrameRate )
 {
     for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
     {
@@ -42,21 +44,31 @@ void Game::init()
 
     mActiveLevel = new Level( "raw/testlevel.bmd" );
 
-    mActiveShip = new PlayerShip( GLRenderer::getRootNode(),
-                                  "raw/ship1.bmd", mCamera );
+    mActiveShip = new PlayerShip( "raw/ship1.bmd", mCamera );
+
+    mNextFrame = Clock::getTime();
 }
 
 void Game::run()
 {
-    for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
+    int framesSkipped = 0;
+
+    if( Clock::getTime() > mNextFrame && framesSkipped < mMaxFrameSkip )
     {
-        if( mActionTriggered[x] )
-            mActiveShip->action( (PlayerShip::SHIP_ACTIONS)x );
+        for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
+        {
+            if( mActionTriggered[x] )
+                mActiveShip->action( (PlayerShip::SHIP_ACTIONS)x );
+        }
+        mActiveShip->update();
+        mNextFrame += mFrameLength;
+        framesSkipped++;
     }
 }
 
 void Game::processKeyEvents( QKeyEvent *evt, bool pressed )
 {
+
     for( int x = 0 ; x < PlayerShip::ACTION_COUNT; x++ )
     {
         if( evt->key() == mActionMap[x] )

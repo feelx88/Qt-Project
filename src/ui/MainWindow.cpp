@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer( this );
     timer->setSingleShot( false );
     timer->setInterval( 0 );
-    connect( timer, SIGNAL(timeout()), mRenderer, SLOT(repaint()) );
+    connect( timer, SIGNAL(timeout()), mRenderer, SLOT(updateGL()) );
 
     timer->start();
 }
@@ -35,13 +35,6 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
 {
     if( mRenderer )
         mRenderer->keyPressEvent( evt );
-
-    if( evt->key() == Qt::Key_Tab )
-        timer->setInterval( 10 );
-    if( evt->key() == Qt::Key_Q )
-        timer->setInterval( 100 );
-    if( evt->key() == Qt::Key_W )
-        timer->setInterval( 0 );
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *evt)

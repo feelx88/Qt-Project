@@ -27,11 +27,11 @@ public:
 
     virtual void init(){}
 
-    virtual void update( int deltaNSec )
+    virtual void update()
     {
         for( std::deque<Node*>::iterator x = mChildren.begin();
              x != mChildren.end(); x++ )
-            (*x)->update( deltaNSec );
+            (*x)->update();
     }
 
     void setPosition( const glm::vec3& position )

@@ -13,7 +13,7 @@ public:
 
     virtual ~GLCameraNode();
 
-    virtual void update( int deltaNSec );
+    virtual void update();
 
     void setLookAt( const glm::vec3 &lookAt )
     {

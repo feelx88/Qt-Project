@@ -6,7 +6,7 @@ class Clock
 public:
     static int getTime();
 
-    static int ticksPerSecond;
+    static const int ticksPerSecond;
 };
 
 #endif // CLOCK_H

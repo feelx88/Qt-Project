@@ -1,14 +1,15 @@
 #ifndef PLAYERSHIP_H
 #define PLAYERSHIP_H
 
-#include "../scene/Node.h"
-
 #include <string>
+
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 class GLNode;
 class GLCameraNode;
 
-class PlayerShip : public Node
+class PlayerShip
 {
 public:
     enum SHIP_ACTIONS
@@ -24,17 +25,17 @@ public:
         ACTION_COUNT
     };
 
-    PlayerShip( Node *parent, std::string fileName, GLCameraNode *camera );
+    PlayerShip( std::string fileName, GLCameraNode *camera );
 
     void action( SHIP_ACTIONS action );
 
-    void update( int deltaNSec );
+    void update();
 
 protected:
     GLNode *mShipModel;
     GLCameraNode *mCamera;
 
-    glm::vec3 delta, movement, rotation;
+    glm::vec3 mCurAcceleration;
 };
 
 #endif // PLAYERSHIP_H

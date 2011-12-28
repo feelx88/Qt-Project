@@ -4,8 +4,6 @@
 
 #include <QKeyEvent>
 
-#include "../core/Clock.h"
-
 #include "../game/Game.h"
 #include "../scene/Node.h"
 
@@ -55,15 +53,13 @@ void GLRenderer::resizeGL(int w, int h)
 
 void GLRenderer::paintGL()
 {
-    int nSec = Clock::getTime();
-
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glLoadIdentity();
 
     mGame->run();
 
-    sRootNode->update( Clock::getTime() - nSec );
+    sRootNode->update();
 }
 
 /* Nice effect :D, at setinterval(10)

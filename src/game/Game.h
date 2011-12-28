@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "PlayerShip.h"
+#include "../core/Clock.h"
 
 class QKeyEvent;
 class QSettings;
@@ -31,7 +32,11 @@ protected:
     Level *mActiveLevel;
     PlayerShip *mActiveShip;
 
-    int mDeltaMSec;
+    int mNextFrame;
+
+    const int mFrameRate; //frames per sec
+    const int mMaxFrameSkip; //maximum frames to be skipped on slow down
+    const int mFrameLength;
 };
 
 #endif // GAME_H

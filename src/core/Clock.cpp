@@ -2,7 +2,7 @@
 
 #include <ctime>
 
-int Clock::ticksPerSecond = CLOCKS_PER_SEC;
+const int Clock::ticksPerSecond = CLOCKS_PER_SEC;
 
 int Clock::getTime()
 {

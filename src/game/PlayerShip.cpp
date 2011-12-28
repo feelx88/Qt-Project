@@ -7,10 +7,10 @@
 #include "../scene/GLCameraNode.h"
 #include "../scene/BMDImport.h"
 
-PlayerShip::PlayerShip( Node *parent, std::string fileName, GLCameraNode *camera )
-    : Node( parent ), mCamera( camera ), delta( glm::vec3( 0, 0, -0.5 ) )
+PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
+    : mCamera( camera ), mCurAcceleration( glm::vec3( 0, 0, -0.5 ) )
 {
-    mShipModel = new GLNode( this );
+    mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
 
     mShipModel->setPosition( glm::vec3( 0, 10, 0 ) );
@@ -23,6 +23,8 @@ PlayerShip::PlayerShip( Node *parent, std::string fileName, GLCameraNode *camera
 
 void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
 {
+    const float timeFactor = 1.f / 25.f;
+
     switch( action )
     {
     case ACTION_MOVE_FASTER:
@@ -30,16 +32,16 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
     case ACTION_MOVE_SLOWER:
         break;
     case ACTION_MOVE_UP:
-        delta += glm::vec3( 0, 1, 0 );
+        mCurAcceleration += glm::vec3( 0, 2 * timeFactor, 0 );
         break;
     case ACTION_MOVE_DOWN:
-        delta -= glm::vec3( 0, 1, 0 );
+        mCurAcceleration -= glm::vec3( 0, 2 * timeFactor, 0 );
         break;
     case ACTION_MOVE_LEFT:
-        delta -= glm::vec3( 1, 0, 0 );
+        mCurAcceleration -= glm::vec3( 2 * timeFactor, 0, 0 );
         break;
     case ACTION_MOVE_RIGHT:
-        delta += glm::vec3( 1, 0, 0 );
+        mCurAcceleration += glm::vec3( 2 * timeFactor, 0, 0 );
         break;
     case ACTION_FIRE_PRIMARY:
         break;
@@ -47,30 +49,40 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
         break;
     }
 
-    delta = glm::clamp( delta, glm::vec3( -1 ), glm::vec3( 1 ) );
+    mCurAcceleration = glm::clamp( mCurAcceleration, glm::vec3( -10 * timeFactor ),
+                             glm::vec3( 10 * timeFactor ) );
 }
 
-void PlayerShip::update( int deltaNSec )
+void PlayerShip::update()
 {
-    Node::update( deltaNSec );
+    const float timeFactor = 1.f / 25.f;
 
     glm::vec3 position = mShipModel->getPosition();
 
-    float frameFactor = (float)deltaNSec / (float)Clock::ticksPerSecond;
+    mCurAcceleration += glm::vec3( 0, 0, -1 * timeFactor );
 
-    movement += ( delta * 0.5f ) * frameFactor;
+    position += mCurAcceleration;
 
-    movement = glm::clamp( movement, glm::vec3( -2.f * frameFactor ), glm::vec3( 2.f * frameFactor ) );
+    glm::quat rotation;
+    rotation = glm::gtc::quaternion::rotate( rotation,
+                                             mCurAcceleration.x * -60,
+                                             glm::vec3( 0, 0, 1 ) );
+    rotation = glm::gtc::quaternion::rotate( rotation,
+                                             mCurAcceleration.x * -30,
+                                             glm::vec3( 0, 1, 0 ) );
+    rotation = glm::gtc::quaternion::rotate( rotation,
+                                             mCurAcceleration.y * 40,
+                                             glm::vec3( 1, 0, 0 ) );
 
-    position += movement;
-
+    //----------------------
     if( position.z < -200 )
-        position.z = 20;
+        position.z = 0;
+    //----------------------
 
     mShipModel->setPosition( position );
+    mShipModel->setRotation( rotation );
 
-    movement *= 0.99f;
-    delta = glm::vec3( 0, 0, -0.5 );
+    mCurAcceleration -= mCurAcceleration * 0.1f;
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 2, 10 ) );

@@ -18,9 +18,9 @@ GLNode::~GLNode()
 void GLNode::init()
 {}
 
-void GLNode::update( int deltaNSec )
+void GLNode::update()
 {
-    Node::update( deltaNSec );
+    Node::update();
 
     glPushMatrix();
 
