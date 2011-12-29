@@ -11,7 +11,10 @@
 #include "Weapon.h"
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
-    : mCamera( camera ), mCurAcceleration( glm::vec3( 0, 0, -0.5 ) )
+    : mCamera( camera ), mCurAcceleration( glm::vec3() ),
+      mSideAcceleration( 2.f ), mSideMinMaxSpeed( 10.f ),
+      mForwardAcceleration( 1.f ), mForwardMinSpeed( -15.f ),
+      mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 20.f, -10.f, -30.f ) )
 {
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
@@ -32,23 +35,28 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
 {
     const float timeFactor = Game::frameRateMultiplicator;
 
+    const float xyAcc = mSideAcceleration * timeFactor;
+    const float zAcc = mForwardAcceleration * timeFactor;
+
     switch( action )
     {
     case ACTION_MOVE_FASTER:
+        mCurAcceleration -= glm::vec3( 0, 0, zAcc );
         break;
     case ACTION_MOVE_SLOWER:
+        mCurAcceleration += glm::vec3( 0, 0,  zAcc );
         break;
     case ACTION_MOVE_UP:
-        mCurAcceleration += glm::vec3( 0, 2 * timeFactor, 0 );
+        mCurAcceleration += glm::vec3( 0, xyAcc, 0 );
         break;
     case ACTION_MOVE_DOWN:
-        mCurAcceleration -= glm::vec3( 0, 2 * timeFactor, 0 );
+        mCurAcceleration -= glm::vec3( 0, xyAcc, 0 );
         break;
     case ACTION_MOVE_LEFT:
-        mCurAcceleration -= glm::vec3( 2 * timeFactor, 0, 0 );
+        mCurAcceleration -= glm::vec3( xyAcc, 0, 0 );
         break;
     case ACTION_MOVE_RIGHT:
-        mCurAcceleration += glm::vec3( 2 * timeFactor, 0, 0 );
+        mCurAcceleration += glm::vec3( xyAcc, 0, 0 );
         break;
     case ACTION_FIRE_PRIMARY:
         break;
@@ -56,32 +64,35 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
         break;
     }
 
-    mCurAcceleration = glm::clamp( mCurAcceleration, glm::vec3( -10 * timeFactor ),
-                             glm::vec3( 10 * timeFactor ) );
+
 }
 
 void PlayerShip::update()
 {
     const float timeFactor = Game::frameRateMultiplicator;
+    const float angleFraction = (float)Game::frameRate / mSideMinMaxSpeed;
+
+    const float xyMinMax = mSideMinMaxSpeed * timeFactor;
+    const float zMin = mForwardMinSpeed * timeFactor;
+    const float zMax = mForwardMaxSpeed * timeFactor;
+
+    mCurAcceleration = glm::clamp( mCurAcceleration,
+                                   glm::vec3( -xyMinMax, -xyMinMax, zMin ),
+                                   glm::vec3( +xyMinMax, +xyMinMax, zMax ) );
 
     glm::vec3 position = mShipModel->getPosition();
-
-    mCurAcceleration += glm::vec3( 0, 0, -1 * timeFactor );
 
     position += mCurAcceleration;
 
     glm::quat rotation;
-    rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.y * 20.f *
-                                             Game::frameRate / 10.f,
+    rotation = glm::gtc::quaternion::rotate( rotation, mCurAcceleration.y *
+                                             mShipTiltAngle.x * angleFraction,
                                              glm::vec3( 1, 0, 0 ) );
-    rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.x * -10.f *
-                                             Game::frameRate / 10.f,
+    rotation = glm::gtc::quaternion::rotate( rotation, mCurAcceleration.x *
+                                             mShipTiltAngle.y * angleFraction,
                                              glm::vec3( 0, 1, 0 ) );
-    rotation = glm::gtc::quaternion::rotate( rotation,
-                                             mCurAcceleration.x * -30.f *
-                                             Game::frameRate / 10.f,
+    rotation = glm::gtc::quaternion::rotate( rotation, mCurAcceleration.x *
+                                             mShipTiltAngle.z * angleFraction,
                                              glm::vec3( 0, 0, 1 ) );
 
     //Only for testing
@@ -93,7 +104,11 @@ void PlayerShip::update()
     mShipModel->setPosition( position );
     mShipModel->setRotation( rotation );
 
+    float oldz = mCurAcceleration.z;
+
     mCurAcceleration -= mCurAcceleration * timeFactor * 10.f;
+
+    mCurAcceleration.z = oldz;
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 2, 10 ) );

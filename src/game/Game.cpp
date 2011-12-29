@@ -42,6 +42,10 @@ void Game::init()
             settings.value( "ActionMoveLeft", Qt::Key_Left ).toInt();
     mActionMap[PlayerShip::ACTION_MOVE_RIGHT] =
             settings.value( "ActionMoveRight", Qt::Key_Right ).toInt();
+    mActionMap[PlayerShip::ACTION_MOVE_FASTER] =
+            settings.value( "ActionMoveRight", Qt::Key_W ).toInt();
+    mActionMap[PlayerShip::ACTION_MOVE_SLOWER] =
+            settings.value( "ActionMoveRight", Qt::Key_S ).toInt();
 
     mCamera = new GLCameraNode( GLRenderer::getRootNode(),
                                 glm::vec3( 0, 20, 10 ), glm::quat() );

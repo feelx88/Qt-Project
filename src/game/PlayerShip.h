@@ -39,6 +39,11 @@ protected:
 
     Weapon *mPrimaryWeapon, *mSecondaryWeapon;
 
+    float mSideAcceleration, mSideMinMaxSpeed;
+    float mForwardAcceleration, mForwardMinSpeed, mForwardMaxSpeed;
+
+    glm::vec3 mShipTiltAngle;
+
     glm::vec3 mCurAcceleration;
 };
 
