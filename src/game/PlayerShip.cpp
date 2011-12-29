@@ -59,8 +59,12 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
         mCurAcceleration += glm::vec3( xyAcc, 0, 0 );
         break;
     case ACTION_FIRE_PRIMARY:
+        if( mPrimaryWeapon )
+            mPrimaryWeapon->shoot();
         break;
     case ACTION_FIRE_SECONDARY:
+        if( mSecondaryWeapon )
+            mSecondaryWeapon->shoot();
         break;
     }
 
