@@ -16,6 +16,12 @@ GLRenderer::GLRenderer(QWidget *parent)
     setAutoBufferSwap( true );
 }
 
+GLRenderer::~GLRenderer()
+{
+    delete mGame;
+    delete sRootNode;
+}
+
 void GLRenderer::keyPressEvent( QKeyEvent *evt )
 {
     mGame->processKeyEvents( evt, true );

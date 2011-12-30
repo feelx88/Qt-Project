@@ -30,6 +30,14 @@ Game::Game()
     }
 }
 
+Game::~Game()
+{
+    delete mActiveLevel;
+    delete mActiveShip;
+
+    delete mCamera;
+}
+
 void Game::init()
 {
     QSettings settings( "raw/config.ini", QSettings::IniFormat );
@@ -43,16 +51,20 @@ void Game::init()
     mActionMap[PlayerShip::ACTION_MOVE_RIGHT] =
             settings.value( "ActionMoveRight", Qt::Key_Right ).toInt();
     mActionMap[PlayerShip::ACTION_MOVE_FASTER] =
-            settings.value( "ActionMoveRight", Qt::Key_W ).toInt();
+            settings.value( "ActionMoveFaster", Qt::Key_W ).toInt();
     mActionMap[PlayerShip::ACTION_MOVE_SLOWER] =
-            settings.value( "ActionMoveRight", Qt::Key_S ).toInt();
+            settings.value( "ActionMoveSlower", Qt::Key_S ).toInt();
+    mActionMap[PlayerShip::ACTION_FIRE_PRIMARY] =
+            settings.value( "ActionFirePrimary", Qt::Key_Q ).toInt();
+    mActionMap[PlayerShip::ACTION_FIRE_SECONDARY] =
+            settings.value( "ActionFireSecondary", Qt::Key_E ).toInt();
 
     mCamera = new GLCameraNode( GLRenderer::getRootNode(),
                                 glm::vec3( 0, 20, 10 ), glm::quat() );
 
-    mActiveLevel = new Level( "raw/testlevel.bmd" );
-
     mActiveShip = new PlayerShip( "raw/ship1.bmd", mCamera );
+
+    mActiveLevel = new Level( "raw/testlevel.bmd" );
 
     mNextFrame = Clock::getTime();
 }
@@ -61,7 +73,7 @@ void Game::run()
 {
     int framesSkipped = 0;
 
-    if( Clock::getTime() > mNextFrame && framesSkipped < maxFrameSkip )
+    while( Clock::getTime() > mNextFrame && framesSkipped < maxFrameSkip )
     {
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {

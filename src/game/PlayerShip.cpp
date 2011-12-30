@@ -19,16 +19,24 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
 
-    mShipModel->setPosition( glm::vec3( 0, 10, 0 ) );
+    mShipModel->setPosition( glm::vec3( 0, 10, 50 ) );
 
     glm::vec3 position = mShipModel->getPosition();
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 10, 10 ) );
 
-    //Not yet working
-    //mPrimaryWeapon = new Weapon( 10, "raw/rayOne.bmd" );
-    //mSecondaryWeapon = new Weapon( 10, "raw/rayTwo.bmd" );
+    mPrimaryWeapon = new Weapon( mShipModel, 250, 20.f, 30,
+                                 "raw/primaryWeaponRay1.bmd" );
+    mSecondaryWeapon = new Weapon( mShipModel, 2000, 10.f, 2,
+                                   "raw/secondaryWeaponBomb1.bmd" );
+}
+
+PlayerShip::~PlayerShip()
+{
+    delete mShipModel;
+    delete mPrimaryWeapon;
+    delete mSecondaryWeapon;
 }
 
 void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
@@ -102,7 +110,7 @@ void PlayerShip::update()
     //Only for testing
     //----------------------
     if( position.z < -200 )
-        position.z = 0;
+        position.z = 50;
     //----------------------
 
     mShipModel->setPosition( position );
@@ -116,4 +124,9 @@ void PlayerShip::update()
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 2, 10 ) );
+
+    if( mPrimaryWeapon )
+        mPrimaryWeapon->update();
+    if( mSecondaryWeapon )
+        mSecondaryWeapon->update();
 }

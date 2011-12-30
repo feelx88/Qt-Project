@@ -10,6 +10,11 @@ Level::Level( std::string fileName )
     BMDImport::loadFromFile( mLevelModel, fileName );
 }
 
+Level::~Level()
+{
+    delete mLevelModel;
+}
+
 void Level::update()
 {
 }

@@ -9,6 +9,7 @@ class Level
 {
 public:
     Level( std::string fileName );
+    ~Level();
 
     void update();
 

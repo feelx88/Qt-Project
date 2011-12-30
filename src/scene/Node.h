@@ -55,6 +55,12 @@ public:
         return mRotation;
     }
 
+    void move( glm::vec3 delta )
+    {
+        delta = glm::gtx::vector_angle::rotate( mRotation, delta );
+        setPosition( getPosition() + delta );
+    }
+
     void addChild( Node *child )
     {
         mChildren.push_back( child );

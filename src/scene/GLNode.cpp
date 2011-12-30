@@ -6,13 +6,14 @@
 
 GLNode::~GLNode()
 {
-    mFaceCount = 0;
-    mTextureCount = 0;
     delete[] mVertices;
     delete[] mNormals;
     delete[] mUVs;
     delete[] mTextureFileNames;
+    for( int x = 0; x < mTextureCount; x++ )
+        delete mTextures[x];
     delete[] mTextures;
+    delete[] mTextureHandles;
 }
 
 void GLNode::init()

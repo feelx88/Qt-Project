@@ -29,6 +29,8 @@ public:
 
     PlayerShip( std::string fileName, GLCameraNode *camera );
 
+    ~PlayerShip();
+
     void action( SHIP_ACTIONS action );
 
     void update();

@@ -16,6 +16,8 @@ public:
     //Default Qt contructor
     explicit GLRenderer(QWidget *parent = 0);
 
+    ~GLRenderer();
+
     static Node* getRootNode()
     {
         return sRootNode;

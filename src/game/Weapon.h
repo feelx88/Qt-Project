@@ -2,14 +2,17 @@
 #define WEAPON_H
 
 #include <string>
+#include <deque>
 
 class GLNode;
 
 class Weapon
 {
 public:
-    Weapon( GLNode *shipNode, int coolDownTime, int bulletCount,
-            std::string bulletModelFileName );
+    Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
+            int bulletCount, std::string bulletModelFileName );
+
+    ~Weapon();
 
     void shoot();
 
@@ -20,13 +23,16 @@ public:
             mAmmoLevel += amount;
     }
 
+    void update();
+
 protected:
-    int mBulletCount;
-    GLNode *mShipNode, **mBullets;
+    int mBulletCount, mCurBullet;
+    GLNode *mShipNode;
+    std::deque<GLNode*> mBullets;
 
-    int mCoolDownTime, mCoolDownLevel;
+    int mCoolDownTime, mAmmoLevel;
 
-    int mAmmoLevel;
+    float mCoolDownLevel, mBulletSpeed;
 };
 
 #endif // WEAPON_H
