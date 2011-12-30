@@ -9,16 +9,26 @@
 class Node
 {
 public:
+    enum CollisionShape
+    {
+        COLLISION_DISABLED = 0,
+        COLLSISION_SPHERE,
+        COLLISION_BOX
+    };
+
     Node( Node* parent )
-        : mPosition( glm::vec3() ), mRotation( glm::quat() ), mParent( parent ),
-          mVisible( true )
+        : mPosition( glm::vec3() ), mScale( glm::vec3( 1.f ) ),
+          mRotation( glm::quat() ), mParent( parent ), mVisible( true ),
+          mCollisionShape( COLLISION_DISABLED )
     {
         if( parent )
             parent->addChild( this );
     }
 
-    Node( Node* parent, const glm::vec3& position, const glm::quat& rotation )
-        : mPosition( position ), mRotation( rotation ), mVisible( true )
+    Node( Node* parent, const glm::vec3& position, const glm::quat& rotation,
+          const glm::vec3 scale = glm::vec3( 1.f ) )
+        : mPosition( position ), mScale( scale ), mRotation( rotation ),
+          mVisible( true )
     {
         if( parent )
             parent->addChild( this );
@@ -40,6 +50,11 @@ public:
         mPosition = position;
     }
 
+    void setScale( const glm::vec3& scale )
+    {
+        mScale = scale;
+    }
+
     void setRotation( const glm::quat& rotation )
     {
         mRotation = rotation;
@@ -48,6 +63,11 @@ public:
     const glm::vec3& getPosition() const
     {
         return mPosition;
+    }
+
+    const glm::vec3& getScale() const
+    {
+        return mScale;
     }
 
     const glm::quat& getRotation() const
@@ -81,12 +101,26 @@ public:
         mVisible = visible;
     }
 
+    void setCollisionShape( const CollisionShape &shape )
+    {
+        mCollisionShape = shape;
+    }
+
+    const CollisionShape& getCollisionShape()
+    {
+        return mCollisionShape;
+    }
+
+    bool collidesWith( Node *other );
+
 protected:
-    glm::vec3 mPosition;
+    glm::vec3 mPosition, mScale;
     glm::quat mRotation;
 
     Node *mParent;
     std::deque<Node*> mChildren;
+
+    CollisionShape mCollisionShape;
 
     bool mVisible;
 };

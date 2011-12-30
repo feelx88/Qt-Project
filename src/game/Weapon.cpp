@@ -8,7 +8,7 @@
 Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
                 int bulletCount, std::string bulletModelFileName )
     : mBulletCount( bulletCount ), mCurBullet( 0 ), mShipNode( shipNode ),
-      mCoolDownTime( coolDownTime ), mAmmoLevel( -1 ),
+      mCoolDownTime( coolDownTime ), mAmmoLevel( -1 ), mOldAmmoLevel( 0 ),
       mCoolDownLevel( coolDownTime ), mBulletSpeed( bulletSpeed )
 {
     for( int x = 0; x < mBulletCount; x++ )

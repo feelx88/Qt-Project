@@ -15,13 +15,14 @@ SOURCES += src/main.cpp \
     src/ui/MainWindow.cpp \
     src/ui/GLRenderer.cpp \
     src/scene/BMDImport.cpp \
+    src/scene/Node.cpp \
     src/scene/GLNode.cpp \
     src/scene/GLCameraNode.cpp \
     src/game/Game.cpp \
     src/game/Level.cpp \
     src/game/PlayerShip.cpp \
     src/core/Clock.cpp \
-    src/game/Weapon.cpp
+    src/game/Weapon.cpp \
 
 HEADERS  += src/ui/MainWindow.h \
     src/ui/GLRenderer.h \

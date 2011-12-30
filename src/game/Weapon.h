@@ -23,6 +23,12 @@ public:
             mAmmoLevel += amount;
     }
 
+    void setInfiniteAmmo( bool on )
+    {
+        mOldAmmoLevel = mAmmoLevel;
+        mAmmoLevel = on ? mAmmoLevel = -1 : mAmmoLevel = mOldAmmoLevel;
+    }
+
     void update();
 
 protected:
@@ -30,7 +36,7 @@ protected:
     GLNode *mShipNode;
     std::deque<GLNode*> mBullets;
 
-    int mCoolDownTime, mAmmoLevel;
+    int mCoolDownTime, mAmmoLevel, mOldAmmoLevel;
 
     float mCoolDownLevel, mBulletSpeed;
 };

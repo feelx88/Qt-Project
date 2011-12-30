@@ -33,6 +33,8 @@ void GLNode::update()
     glm::vec3 axis = glm::gtx::quaternion::axis( mRotation );
     glRotatef( angle, axis.x, axis.y, axis.z );
 
+    glScalef( mScale.x, mScale.y, mScale.z );
+
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_NORMAL_ARRAY );
 

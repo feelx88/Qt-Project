@@ -50,7 +50,7 @@ void GLRenderer::resizeGL(int w, int h)
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
 
-    gluPerspective( 45.f, (float)w / (float)h, 0.1f, 500.f );
+    gluPerspective( 45.f, (float)w / (float)h, 1.f, 500.f );
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();

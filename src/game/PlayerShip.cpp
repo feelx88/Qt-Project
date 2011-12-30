@@ -14,7 +14,7 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( glm::vec3() ),
       mSideAcceleration( 2.f ), mSideMinMaxSpeed( 10.f ),
       mForwardAcceleration( 1.f ), mForwardMinSpeed( -15.f ),
-      mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 20.f, -10.f, -30.f ) )
+      mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) )
 {
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
@@ -26,10 +26,13 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 10, 10 ) );
 
-    mPrimaryWeapon = new Weapon( mShipModel, 250, 20.f, 30,
+    mPrimaryWeapon = new Weapon( mShipModel, 150, 20.f, 30,
                                  "raw/primaryWeaponRay1.bmd" );
     mSecondaryWeapon = new Weapon( mShipModel, 2000, 10.f, 2,
                                    "raw/secondaryWeaponBomb1.bmd" );
+
+    mSecondaryWeapon->setInfiniteAmmo( false );
+    mSecondaryWeapon->incrementAmmo( 1 );
 }
 
 PlayerShip::~PlayerShip()
