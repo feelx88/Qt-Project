@@ -33,6 +33,12 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     mSecondaryWeapon->setInfiniteAmmo( false );
     mSecondaryWeapon->incrementAmmo( 1 );
+
+    mCrosshairFront = new GLNode( GLRenderer::getRootNode() );
+    mCrosshairBack = new GLNode( GLRenderer::getRootNode() );
+
+    BMDImport::loadFromFile( mCrosshairFront, "raw/crosshair.bmd" );
+    BMDImport::loadFromFile( mCrosshairBack, "raw/crosshair.bmd" );
 }
 
 PlayerShip::~PlayerShip()
@@ -40,6 +46,8 @@ PlayerShip::~PlayerShip()
     delete mShipModel;
     delete mPrimaryWeapon;
     delete mSecondaryWeapon;
+    delete mCrosshairFront;
+    delete mCrosshairBack;
 }
 
 void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
@@ -132,4 +140,12 @@ void PlayerShip::update()
         mPrimaryWeapon->update();
     if( mSecondaryWeapon )
         mSecondaryWeapon->update();
+
+    mCrosshairFront->setPosition( mShipModel->getPosition() );
+    mCrosshairFront->setRotation( mShipModel->getRotation() );
+    mCrosshairFront->move( glm::vec3( 0, 0, -20 ) );
+
+    mCrosshairBack->setPosition( mShipModel->getPosition() );
+    mCrosshairBack->setRotation( mShipModel->getRotation() );
+    mCrosshairBack->move( glm::vec3( 0, 0, -50 ) );
 }

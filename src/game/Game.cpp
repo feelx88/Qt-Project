@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-const int Game::frameRate = 30;
+const int Game::frameRate = 60;
 const int Game::maxFrameSkip = 5;
 const int Game::frameLength = Clock::ticksPerSecond / Game::frameRate;
 const float Game::frameRateMultiplicator = 1.f / (float)Game::frameRate;

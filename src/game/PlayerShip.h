@@ -41,6 +41,8 @@ protected:
 
     Weapon *mPrimaryWeapon, *mSecondaryWeapon;
 
+    GLNode *mCrosshairFront, *mCrosshairBack;
+
     float mSideAcceleration, mSideMinMaxSpeed;
     float mForwardAcceleration, mForwardMinSpeed, mForwardMaxSpeed;
 

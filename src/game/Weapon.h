@@ -26,7 +26,7 @@ public:
     void setInfiniteAmmo( bool on )
     {
         mOldAmmoLevel = mAmmoLevel;
-        mAmmoLevel = on ? mAmmoLevel = -1 : mAmmoLevel = mOldAmmoLevel;
+        mAmmoLevel = on ? -1 : mOldAmmoLevel;
     }
 
     void update();
