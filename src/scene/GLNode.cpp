@@ -1,5 +1,6 @@
 #include "GLNode.h"
 #include <QtOpenGL>
+#include <GL/glext.h>
 #include <GL/glu.h>
 
 #include "../ui/GLRenderer.h"

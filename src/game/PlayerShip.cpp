@@ -12,7 +12,7 @@
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( glm::vec3() ),
-      mSideAcceleration( 2.f ), mSideMinMaxSpeed( 10.f ),
+      mSideAcceleration( 1.f ), mSideMinMaxSpeed( 10.f ),
       mForwardAcceleration( 1.f ), mForwardMinSpeed( -15.f ),
       mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) )
 {
@@ -129,7 +129,7 @@ void PlayerShip::update()
 
     float oldz = mCurAcceleration.z;
 
-    mCurAcceleration -= mCurAcceleration * timeFactor * 10.f;
+    mCurAcceleration -= mCurAcceleration * timeFactor;// * 10.f;
 
     mCurAcceleration.z = oldz;
 

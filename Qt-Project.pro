@@ -47,7 +47,12 @@ OTHER_FILES += \
     raw/vader_tie_fighter.blend \
     raw/tie_fighter.blend
 
+unix {
 LIBS += -lGLU
+}
+win32 {
+LIBS += -lglu32
+}
 
 
 
