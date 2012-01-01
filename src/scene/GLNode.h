@@ -10,11 +10,11 @@ class GLNode : public Node
 {
 public:
     GLNode( Node* parent )
-        : Node( parent )
+        : Node( parent ), mZPass( false )
     {}
 
     GLNode( Node* parent, const glm::vec3& position, const glm::quat& rotation )
-        : Node( parent, position, rotation )
+        : Node( parent, position, rotation ), mZPass( false )
     {}
 
     virtual ~GLNode();
@@ -27,6 +27,11 @@ public:
                   float *vertices, float *normals, float *uvs,
                   std::string *textureFileNames );
 
+    void setAlwasDrawToFront( bool on )
+    {
+        mZPass = on;
+    }
+
 protected:
     unsigned int mFaceCount, mTextureCount, *mTextureHandles;
     float *mVertices;
@@ -34,6 +39,8 @@ protected:
     float *mUVs;
     std::string *mTextureFileNames;
     QImage **mTextures;
+
+    bool mZPass;
 };
 
 #endif // GLNODE_H

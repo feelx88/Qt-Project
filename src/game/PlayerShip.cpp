@@ -39,6 +39,9 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     BMDImport::loadFromFile( mCrosshairFront, "raw/crosshair.bmd" );
     BMDImport::loadFromFile( mCrosshairBack, "raw/crosshair.bmd" );
+
+    mCrosshairFront->setAlwasDrawToFront( true );
+    mCrosshairBack->setAlwasDrawToFront( true );
 }
 
 PlayerShip::~PlayerShip()

@@ -29,6 +29,9 @@ void GLNode::update()
 
     glPushMatrix();
 
+    if( mZPass )
+        glDepthFunc( GL_ALWAYS );
+
     glTranslatef( mPosition.x, mPosition.y, mPosition.z );
     float angle = glm::gtx::quaternion::angle( mRotation );
     glm::vec3 axis = glm::gtx::quaternion::axis( mRotation );
@@ -62,6 +65,8 @@ void GLNode::update()
         glDisableClientState( GL_TEXTURE_COORD_ARRAY );
         glDisable( GL_TEXTURE_2D );
     }
+
+    glDepthFunc( GL_LESS );
 
     glPopMatrix();
 }
