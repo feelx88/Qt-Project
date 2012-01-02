@@ -32,7 +32,7 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
                                    "raw/secondaryWeaponBomb1.bmd" );
 
     mSecondaryWeapon->setInfiniteAmmo( false );
-    mSecondaryWeapon->incrementAmmo( 1 );
+    mSecondaryWeapon->incrementAmmo();
 
     mCrosshairFront = new GLNode( GLRenderer::getRootNode() );
     mCrosshairBack = new GLNode( GLRenderer::getRootNode() );

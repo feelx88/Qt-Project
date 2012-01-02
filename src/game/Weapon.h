@@ -18,15 +18,12 @@ public:
 
     void incrementAmmo( int amount = 1 )
     {
-        //AmmoLevel = -1 => infinite ammo
-        if( mAmmoLevel > 0 )
-            mAmmoLevel += amount;
+        mAmmoLevel += amount;
     }
 
     void setInfiniteAmmo( bool on )
     {
-        mOldAmmoLevel = mAmmoLevel;
-        mAmmoLevel = on ? -1 : mOldAmmoLevel;
+        mInfiniteAmmo = on;
     }
 
     void update();
@@ -36,7 +33,8 @@ protected:
     GLNode *mShipNode;
     std::deque<GLNode*> mBullets;
 
-    int mCoolDownTime, mAmmoLevel, mOldAmmoLevel;
+    int mCoolDownTime, mAmmoLevel;
+    bool mInfiniteAmmo;
 
     float mCoolDownLevel, mBulletSpeed;
 };
