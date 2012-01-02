@@ -9,7 +9,7 @@ class Level
 {
 public:
     Level( std::string fileName );
-    ~Level();
+    virtual ~Level();
 
     void update();
 

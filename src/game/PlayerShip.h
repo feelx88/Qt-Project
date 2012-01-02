@@ -29,7 +29,7 @@ public:
 
     PlayerShip( std::string fileName, GLCameraNode *camera );
 
-    ~PlayerShip();
+    virtual ~PlayerShip();
 
     void action( SHIP_ACTIONS action );
 

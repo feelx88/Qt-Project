@@ -6,6 +6,7 @@
 #include "../scene/GLNode.h"
 #include "../scene/GLCameraNode.h"
 #include "../scene/BMDImport.h"
+#include "../scene/CollisionShape.h"
 
 #include "Game.h"
 #include "Weapon.h"

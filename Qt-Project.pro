@@ -23,6 +23,7 @@ SOURCES += src/main.cpp \
     src/game/PlayerShip.cpp \
     src/core/Clock.cpp \
     src/game/Weapon.cpp \
+    src/scene/CollisionShape.cpp
 
 HEADERS  += src/ui/MainWindow.h \
     src/ui/GLRenderer.h \
@@ -35,7 +36,8 @@ HEADERS  += src/ui/MainWindow.h \
     src/game/Level.h \
     src/game/PlayerShip.h \
     src/core/Clock.h \
-    src/game/Weapon.h
+    src/game/Weapon.h \
+    src/scene/CollisionShape.h
 
 FORMS    += src/ui/MainWindow.ui
 

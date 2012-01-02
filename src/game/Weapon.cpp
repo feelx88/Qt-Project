@@ -3,6 +3,7 @@
 #include "../ui/GLRenderer.h"
 #include "../scene/GLNode.h"
 #include "../scene/BMDImport.h"
+#include "../scene/CollisionShape.h"
 #include "../game/Game.h"
 
 Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
@@ -16,6 +17,10 @@ Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
         GLNode *bullet = new GLNode( GLRenderer::getRootNode() );
         BMDImport::loadFromFile( bullet, bulletModelFileName );
         bullet->hide();
+
+        bullet->setCollisionShape(
+                    CollisionShape::newSpehereShape( bullet, 0.5f ) );
+
         mBullets.push_back( bullet );
     }
 }
@@ -23,7 +28,10 @@ Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
 Weapon::~Weapon()
 {
     for( int x = 0; x < mBulletCount; x++ )
+    {
+        delete mBullets[x]->getCollisionShape();
         delete mBullets[x];
+    }
 }
 
 void Weapon::shoot()

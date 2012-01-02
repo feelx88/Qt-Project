@@ -12,7 +12,7 @@ public:
     Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
             int bulletCount, std::string bulletModelFileName );
 
-    ~Weapon();
+    virtual ~Weapon();
 
     void shoot();
 

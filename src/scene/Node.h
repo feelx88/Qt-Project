@@ -6,20 +6,15 @@
 
 #include <deque>
 
+class CollisionShape;
+
 class Node
 {
 public:
-    enum CollisionShape
-    {
-        COLLISION_DISABLED = 0,
-        COLLSISION_SPHERE,
-        COLLISION_BOX
-    };
-
     Node( Node* parent )
         : mPosition( glm::vec3() ), mScale( glm::vec3( 1.f ) ),
           mRotation( glm::quat() ), mParent( parent ), mVisible( true ),
-          mCollisionShape( COLLISION_DISABLED )
+          mCollisionShape( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -28,7 +23,7 @@ public:
     Node( Node* parent, const glm::vec3& position, const glm::quat& rotation,
           const glm::vec3 scale = glm::vec3( 1.f ) )
         : mPosition( position ), mScale( scale ), mRotation( rotation ),
-          mVisible( true )
+          mVisible( true ), mCollisionShape( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -101,12 +96,12 @@ public:
         mVisible = visible;
     }
 
-    void setCollisionShape( const CollisionShape &shape )
+    void setCollisionShape( CollisionShape *shape )
     {
         mCollisionShape = shape;
     }
 
-    const CollisionShape& getCollisionShape()
+    const CollisionShape *getCollisionShape()
     {
         return mCollisionShape;
     }
@@ -120,7 +115,7 @@ protected:
     Node *mParent;
     std::deque<Node*> mChildren;
 
-    CollisionShape mCollisionShape;
+    CollisionShape *mCollisionShape;
 
     bool mVisible;
 };
