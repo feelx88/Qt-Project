@@ -14,7 +14,7 @@ public:
     Node( Node* parent )
         : mPosition( glm::vec3() ), mScale( glm::vec3( 1.f ) ),
           mRotation( glm::quat() ), mParent( parent ), mVisible( true ),
-          mCollisionShape( 0 )
+          mCollisionShape( 0 ), mTag( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -23,7 +23,7 @@ public:
     Node( Node* parent, const glm::vec3& position, const glm::quat& rotation,
           const glm::vec3 scale = glm::vec3( 1.f ) )
         : mPosition( position ), mScale( scale ), mRotation( rotation ),
-          mVisible( true ), mCollisionShape( 0 )
+          mVisible( true ), mCollisionShape( 0 ), mTag( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -108,6 +108,16 @@ public:
 
     bool collidesWith( Node *other );
 
+    void setTag( const unsigned int &tag )
+    {
+        mTag = tag;
+    }
+
+    const unsigned int &getTag()
+    {
+        return mTag;
+    }
+
 protected:
     glm::vec3 mPosition, mScale;
     glm::quat mRotation;
@@ -118,6 +128,8 @@ protected:
     CollisionShape *mCollisionShape;
 
     bool mVisible;
+
+    unsigned int mTag;
 };
 
 #endif // NODE_H

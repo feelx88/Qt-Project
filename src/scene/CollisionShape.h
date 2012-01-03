@@ -28,6 +28,16 @@ public:
 
     bool testCollision( CollisionShape *other );
 
+    void setNode( const Node *node )
+    {
+        mNode = node;
+    }
+
+    const Node *getNode()
+    {
+        return mNode;
+    }
+
     static CollisionShape *newSpehereShape( Node *node, float radius );
 
     static void findCollisionPairs();

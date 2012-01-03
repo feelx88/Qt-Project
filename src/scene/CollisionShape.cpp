@@ -4,8 +4,8 @@
 std::set<CollisionShape*> CollisionShape::sShapes;
 std::multimap<CollisionShape*, CollisionShape*> CollisionShape::sShapePairs;
 
-CollisionShape::CollisionShape( ShapeType shape, Node *node )
-    : mNode( node ), mShapeType( shape ), mSphereRadius( 0.f )
+CollisionShape::CollisionShape( ShapeType shape )
+    : mNode( 0 ), mShapeType( shape ), mSphereRadius( 0.f )
 {
     sShapes.insert( this );
 }
@@ -73,8 +73,9 @@ bool CollisionShape::testCollision( CollisionShape *other )
 
 CollisionShape *CollisionShape::newSpehereShape( Node *node, float radius )
 {
-    CollisionShape *shape = new CollisionShape( COLLISION_SPHERE, node );
+    CollisionShape *shape = new CollisionShape( COLLISION_SPHERE );
     shape->setSphereRadius( radius );
+    shape->setNode( node );
     return shape;
 }
 
