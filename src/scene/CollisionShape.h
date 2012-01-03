@@ -1,6 +1,10 @@
 #ifndef COLLISIONSHAPE_H
 #define COLLISIONSHAPE_H
 
+#include <set>
+#include <map>
+#include <vector>
+
 class Node;
 
 class CollisionShape
@@ -26,12 +30,23 @@ public:
 
     static CollisionShape *newSpehereShape( Node *node, float radius );
 
+    static void findCollisionPairs();
+
+    static bool collisionOccured( CollisionShape *shape1,
+                                  CollisionShape *shape2 );
+
+    static std::vector<CollisionShape*> shapesCollidingWith(
+            CollisionShape *shape );
+
 protected:
     Node *mNode;
 
     ShapeType mShapeType;
 
     float mSphereRadius;
+
+    static std::set<CollisionShape*> sShapes;
+    static std::multimap<CollisionShape*, CollisionShape*> sShapePairs;
 };
 
 #endif // COLLISIONSHAPE_H

@@ -8,6 +8,7 @@
 #include "../scene/GLCameraNode.h"
 #include "../scene/GLNode.h"
 #include "../scene/BMDImport.h"
+#include "../scene/CollisionShape.h"
 
 #include "Level.h"
 #include "PlayerShip.h"
@@ -88,6 +89,8 @@ void Game::run()
         mNextFrame += frameLength;
         framesSkipped++;
     }
+
+    CollisionShape::findCollisionPairs();
 }
 
 void Game::processKeyEvents( QKeyEvent *evt, bool pressed )

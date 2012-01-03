@@ -13,7 +13,7 @@
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( glm::vec3() ),
-      mSideAcceleration( 1.f ), mSideMinMaxSpeed( 10.f ),
+      mSideAcceleration( 0.5f ), mSideMinMaxSpeed( 10.f ),
       mForwardAcceleration( 1.f ), mForwardMinSpeed( -15.f ),
       mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) )
 {
@@ -33,10 +33,10 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
                                    "raw/secondaryWeaponBomb1.bmd" );
 
     mSecondaryWeapon->setInfiniteAmmo( false );
-    mSecondaryWeapon->incrementAmmo();
+    mSecondaryWeapon->incrementAmmo( 3 );
 
-    mCrosshairFront = new GLNode( GLRenderer::getRootNode() );
     mCrosshairBack = new GLNode( GLRenderer::getRootNode() );
+    mCrosshairFront = new GLNode( GLRenderer::getRootNode() );
 
     BMDImport::loadFromFile( mCrosshairFront, "raw/crosshair.bmd" );
     BMDImport::loadFromFile( mCrosshairBack, "raw/crosshair.bmd" );
@@ -67,7 +67,7 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
         mCurAcceleration -= glm::vec3( 0, 0, zAcc );
         break;
     case ACTION_MOVE_SLOWER:
-        mCurAcceleration += glm::vec3( 0, 0,  zAcc );
+        mCurAcceleration += glm::vec3( 0, 0, zAcc );
         break;
     case ACTION_MOVE_UP:
         mCurAcceleration += glm::vec3( 0, xyAcc, 0 );
@@ -138,7 +138,7 @@ void PlayerShip::update()
     mCurAcceleration.z = oldz;
 
     mCamera->setLookAt( position );
-    mCamera->setPosition( position + glm::vec3( 0, 2, 10 ) );
+    mCamera->setPosition( position + glm::vec3( 0, 0, 10 ) );
 
     if( mPrimaryWeapon )
         mPrimaryWeapon->update();
@@ -147,9 +147,9 @@ void PlayerShip::update()
 
     mCrosshairFront->setPosition( mShipModel->getPosition() );
     mCrosshairFront->setRotation( mShipModel->getRotation() );
-    mCrosshairFront->move( glm::vec3( 0, 0, -20 ) );
+    mCrosshairFront->move( glm::vec3( 0, 0, -50 ) );
 
     mCrosshairBack->setPosition( mShipModel->getPosition() );
     mCrosshairBack->setRotation( mShipModel->getRotation() );
-    mCrosshairBack->move( glm::vec3( 0, 0, -50 ) );
+    mCrosshairBack->move( glm::vec3( 0, 0, -20 ) );
 }
