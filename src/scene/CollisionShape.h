@@ -17,7 +17,7 @@ public:
         COLLISION_MESH
     };
 
-    CollisionShape( ShapeType shape, Node *node );
+    CollisionShape( ShapeType shape );
 
     virtual ~CollisionShape();
 
@@ -27,6 +27,16 @@ public:
     }
 
     bool testCollision( CollisionShape *other );
+
+    void setNode( const Node *node )
+    {
+        mNode = node;
+    }
+
+    const Node *getNode()
+    {
+        return mNode;
+    }
 
     static CollisionShape *newSpehereShape( Node *node, float radius );
 

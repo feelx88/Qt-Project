@@ -20,6 +20,8 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
 
+    mShipModel->setTag( Game::NODE_PLAYERSHIP );
+
     mShipModel->setPosition( glm::vec3( 0, 10, 50 ) );
 
     glm::vec3 position = mShipModel->getPosition();

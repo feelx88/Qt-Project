@@ -15,6 +15,14 @@ class Game
 {
 public:
 
+    enum NodeTags
+    {
+        NODE_PLAYERSHIP = 1,
+        NODE_LEVEL,
+        NODE_BULLET,
+        NODE_ENEMY
+    };
+
     Game();
     virtual ~Game();
 
