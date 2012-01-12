@@ -28,7 +28,7 @@ public:
 
     bool testCollision( CollisionShape *other );
 
-    void setNode( const Node *node )
+    void setNode( Node *node )
     {
         mNode = node;
     }
