@@ -16,6 +16,19 @@
 #     3 float: vertex normals
 #     2 float: uv coordinates
 
+bl_info = {
+    "name": "BMD Exporter",
+    "description": "Export Mesh to Binary Mesh Data.",
+    "author": "feelx88",
+    "version": (1, 0),
+    "blender": (2, 6, 0),
+    "api": 39685,
+    "location": "File > Export",
+    "warning": "", # used for warning icon and text in addons panel
+    "wiki_url": "",
+    "tracker_url": "",
+    "category": "Import-Export"}
+
 import bpy
 import struct
 
