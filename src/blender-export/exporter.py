@@ -26,7 +26,7 @@ def write_bmd(context, filepath):
     xx = 0
     yx = 2
     zx = 1
-    
+
     xm = +1
     ym = +1
     zm = -1
@@ -50,9 +50,9 @@ def write_bmd(context, filepath):
     file = open(filepath, 'w+b')
 
     #Magic number
-    file.write( struct.pack( 'cccc', 
-        bytes( 'b', 'ascii' ), 
-        bytes( 'm', 'ascii' ), 
+    file.write( struct.pack( 'cccc',
+        bytes( 'b', 'ascii' ),
+        bytes( 'm', 'ascii' ),
         bytes( 'd', 'ascii' ),
         bytes( '\0', 'ascii' ) ) )
 
@@ -76,7 +76,7 @@ def write_bmd(context, filepath):
 
     #geometry data
     for faceNum in range( 0, len( ob.data.faces ) ):
-        file.write( struct.pack( 'i', texNums[ob.data.uv_textures[0].data[faceNum].image] ) )
+        file.write( struct.pack( 'i', texNums[ob.data.uv_textures[0].data[0].image] ) )
         for x in range(0,3):
             vertex = ob.data.vertices[ob.data.faces[faceNum].vertices[x]]
             file.write( struct.pack( 'fff',
@@ -145,16 +145,16 @@ def menu_func_export(self, context):
 
 def register():
     bpy.utils.register_class(ExportBMD)
-    #bpy.types.INFO_MT_file_export.append(menu_func_export)
+    bpy.types.INFO_MT_file_export.append(menu_func_export)
 
 
 def unregister():
     try:
         bpy.utils.unregister_class(ExportBMD)
-        #bpy.types.INFO_MT_file_export.remove(menu_func_export)
+        bpy.types.INFO_MT_file_export.remove(menu_func_export)
     except:
         pass
 
 if __name__ == "__main__":
     register()
-    bpy.ops.export.bmd('INVOKE_DEFAULT')
+    #bpy.ops.export.bmd('INVOKE_DEFAULT')
