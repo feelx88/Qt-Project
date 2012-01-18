@@ -23,6 +23,8 @@ public:
 protected:
     GLNode *mEnemyShip;
     Path *mPath;
+
+    int mHitPoints;
 };
 
 #endif // ENEMY_H

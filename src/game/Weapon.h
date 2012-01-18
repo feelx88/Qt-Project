@@ -2,7 +2,7 @@
 #define WEAPON_H
 
 #include <string>
-#include <deque>
+#include <vector>
 
 class GLNode;
 
@@ -31,7 +31,7 @@ public:
 protected:
     int mBulletCount, mCurBullet;
     GLNode *mShipNode;
-    std::deque<GLNode*> mBullets;
+    std::vector<GLNode*> mBullets;
 
     int mCoolDownTime, mAmmoLevel;
     bool mInfiniteAmmo;

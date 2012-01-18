@@ -11,16 +11,16 @@ Path::~Path()
 
 glm::vec3 Path::getNextPosition()
 {
-    if( mCurPosition >= 1.f )
+    mCurPosition += 0.01f;
+
+    if( mCurPosition > 1.f )
     {
         if( mCurPathIndex < mPathNodes.size() - 4 )
-            mCurPathIndex++;
+            mCurPathIndex += 4;
         else
             mCurPathIndex = 0;
         mCurPosition = 0.f;
     }
-
-    mCurPosition += 0.001f;
 
     return calculateBezierCurvePoint( mCurPathIndex, mCurPosition );
 }
@@ -41,5 +41,5 @@ glm::vec3 Path::calculateBezierCurvePoint(int startIndex, float fraction)
     glm::vec3 part3 = ( -3.f * p0 + 3.f * p1 )
             * fraction;
 
-    return part1 + part2 + part3 +p0;
+    return part1 + part2 + part3 + p0;
 }

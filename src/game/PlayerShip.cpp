@@ -24,6 +24,8 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     mShipModel->setPosition( glm::vec3( 0, 10, 50 ) );
 
+    mShipModel->setCollisionShape( CollisionShape::newSphereShape( mShipModel, 2 ) );
+
     glm::vec3 position = mShipModel->getPosition();
 
     mCamera->setLookAt( position );
@@ -92,8 +94,6 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
             mSecondaryWeapon->shoot();
         break;
     }
-
-
 }
 
 void PlayerShip::update()
@@ -139,8 +139,8 @@ void PlayerShip::update()
 
     mCurAcceleration.z = oldz;
 
-    mCamera->setLookAt( position );
-    mCamera->setPosition( position + glm::vec3( 0, 0, 10 ) );
+    mCamera->setLookAt( position + glm::vec3( 0, 0, -10 ) );
+    mCamera->setPosition( position + glm::vec3( 0, 1, 10 ) );
 
     if( mPrimaryWeapon )
         mPrimaryWeapon->update();
@@ -149,7 +149,8 @@ void PlayerShip::update()
 
     mCrosshairFront->setPosition( mShipModel->getPosition() );
     mCrosshairFront->setRotation( mShipModel->getRotation() );
-    mCrosshairFront->move( glm::vec3( 0, 0, -50 ) );
+    mCrosshairFront->move( glm::vec3( 0, 0, -200 ) );
+    mCrosshairFront->setScale( glm::vec3( 3 ) );
 
     mCrosshairBack->setPosition( mShipModel->getPosition() );
     mCrosshairBack->setRotation( mShipModel->getRotation() );

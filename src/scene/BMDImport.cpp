@@ -26,7 +26,7 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
             cBuffer.convertFromStream<char>() == 'd' )
         cBuffer.readFromStream();
     else
-        return false;
+        throw "Error";
 
     int faceCount = iBuffer.convertFromStream<int>();
     int textureCount = iBuffer.convertFromStream<int>();

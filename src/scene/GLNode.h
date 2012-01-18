@@ -2,7 +2,10 @@
 #define GLNODE_H
 
 #include "Node.h"
+
+#include <glm/glm.hpp>
 #include <string>
+#include <vector>
 
 class QImage;
 
@@ -10,7 +13,7 @@ class GLNode : public Node
 {
 public:
     GLNode( Node* parent )
-        : Node( parent ), mZPass( false )
+        : Node( parent ), mTextureCount( 0 ), mZPass( false )
     {}
 
     GLNode( Node* parent, const glm::vec3& position, const glm::quat& rotation )
@@ -31,6 +34,8 @@ public:
     {
         mZPass = on;
     }
+
+    std::vector<glm::vec3> getVertices();
 
 protected:
     unsigned int mFaceCount, mTextureCount, *mTextureHandles;

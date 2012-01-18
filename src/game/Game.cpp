@@ -63,7 +63,8 @@ void Game::init()
     mCamera = new GLCameraNode( GLRenderer::getRootNode(),
                                 glm::vec3( 0, 20, 10 ), glm::quat() );
 
-    mActiveLevel = new Level( "raw/testlevel.bmd" );
+    mActiveLevel = new Level();
+    mActiveLevel->loadLevel( "raw/testlevel2/testlevel2.xml" );
 
     mActiveShip = new PlayerShip( "raw/ship1.bmd", mCamera );
 
@@ -76,6 +77,7 @@ void Game::run()
 
     while( Clock::getTime() > mNextFrame && framesSkipped < maxFrameSkip )
     {
+        CollisionShape::findCollisionPairs();
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {
             if( mActionTriggered[x] )
@@ -89,8 +91,6 @@ void Game::run()
         mNextFrame += frameLength;
         framesSkipped++;
     }
-
-    CollisionShape::findCollisionPairs();
 }
 
 void Game::processKeyEvents( QKeyEvent *evt, bool pressed )

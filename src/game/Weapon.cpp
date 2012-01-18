@@ -19,7 +19,7 @@ Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
         bullet->hide();
 
         bullet->setCollisionShape(
-                    CollisionShape::newSpehereShape( bullet, 0.5f ) );
+                    CollisionShape::newSphereShape( bullet, 1.f ) );
 
         bullet->setTag( Game::NODE_BULLET );
 

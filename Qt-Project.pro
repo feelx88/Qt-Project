@@ -46,12 +46,13 @@ HEADERS  += src/ui/MainWindow.h \
 FORMS    += src/ui/MainWindow.ui
 
 OTHER_FILES += \
-    src/blender-export/exporter.py \
     README \
     raw/vadertie.blend \
     raw/x-wing.blend \
     raw/vader_tie_fighter.blend \
-    raw/tie_fighter.blend
+    raw/tie_fighter.blend \
+    src/blender-export/bmd-export.py \
+    src/blender-export/level-export.py
 
 unix {
 LIBS += -lGLU

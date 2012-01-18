@@ -22,11 +22,7 @@ bl_info = {
     "author": "feelx88",
     "version": (1, 0),
     "blender": (2, 6, 0),
-    "api": 39685,
     "location": "File > Export",
-    "warning": "", # used for warning icon and text in addons panel
-    "wiki_url": "",
-    "tracker_url": "",
     "category": "Import-Export"}
 
 import bpy
@@ -48,9 +44,8 @@ def write_bmd(context, filepath):
     ob = bpy.context.selected_objects[0]
 
     #convert to triangles
-    if bpy.context.mode == 'EDIT_MESH':
+    if bpy.context.mode != 'EDIT_MESH':
         bpy.ops.object.editmode_toggle()
-    bpy.ops.object.editmode_toggle()
     bpy.ops.mesh.quads_convert_to_tris()
     bpy.ops.object.editmode_toggle()
 
@@ -116,8 +111,8 @@ from bpy.props import StringProperty, BoolProperty, EnumProperty
 
 class ExportBMD(bpy.types.Operator, ExportHelper):
     '''This appears in the tooltip of the operator and in the generated docs.'''
-    bl_idname = "export.bmd"  # this is important since its how bpy.ops.export.some_data is constructed
-    bl_label = "Export Binary Model Data (BMD)"
+    bl_idname = "export_mesh.bmd"  # this is important since its how bpy.ops.export.some_data is constructed
+    bl_label = "Export Binary Mesh Data (BMD)"
 
     # ExportHelper mixin class uses this
     filename_ext = ".bmd"

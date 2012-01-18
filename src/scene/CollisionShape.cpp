@@ -1,5 +1,6 @@
 #include "CollisionShape.h"
 #include "Node.h"
+#include <QtOpenGL>
 
 std::set<CollisionShape*> CollisionShape::sShapes;
 std::multimap<CollisionShape*, CollisionShape*> CollisionShape::sShapePairs;
@@ -13,6 +14,30 @@ CollisionShape::CollisionShape( ShapeType shape )
 CollisionShape::~CollisionShape()
 {
     sShapes.erase( this );
+}
+
+float min( const float &x, const float &y, const float &z )
+{
+    if( x <= y && x <= z )
+        return x;
+    else if( y <= x && y <= z )
+        return y;
+    else if( z <= x && z <= y )
+        return z;
+    else
+        return x;
+}
+
+float max( const float &x, const float &y, const float &z )
+{
+    if( x >= y && x >= z )
+        return x;
+    else if( y >= x && y >= z )
+        return y;
+    else if( z >= x && z >= y )
+        return z;
+    else
+        return x;
 }
 
 bool CollisionShape::testCollision( CollisionShape *other )
@@ -31,12 +56,13 @@ bool CollisionShape::testCollision( CollisionShape *other )
                 return false;
         }
 
-        if( other->mShapeType == COLLISION_BOX )
+        else if( other->mShapeType == COLLISION_BOX )
         {
         }
 
-        if( other->mShapeType == COLLISION_MESH )
+        else if( other->mShapeType == COLLISION_MESH )
         {
+            return other->testCollision( this );
         }
     }
 
@@ -46,11 +72,11 @@ bool CollisionShape::testCollision( CollisionShape *other )
         {
         }
 
-        if( other->mShapeType == COLLISION_BOX )
+        else if( other->mShapeType == COLLISION_BOX )
         {
         }
 
-        if( other->mShapeType == COLLISION_MESH )
+        else if( other->mShapeType == COLLISION_MESH )
         {
         }
     }
@@ -59,23 +85,51 @@ bool CollisionShape::testCollision( CollisionShape *other )
     {
         if( other->mShapeType == COLLISION_SPHERE )
         {
+            for( std::vector<AABB>::iterator x = mMeshAABBs.begin();
+                 x != mMeshAABBs.end(); x++ )
+            {
+                AABB aabb = *x;
+                aabb.aabbMin -= other->mSphereRadius;
+                aabb.aabbMax += other->mSphereRadius;
+
+                glm::vec3 nodePos = other->getNode()->getPosition();
+
+                if( ( nodePos.x >= aabb.aabbMin.x &&
+                      nodePos.x <= aabb.aabbMax.x ) &&
+                    ( nodePos.y >= aabb.aabbMin.y &&
+                      nodePos.y <= aabb.aabbMax.y ) &&
+                    ( nodePos.z >= aabb.aabbMin.z &&
+                      nodePos.z <= aabb.aabbMax.z ) )
+                    return true;
+            }
         }
 
-        if( other->mShapeType == COLLISION_BOX )
+        else if( other->mShapeType == COLLISION_BOX )
         {
         }
 
-        if( other->mShapeType == COLLISION_MESH )
+        else if( other->mShapeType == COLLISION_MESH )
         {
         }
     }
+    return false;
 }
 
-CollisionShape *CollisionShape::newSpehereShape( Node *node, float radius )
+CollisionShape *CollisionShape::newSphereShape( Node *node, float radius )
 {
     CollisionShape *shape = new CollisionShape( COLLISION_SPHERE );
     shape->setSphereRadius( radius );
     shape->setNode( node );
+    return shape;
+}
+
+CollisionShape *CollisionShape::newMeshShape(
+        Node *node, std::vector<glm::vec3> verts )
+{
+    CollisionShape *shape = new CollisionShape( COLLISION_MESH );
+    shape->setMeshVertices( verts );
+    shape->setNode( node );
+    shape->recalculateAABBs();
     return shape;
 }
 
@@ -115,6 +169,7 @@ bool CollisionShape::collisionOccured( CollisionShape *shape1,
         if( ( shape1 == s1 || shape1 == s2 ) && ( shape2 == s1 || shape2 == s2 ) )
             return true;
     }
+    return false;
 }
 
 std::vector<CollisionShape*> CollisionShape::shapesCollidingWith(
@@ -133,4 +188,30 @@ std::vector<CollisionShape*> CollisionShape::shapesCollidingWith(
     }
 
     return ret;
+}
+
+void CollisionShape::recalculateAABBs()
+{
+    mMeshAABBs.clear();
+    for( unsigned int x = 0; x < mMeshVertices.size() - 3; x++ )
+    {
+        glm::vec3 a = mMeshVertices.at( x + 0 );
+        glm::vec3 b = mMeshVertices.at( x + 1 );
+        glm::vec3 c = mMeshVertices.at( x + 2 );
+
+        AABB aabb;
+
+        aabb.aabbMin.x = min( a.x, b.x, c.x );
+        aabb.aabbMin.y = min( a.y, b.y, c.y );
+        aabb.aabbMin.z = min( a.z, b.z, c.z );
+
+        aabb.aabbMax.x = max( a.x, b.x, c.x );
+        aabb.aabbMax.y = max( a.y, b.y, c.y );
+        aabb.aabbMax.z = max( a.z, b.z, c.z );
+
+        aabb.aabbMax += mNode->getPosition();
+        aabb.aabbMin += mNode->getPosition();
+
+        mMeshAABBs.push_back( aabb );
+    }
 }

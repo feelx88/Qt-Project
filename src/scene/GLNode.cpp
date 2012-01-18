@@ -103,3 +103,14 @@ void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
                          GL_LINEAR_MIPMAP_LINEAR );
     }
 }
+
+std::vector<glm::vec3> GLNode::getVertices()
+{
+    std::vector<glm::vec3> verts;
+
+    for( int x = 0; x < mFaceCount * 3; x += 3 )
+    {
+        verts.push_back( glm::vec3( mVertices[x], mVertices[x + 1], mVertices[x + 2] ) );
+    }
+    return verts;
+}

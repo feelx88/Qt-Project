@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include <deque>
+#include <vector>
 
 class CollisionShape;
 
@@ -13,8 +13,8 @@ class Node
 public:
     Node( Node* parent )
         : mPosition( glm::vec3() ), mScale( glm::vec3( 1.f ) ),
-          mRotation( glm::quat() ), mParent( parent ), mVisible( true ),
-          mCollisionShape( 0 ), mTag( 0 )
+          mRotation( glm::quat() ), mParent( parent ), mCollisionShape( 0 ),
+          mVisible( true ), mTag( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -23,7 +23,7 @@ public:
     Node( Node* parent, const glm::vec3& position, const glm::quat& rotation,
           const glm::vec3 scale = glm::vec3( 1.f ) )
         : mPosition( position ), mScale( scale ), mRotation( rotation ),
-          mVisible( true ), mCollisionShape( 0 ), mTag( 0 )
+          mCollisionShape( 0 ), mVisible( true ), mTag( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -35,7 +35,7 @@ public:
 
     virtual void update()
     {
-        for( std::deque<Node*>::iterator x = mChildren.begin();
+        for( std::vector<Node*>::iterator x = mChildren.begin();
              x != mChildren.end(); x++ )
             (*x)->update();
     }
@@ -101,7 +101,7 @@ public:
         mCollisionShape = shape;
     }
 
-    const CollisionShape *getCollisionShape()
+    CollisionShape *getCollisionShape()
     {
         return mCollisionShape;
     }
@@ -123,7 +123,7 @@ protected:
     glm::quat mRotation;
 
     Node *mParent;
-    std::deque<Node*> mChildren;
+    std::vector<Node*> mChildren;
 
     CollisionShape *mCollisionShape;
 
