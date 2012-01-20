@@ -6,12 +6,11 @@
 # 1 int: faceCount
 # 1 int: texCount
 #
-# texCount times =>
-#   512 char: texName
+# 512 char: texName
 #
 # faceCount times =>
-# 1 int: texture num
 #   3 times =>
+#     1 int: 0 to keep backward compatibiity
 #     3 float: vertex coordinates
 #     3 float: vertex normals
 #     2 float: uv coordinates
@@ -27,9 +26,13 @@ bl_info = {
 
 import bpy
 import struct
+import os.path
+import shutil
 
 def write_bmd(context, filepath):
     print("running write_bmd...")
+    
+    path = os.path.dirname( filepath )
 
     #prepare axes
     xx = 0
@@ -39,20 +42,29 @@ def write_bmd(context, filepath):
     xm = +1
     ym = +1
     zm = -1
-
-    #test for valid selection
+    
+    if len( bpy.context.selected_objects ) != 1:
+        return {'CANCELLED'}
+    
     ob = bpy.context.selected_objects[0]
-
-    #convert to triangles
-    if bpy.context.mode != 'EDIT_MESH':
-        bpy.ops.object.editmode_toggle()
-    bpy.ops.mesh.quads_convert_to_tris()
-    bpy.ops.object.editmode_toggle()
-
+    
     #test for mesh
     if ob.type != 'MESH':
         print( 'Error: Not a Mesh!' )
-        return {'FAILURE'}
+        return {'CANCELLED'}
+    
+    if bpy.context.mode == 'EDIT_MESH':
+        bpy.ops.object.editmode_toggle()
+    
+    bpy.ops.object.duplicate()
+    ob.select = False
+    
+    ob = bpy.context.selected_objects[0]
+
+    #convert to triangles
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.mesh.quads_convert_to_tris()
+    bpy.ops.object.editmode_toggle()
 
     #open file
     file = open(filepath, 'w+b')
@@ -65,26 +77,26 @@ def write_bmd(context, filepath):
         bytes( '\0', 'ascii' ) ) )
 
     #Write object data
-    file.write( struct.pack( 'ii', len( ob.data.faces ), len( ob.data.uv_textures ) ) )
+    file.write( struct.pack( 'ii', len( ob.data.faces ), 1 ) )
 
-    texNums = {}
+    #512 byte texture name
+    tex = ob.data.uv_textures[0].data[0].image
+    texFile = os.path.basename( tex.filepath )
+    tex.file_format = 'PNG'
+    
+    if texFile == '' or not os.path.exists( path + os.path.sep + texFile ):
+        texFile = tex.name + '.png'
+        tex.save_render( filepath = path + os.path.sep + texFile )
 
-    #512 byte texture names
-    for texture in ob.data.uv_textures:
-        path = ob.data.uv_textures[0].data[0].image.filepath
-
-        #save texture number
-        texNums[ob.data.uv_textures[0].data[0].image] = len( texNums )
-
-        length = len( path )
-        for byte in range( 0, length ):
-            file.write( struct.pack( 'c', bytes( path[byte], 'ascii' ) ) )
-        for byte in range( length, 512 ):
-            file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
+    texLen = len( texFile )
+    for byte in range( 0, texLen ):
+        file.write( struct.pack( 'c', bytes( texFile[byte], 'ascii' ) ) )
+    for byte in range( texLen, 512 ):
+        file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
 
     #geometry data
     for faceNum in range( 0, len( ob.data.faces ) ):
-        file.write( struct.pack( 'i', texNums[ob.data.uv_textures[0].data[0].image] ) )
+        file.write( struct.pack( 'i', 0 ) ) #for compatibility
         for x in range(0,3):
             vertex = ob.data.vertices[ob.data.faces[faceNum].vertices[x]]
             file.write( struct.pack( 'fff',
@@ -100,6 +112,7 @@ def write_bmd(context, filepath):
             file.write( struct.pack( 'ff', uvdata[0], 1 - uvdata[1] ) )
 
     file.close()
+    bpy.ops.object.delete()
     return {'FINISHED'}
 
 
@@ -124,9 +137,9 @@ class ExportBMD(bpy.types.Operator, ExportHelper):
 
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    #use_setting = BoolProperty(
-    #        name="Example Boolean",
-    #        description="Example Tooltip",
+    #onlySelected = BoolProperty(
+    #        name="Export only selected",
+    #        description="Exports only the selected object.",
     #        default=True,
     #        )
 
@@ -165,4 +178,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
-    #bpy.ops.export.bmd('INVOKE_DEFAULT')
+    #bpy.ops.export_mesh.bmd('INVOKE_DEFAULT')
