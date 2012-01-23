@@ -51,7 +51,7 @@ def write_bmd(context, filepath):
     #test for mesh
     if ob.type != 'MESH':
         print( 'Error: Not a Mesh!' )
-        return {'CANCELLED'}
+        return {'FINISHED'}
 
     bpy.ops.object.mode_set( mode = 'OBJECT' )
 

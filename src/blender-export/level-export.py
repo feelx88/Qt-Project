@@ -30,6 +30,9 @@ def appendTextElement( self, document, nodeName, text ):
     self.appendChild( node )
     return node
 
+#def switchToObjectMode():
+#    if bpy.context.object
+
 def write_leveldata(context, filepath):
     print("running write_leveldata...")
 
@@ -43,7 +46,8 @@ def write_leveldata(context, filepath):
     zm = -1
 
     #activate object mode and deselect all objects
-    bpy.ops.object.mode_set( mode = 'OBJECT' )
+    if bpy.ops.object.mode_set.poll():
+        bpy.ops.object.mode_set( mode = 'OBJECT' )
     bpy.ops.object.select_all( action = 'DESELECT' )
 
     #apend convenience methods
@@ -70,10 +74,10 @@ def write_leveldata(context, filepath):
                 #level geometry
                 elem = rootElem.appendElement( doc, 'Mesh' )
                 elem.appendTextElement( doc, 'File', ob.name + '.bmd' )
+                bpy.ops.object.select_name( name = ob.name )
                 bpy.ops.object.mode_set( mode = 'OBJECT' )
-                ob.select = True
                 bpy.ops.export_mesh.bmd( filepath = directory + ob.name + '.bmd' )
-                ob.select = False
+                bpy.ops.object.select_all( action = 'DESELECT' )
                 elem.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
                 elem.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
                 elem.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
@@ -150,7 +154,7 @@ class ExportLevel(bpy.types.Operator, ExportHelper):
 
     @classmethod
     def poll(cls, context):
-        return context.active_object is not None
+        return True#context.active_object is not None
 
     def execute(self, context):
         return write_leveldata(context, self.filepath)
