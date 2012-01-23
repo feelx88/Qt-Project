@@ -20,7 +20,8 @@ public:
         NODE_PLAYERSHIP = 1,
         NODE_LEVEL,
         NODE_BULLET,
-        NODE_ENEMY
+        NODE_ENEMY,
+        NODE_ENEMY_SENSOR       //Used for starting enemy ships
     };
 
     Game();

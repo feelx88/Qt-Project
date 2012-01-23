@@ -31,7 +31,7 @@ import shutil
 
 def write_bmd(context, filepath):
     print("running write_bmd...")
-    
+
     path = os.path.dirname( filepath )
 
     #prepare axes
@@ -42,29 +42,28 @@ def write_bmd(context, filepath):
     xm = +1
     ym = +1
     zm = -1
-    
+
     if len( bpy.context.selected_objects ) != 1:
         return {'CANCELLED'}
-    
+
     ob = bpy.context.selected_objects[0]
-    
+
     #test for mesh
     if ob.type != 'MESH':
         print( 'Error: Not a Mesh!' )
         return {'CANCELLED'}
-    
-    if bpy.context.mode == 'EDIT_MESH':
-        bpy.ops.object.editmode_toggle()
-    
+
+    bpy.ops.object.mode_set( mode = 'OBJECT' )
+
     bpy.ops.object.duplicate()
     ob.select = False
-    
+
     ob = bpy.context.selected_objects[0]
 
     #convert to triangles
-    bpy.ops.object.editmode_toggle()
+    bpy.ops.object.mode_set( mode = 'EDIT' )
     bpy.ops.mesh.quads_convert_to_tris()
-    bpy.ops.object.editmode_toggle()
+    bpy.ops.object.mode_set( mode = 'OBJECT' )
 
     #open file
     file = open(filepath, 'w+b')
@@ -83,8 +82,10 @@ def write_bmd(context, filepath):
     tex = ob.data.uv_textures[0].data[0].image
     texFile = os.path.basename( tex.filepath )
     tex.file_format = 'PNG'
-    
+
     if texFile == '' or not os.path.exists( path + os.path.sep + texFile ):
+        bpy.context.scene.render.image_settings.file_format = 'PNG'
+        bpy.context.scene.render.image_settings.color_mode = 'RGBA'
         texFile = tex.name + '.png'
         tex.save_render( filepath = path + os.path.sep + texFile )
 

@@ -41,11 +41,11 @@ def write_leveldata(context, filepath):
     xm = +1
     ym = +1
     zm = -1
-    
+
     #activate object mode and deselect all objects
-    bpy.ops.object.mode_set()
+    bpy.ops.object.mode_set( mode = 'OBJECT' )
     bpy.ops.object.select_all( action = 'DESELECT' )
-    
+
     #apend convenience methods
     setattr( xml.dom.minidom.Element, 'appendElement', appendElement )
     setattr( xml.dom.minidom.Element, 'appendTextElement', appendTextElement )
@@ -54,7 +54,7 @@ def write_leveldata(context, filepath):
     doc = xml.dom.minidom.Document()
     rootElem = doc.createElement( 'Level' )
     doc.appendChild( rootElem )
-    
+
     directory = os.path.dirname( filepath ) + '/'
 
     #add data to dom
