@@ -70,6 +70,7 @@ def write_leveldata(context, filepath):
                 #level geometry
                 elem = rootElem.appendElement( doc, 'Mesh' )
                 elem.appendTextElement( doc, 'File', ob.name + '.bmd' )
+                bpy.ops.object.mode_set( mode = 'OBJECT' )
                 ob.select = True
                 bpy.ops.export_mesh.bmd( filepath = directory + ob.name + '.bmd' )
                 ob.select = False
@@ -118,7 +119,7 @@ from bpy_extras.io_utils import ExportHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 
 
-class ExportBMD(bpy.types.Operator, ExportHelper):
+class ExportLevel(bpy.types.Operator, ExportHelper):
     '''This appears in the tooltip of the operator and in the generated docs.'''
     bl_idname = "export.leveldata"  # this is important since its how bpy.ops.export.some_data is constructed
     bl_label = "Export Level Data (XML)"
@@ -157,17 +158,17 @@ class ExportBMD(bpy.types.Operator, ExportHelper):
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_export(self, context):
-    self.layout.operator(ExportBMD.bl_idname, text="BMD Export")
+    self.layout.operator(ExportLevel.bl_idname, text="BMD Export")
 
 
 def register():
-    bpy.utils.register_class(ExportBMD)
+    bpy.utils.register_class(ExportLevel)
     #bpy.types.INFO_MT_file_export.append(menu_func_export)
 
 
 def unregister():
     try:
-        bpy.utils.unregister_class(ExportBMD)
+        bpy.utils.unregister_class(ExportLevel)
         #bpy.types.INFO_MT_file_export.remove(menu_func_export)
     except:
         pass
