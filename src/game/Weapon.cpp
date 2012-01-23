@@ -30,10 +30,7 @@ Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
 Weapon::~Weapon()
 {
     for( int x = 0; x < mBulletCount; x++ )
-    {
-        delete mBullets[x]->getCollisionShape();
         delete mBullets[x];
-    }
 }
 
 void Weapon::shoot()

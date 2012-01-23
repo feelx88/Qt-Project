@@ -41,6 +41,8 @@ public:
 
     void update();
 
+    void setPosition( glm::vec3 position );
+
 protected:
     GLNode *mShipModel;
     GLCameraNode *mCamera;

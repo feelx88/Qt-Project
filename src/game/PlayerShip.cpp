@@ -125,12 +125,6 @@ void PlayerShip::update()
                                              mShipTiltAngle.z * angleFraction,
                                              glm::vec3( 0, 0, 1 ) );
 
-    //Only for testing
-    //----------------------
-    if( position.z < -200 )
-        position.z = 50;
-    //----------------------
-
     mShipModel->setPosition( position );
     mShipModel->setRotation( rotation );
 
@@ -156,4 +150,10 @@ void PlayerShip::update()
     mCrosshairBack->setPosition( mShipModel->getPosition() );
     mCrosshairBack->setRotation( mShipModel->getRotation() );
     mCrosshairBack->move( glm::vec3( 0, 0, -20 ) );
+}
+
+void PlayerShip::setPosition( glm::core::type::vec3 position )
+{
+    if( mShipModel )
+        mShipModel->setPosition( position );
 }

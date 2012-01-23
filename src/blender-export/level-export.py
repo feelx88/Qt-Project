@@ -67,9 +67,10 @@ def write_leveldata(context, filepath):
             if 'player' in ob.keys():
                 #player start
                 elem = rootElem.appendElement( doc, 'Player' )
-                elem.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
-                elem.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
-                elem.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
+                pos = elem.appendElement( doc, 'StartPosition' )
+                pos.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
+                pos.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
+                pos.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
             else:
                 #level geometry
                 elem = rootElem.appendElement( doc, 'Mesh' )

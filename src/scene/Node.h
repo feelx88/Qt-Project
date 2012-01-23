@@ -29,7 +29,11 @@ public:
             parent->addChild( this );
     }
 
-    virtual ~Node(){}
+    virtual ~Node()
+    {
+        if( mCollisionShape )
+            delete mCollisionShape;
+    }
 
     virtual void init(){}
 

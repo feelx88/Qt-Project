@@ -21,7 +21,7 @@ const int Game::frameLength = Clock::ticksPerSecond / Game::frameRate;
 const float Game::frameRateMultiplicator = 1.f / (float)Game::frameRate;
 
 Game::Game()
-    : mCamera( 0 ), mActiveLevel( 0 ), mActiveShip( 0 ),
+    : mCamera( 0 ), mActiveLevel( 0 ),
       mNextFrame( 0 )
 {
     for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
@@ -34,9 +34,10 @@ Game::Game()
 Game::~Game()
 {
     delete mActiveLevel;
-    delete mActiveShip;
 
     delete mCamera;
+
+    GLNode::clearTextures();
 }
 
 void Game::init()
@@ -63,10 +64,8 @@ void Game::init()
     mCamera = new GLCameraNode( GLRenderer::getRootNode(),
                                 glm::vec3( 0, 20, 10 ), glm::quat() );
 
-    mActiveLevel = new Level();
+    mActiveLevel = new Level( mCamera );
     mActiveLevel->loadLevel( "raw/testlevel2/testlevel2.xml" );
-
-    mActiveShip = new PlayerShip( "raw/ship1.bmd", mCamera );
 
     mNextFrame = Clock::getTime();
 }
@@ -81,12 +80,10 @@ void Game::run()
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {
             if( mActionTriggered[x] )
-                mActiveShip->action( (PlayerShip::SHIP_ACTIONS)x );
+                mActiveLevel->action( (PlayerShip::SHIP_ACTIONS)x );
         }
 
         mActiveLevel->update();
-
-        mActiveShip->update();
 
         mNextFrame += frameLength;
         framesSkipped++;
@@ -95,7 +92,6 @@ void Game::run()
 
 void Game::processKeyEvents( QKeyEvent *evt, bool pressed )
 {
-
     for( int x = 0 ; x < PlayerShip::ACTION_COUNT; x++ )
     {
         if( evt->key() == mActionMap[x] )

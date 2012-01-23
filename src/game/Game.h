@@ -49,7 +49,6 @@ protected:
     GLCameraNode *mCamera;
 
     Level *mActiveLevel;
-    PlayerShip *mActiveShip;
 
     int mNextFrame;
 };

@@ -60,6 +60,9 @@ def write_bmd(context, filepath):
 
     ob = bpy.context.selected_objects[0]
 
+    for mod in ob.modifiers:
+        bpy.ops.object.convert(target='MESH', keep_original=False)
+
     #convert to triangles
     bpy.ops.object.mode_set( mode = 'EDIT' )
     bpy.ops.mesh.quads_convert_to_tris()
@@ -77,23 +80,30 @@ def write_bmd(context, filepath):
 
     #Write object data
     file.write( struct.pack( 'ii', len( ob.data.faces ), 1 ) )
+    
+    hasTex = False
 
     #512 byte texture name
-    tex = ob.data.uv_textures[0].data[0].image
-    texFile = os.path.basename( tex.filepath )
-    tex.file_format = 'PNG'
-
-    if texFile == '' or not os.path.exists( path + os.path.sep + texFile ):
-        bpy.context.scene.render.image_settings.file_format = 'PNG'
-        bpy.context.scene.render.image_settings.color_mode = 'RGBA'
-        texFile = tex.name + '.png'
-        tex.save_render( filepath = path + os.path.sep + texFile )
-
-    texLen = len( texFile )
-    for byte in range( 0, texLen ):
-        file.write( struct.pack( 'c', bytes( texFile[byte], 'ascii' ) ) )
-    for byte in range( texLen, 512 ):
-        file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
+    if len( ob.data.uv_textures ) > 0:
+        hasTex = True
+        tex = ob.data.uv_textures[0].data[0].image
+        texFile = os.path.basename( tex.filepath )
+        tex.file_format = 'PNG'
+        
+        if texFile == '' or not os.path.exists( path + os.path.sep + texFile ):
+            bpy.context.scene.render.image_settings.file_format = 'PNG'
+            bpy.context.scene.render.image_settings.color_mode = 'RGBA'
+            texFile = tex.name + '.png'
+            tex.save_render( filepath = path + os.path.sep + texFile )
+        
+        texLen = len( texFile )
+        for byte in range( 0, texLen ):
+            file.write( struct.pack( 'c', bytes( texFile[byte], 'ascii' ) ) )
+        for byte in range( texLen, 512 ):
+            file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
+    else:
+        for byte in range( 0, 512 ):
+            file.write( struct.pack( 'c', bytes( '\0', 'ascii' ) ) )
 
     #geometry data
     for faceNum in range( 0, len( ob.data.faces ) ):
@@ -108,10 +118,12 @@ def write_bmd(context, filepath):
                 vertex.normal[xx] * xm,
                 vertex.normal[yx] * ym,
                 vertex.normal[zx] * zm ) )
+            if( hasTex ):
+                uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
+                file.write( struct.pack( 'ff', uvdata[0], 1 - uvdata[1] ) )
+            else
+                file.write( struct.pack( 'ff', 0.0, 0.0 ) )
 
-            uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
-            file.write( struct.pack( 'ff', uvdata[0], 1 - uvdata[1] ) )
-t
     file.close()
     bpy.ops.object.delete()
     return {'FINISHED'}

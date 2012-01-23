@@ -195,9 +195,9 @@ void CollisionShape::recalculateAABBs()
     mMeshAABBs.clear();
     for( unsigned int x = 0; x < mMeshVertices.size() - 3; x++ )
     {
-        glm::vec3 a = mMeshVertices.at( x + 0 );
-        glm::vec3 b = mMeshVertices.at( x + 1 );
-        glm::vec3 c = mMeshVertices.at( x + 2 );
+        glm::vec3 &a = mMeshVertices.at( x + 0 );
+        glm::vec3 &b = mMeshVertices.at( x + 1 );
+        glm::vec3 &c = mMeshVertices.at( x + 2 );
 
         AABB aabb;
 

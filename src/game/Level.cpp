@@ -1,11 +1,13 @@
 #include "Level.h"
 
 #include "Game.h"
+#include "PlayerShip.h"
 #include "Enemy.h"
 #include "Path.h"
 
 #include "../ui/GLRenderer.h"
 #include "../scene/GLNode.h"
+#include "../scene/GLCameraNode.h"
 #include "../scene/BMDImport.h"
 #include "../scene/CollisionShape.h"
 
@@ -13,7 +15,8 @@
 #include <QFile>
 #include <QDir>
 
-Level::Level()
+Level::Level( GLCameraNode *camera )
+    : mPlayerShip( 0 ), mCamera( camera )
 {
 }
 
@@ -25,6 +28,8 @@ Level::~Level()
     for( std::vector<Enemy*>::iterator x = mEnemies.begin();
          x != mEnemies.end(); x++ )
         delete *x;
+
+    delete mPlayerShip;
 }
 
 void Level::update()
@@ -32,6 +37,7 @@ void Level::update()
     for( std::vector<Enemy*>::iterator x = mEnemies.begin();
          x != mEnemies.end(); x++ )
         (*x)->update();
+    mPlayerShip->update();
 }
 
 void Level::loadLevel(std::string fileName)
@@ -40,7 +46,8 @@ void Level::loadLevel(std::string fileName)
     dir.cdUp();
 
     QDomDocument doc;
-    doc.setContent( new QFile( fileName.c_str() ), false );
+    QFile *levelFile = new QFile( fileName.c_str() );
+    doc.setContent( levelFile, false );
 
     QDomNodeList meshList = doc.elementsByTagName( "Mesh" );
     for( int x = 0; x < meshList.size(); x++ )
@@ -68,18 +75,6 @@ void Level::loadLevel(std::string fileName)
         mesh->setCollisionShape( shape );
 
         mesh->setTag( Game::NODE_LEVEL );
-    }
-
-    QDomNodeList playerPosition = doc.elementsByTagName( "Player" );
-    if( !playerPosition.isEmpty() )
-    {
-        QDomNode pos = playerPosition.at( 0 );
-        mPlayerStart.x = pos.firstChildElement( "X" ).firstChild()
-                .nodeValue().toFloat();
-        mPlayerStart.y = pos.firstChildElement( "Y" ).firstChild()
-                .nodeValue().toFloat();
-        mPlayerStart.z = pos.firstChildElement( "Z" ).firstChild()
-                .nodeValue().toFloat();
     }
 
     QDomNodeList enemies = doc.elementsByTagName( "Enemy" );
@@ -113,4 +108,27 @@ void Level::loadLevel(std::string fileName)
 
         mEnemies.push_back( e );
     }
+
+    QDomNodeList playerShip = doc.elementsByTagName( "Player" );
+    if( !playerShip.isEmpty() )
+    {
+        QDomNode pos = playerShip.at( 0 ).firstChildElement( "StartPosition" );
+        mPlayerStart.x = pos.firstChildElement( "X" ).firstChild()
+                .nodeValue().toFloat();
+        mPlayerStart.y = pos.firstChildElement( "Y" ).firstChild()
+                .nodeValue().toFloat();
+        mPlayerStart.z = pos.firstChildElement( "Z" ).firstChild()
+                .nodeValue().toFloat();
+    }
+
+    mPlayerShip = new PlayerShip( "raw/ship1.bmd", mCamera );
+    mPlayerShip->setPosition( mPlayerStart );
+
+    delete levelFile;
+}
+
+void Level::action( PlayerShip::SHIP_ACTIONS action )
+{
+    if( mPlayerShip )
+        mPlayerShip->action( action );
 }
