@@ -62,7 +62,7 @@ def write_leveldata(context, filepath):
     directory = os.path.dirname( filepath ) + '/'
 
     #add data to dom
-    for ob in bpy.data.objects:
+    for ob in bpy.context.scene.objects:
         if ob.type == 'MESH':
             if 'player' in ob.keys():
                 #player start

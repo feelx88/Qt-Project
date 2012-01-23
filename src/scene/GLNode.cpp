@@ -5,14 +5,14 @@
 
 #include "../ui/GLRenderer.h"
 
+std::map<std::string,std::pair<QImage*, unsigned int> > GLNode::sTexturePool;
+
 GLNode::~GLNode()
 {
     delete[] mVertices;
     delete[] mNormals;
     delete[] mUVs;
     delete[] mTextureFileNames;
-    for( int x = 0; x < mTextureCount; x++ )
-        delete mTextures[x];
     delete[] mTextures;
     delete[] mTextureHandles;
 }
@@ -84,6 +84,17 @@ void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
 
     mTextureHandles = new unsigned int[textureCount];
     mTextures = new QImage*[mTextureCount];
+
+    std::map<std::string,std::pair<QImage*, unsigned int> >::iterator tex =
+            sTexturePool.find( mTextureFileNames[0] );
+
+    if( tex != sTexturePool.end() )
+    {
+        mTextures[0] = tex->second.first;
+        mTextureHandles[0] = tex->second.second;
+        return;
+    }
+
     glGenTextures( textureCount, mTextureHandles );
 
     for( unsigned int x = 0; x < textureCount; x++ )
@@ -102,6 +113,9 @@ void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
                          GL_LINEAR_MIPMAP_LINEAR );
     }
+
+    sTexturePool.insert( std::make_pair( mTextureFileNames[0], std::make_pair(
+                                             mTextures[0], mTextureHandles[0] ) ) );
 }
 
 std::vector<glm::vec3> GLNode::getVertices()
@@ -113,4 +127,13 @@ std::vector<glm::vec3> GLNode::getVertices()
         verts.push_back( glm::vec3( mVertices[x], mVertices[x + 1], mVertices[x + 2] ) );
     }
     return verts;
+}
+
+void GLNode::clearTextures()
+{
+    std::map<std::string,std::pair<QImage*, unsigned int> >::iterator tex;
+    for( tex = sTexturePool.begin(); tex != sTexturePool.end(); tex++ )
+    {
+        delete tex->second.first;
+    }
 }

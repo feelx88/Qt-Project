@@ -15,7 +15,8 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( glm::vec3() ),
       mSideAcceleration( 0.5f ), mSideMinMaxSpeed( 10.f ),
       mForwardAcceleration( 1.f ), mForwardMinSpeed( -15.f ),
-      mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) )
+      mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
+      mShipDirection( glm::vec3( 0.f, 0.f, 1.f ) )
 {
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );

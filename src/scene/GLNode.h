@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <map>
+#include <utility>
 
 class QImage;
 
@@ -37,6 +39,8 @@ public:
 
     std::vector<glm::vec3> getVertices();
 
+    static void clearTextures();
+
 protected:
     unsigned int mFaceCount, mTextureCount, *mTextureHandles;
     float *mVertices;
@@ -44,6 +48,8 @@ protected:
     float *mUVs;
     std::string *mTextureFileNames;
     QImage **mTextures;
+
+    static std::map<std::string,std::pair<QImage*, unsigned int> > sTexturePool;
 
     bool mZPass;
 };

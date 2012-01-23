@@ -27,6 +27,12 @@ public:
         ACTION_COUNT
     };
 
+    enum CONTROL_MODE
+    {
+        MODE_FREEFLIGHT = 0,
+        MODE_FIXED_DIRECTION
+    };
+
     PlayerShip( std::string fileName, GLCameraNode *camera );
 
     virtual ~PlayerShip();
@@ -49,6 +55,8 @@ protected:
     glm::vec3 mShipTiltAngle;
 
     glm::vec3 mCurAcceleration;
+
+    glm::vec3 mShipDirection;
 };
 
 #endif // PLAYERSHIP_H

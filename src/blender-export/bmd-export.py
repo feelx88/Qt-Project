@@ -111,7 +111,7 @@ def write_bmd(context, filepath):
 
             uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
             file.write( struct.pack( 'ff', uvdata[0], 1 - uvdata[1] ) )
-
+t
     file.close()
     bpy.ops.object.delete()
     return {'FINISHED'}
