@@ -121,7 +121,7 @@ def write_bmd(context, filepath):
             if( hasTex ):
                 uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
                 file.write( struct.pack( 'ff', uvdata[0], 1 - uvdata[1] ) )
-            else
+            else:
                 file.write( struct.pack( 'ff', 0.0, 0.0 ) )
 
     file.close()
