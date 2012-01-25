@@ -43,6 +43,8 @@ public:
 
     void setPosition( glm::vec3 position );
 
+    void setDirection( glm::vec3 direction );
+
 protected:
     GLNode *mShipModel;
     GLCameraNode *mCamera;
@@ -57,9 +59,12 @@ protected:
     glm::vec3 mShipTiltAngle;
 
     float mCurAcceleration;
-    glm::vec3 mCurRotation;
+    glm::vec3 mCurRotation, mCurRotationMinus;
 
-    glm::vec3 mShipDirection;
+    glm::vec3 mShipDirection, mShipUp, mShipLeft;
+    glm::quat mShipDirectionQuat;
+
+    CONTROL_MODE mMode;
 };
 
 #endif // PLAYERSHIP_H

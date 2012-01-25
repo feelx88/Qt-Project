@@ -13,10 +13,10 @@
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mCurAcceleration( 0.f ),
-      mSideAcceleration( 20.5f ), mSideMinMaxSpeed( 10.f ),
-      mForwardAcceleration( 1.f ), mForwardMinSpeed( -15.f ),
-      mForwardMaxSpeed( -3.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
-      mShipDirection( glm::vec3( 0.f, 0.f, 1.f ) )
+      mSideAcceleration( 30.f ), mSideMinMaxSpeed( 10.f ),
+      mForwardAcceleration( 10.f ), mForwardMinSpeed( 3.f ),
+      mForwardMaxSpeed( 15.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
+      mMode( MODE_FIXED_DIRECTION )
 {
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
@@ -48,6 +48,8 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     mCrosshairFront->setAlwasDrawToFront( true );
     mCrosshairBack->setAlwasDrawToFront( true );
+
+    setDirection( glm::vec3( 0.f, 0.f, -1.f ) );
 }
 
 PlayerShip::~PlayerShip()
@@ -69,22 +71,26 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
     switch( action )
     {
     case ACTION_MOVE_FASTER:
-        mCurAcceleration -= zAcc;
+        mCurAcceleration += zAcc;
         break;
     case ACTION_MOVE_SLOWER:
-        mCurAcceleration += zAcc;
+        mCurAcceleration -= zAcc;
         break;
     case ACTION_MOVE_UP:
         mCurRotation += glm::vec3( xyAcc, 0, 0 );
+        mCurRotationMinus.x = 0;
         break;
     case ACTION_MOVE_DOWN:
         mCurRotation -= glm::vec3( xyAcc, 0, 0 );
+        mCurRotationMinus.x = 0;
         break;
     case ACTION_MOVE_LEFT:
         mCurRotation += glm::vec3( 0, xyAcc, 0 );
+        mCurRotationMinus.y = 0;
         break;
     case ACTION_MOVE_RIGHT:
         mCurRotation -= glm::vec3( 0, xyAcc, 0 );
+        mCurRotationMinus.y = 0;
         break;
     case ACTION_FIRE_PRIMARY:
         if( mPrimaryWeapon )
@@ -100,65 +106,75 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
 void PlayerShip::update()
 {
     const float timeFactor = Game::frameRateMultiplicator;
-    const float angleFraction = (float)Game::frameRate / mSideMinMaxSpeed;
+
+    const glm::vec3 xDir = glm::vec3( 1.f, 0.f, 0.f );
+    const glm::vec3 yDir = glm::vec3( 0.f, 1.f, 0.f );
+    const glm::vec3 zDir = glm::vec3( 0.f, 0.f, 1.f );
 
     glm::vec3 position = mShipModel->getPosition();
     glm::quat rotation;
-    rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.x, glm::vec3( 1, 0, 0 ) );
-    rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.y, glm::vec3( 0, 1, 0 ) );
 
-    mShipModel->move( glm::vec3( 0, 0, mCurAcceleration ) );
+    if( mMode == MODE_FIXED_DIRECTION )
+        rotation = mShipDirectionQuat;
 
-    //rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.y, glm::vec3( 0, 0, 1 ) );
+    if( mMode == MODE_FREEFLIGHT )
+    {
+        mCurRotation.z = glm::clamp( mCurRotation.z, -50.f, 50.f );
+        mCurRotation.x = glm::clamp( mCurRotation.x, -50.f, 50.f );
+    }
+    else
+    {
+        mCurRotation = glm::clamp( mCurRotation,
+                                   glm::vec3( -20.f, -40.f, -50.f ),
+                                   glm::vec3( 20.f, 40.f, 50.f ) );
+    }
 
-    mShipModel->setRotation( rotation );
-
-    /*
-    const float xyMinMax = mSideMinMaxSpeed * timeFactor;
-    const float zMin = mForwardMinSpeed * timeFactor;
-    const float zMax = mForwardMaxSpeed * timeFactor;
+    rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.y, yDir );
+    rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.x, xDir );
 
     mCurAcceleration = glm::clamp( mCurAcceleration,
-                                   glm::vec3( -xyMinMax, -xyMinMax, zMin ),
-                                   glm::vec3( +xyMinMax, +xyMinMax, zMax ) );
+                                   mForwardMinSpeed, mForwardMaxSpeed );
 
-    position += mCurAcceleration;
+    mShipModel->move( glm::vec3( 0, 0, -mCurAcceleration * timeFactor ) );
 
-    glm::quat rotation;
-    rotation = glm::gtc::quaternion::rotate( rotation, mCurAcceleration.y *
-                                             mShipTiltAngle.x * angleFraction,
-                                             glm::vec3( 1, 0, 0 ) );
-    rotation = glm::gtc::quaternion::rotate( rotation, mCurAcceleration.x *
-                                             mShipTiltAngle.y * angleFraction,
-                                             glm::vec3( 0, 1, 0 ) );
-    rotation = glm::gtc::quaternion::rotate( rotation, mCurAcceleration.x *
-                                             mShipTiltAngle.z * angleFraction,
-                                             glm::vec3( 0, 0, 1 ) );
+    rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.z, zDir );
 
-    mShipModel->setPosition( position );
     mShipModel->setRotation( rotation );
 
-    float oldz = mCurAcceleration.z;
+    if( mMode == MODE_FREEFLIGHT )
+        mCurRotation.z -= mCurRotationMinus.z * timeFactor;
+    else
+        mCurRotation -= mCurRotationMinus * timeFactor;
 
-    mCurAcceleration -= mCurAcceleration * timeFactor;// * 10.f;
+    mCurRotationMinus = mCurRotation;
 
-    mCurAcceleration.z = oldz;*/
-
-    mCamera->setLookAt( position + glm::vec3( 0, 0, -10 ) );
-    mCamera->setPosition( position + glm::vec3( 0, 1, 10 ) );
+    if( mMode == MODE_FREEFLIGHT )
+    {
+        mCamera->setLookAt( position );
+        mCamera->setPosition( position );
+        mCamera->setRotation( rotation );
+        mCamera->move( glm::vec3( 0, 1, 10 ) );
+    }
+    else //MODE_FIXED_DIRECTION
+    {
+        mCamera->setLookAt( position );
+        mCamera->setPosition( position );
+        mCamera->setRotation( mShipDirectionQuat );
+        mCamera->move( glm::vec3( 0, 1, 10 ) );
+    }
 
     if( mPrimaryWeapon )
         mPrimaryWeapon->update();
     if( mSecondaryWeapon )
         mSecondaryWeapon->update();
 
-    mCrosshairFront->setPosition( mShipModel->getPosition() );
-    mCrosshairFront->setRotation( mShipModel->getRotation() );
+    mCrosshairFront->setPosition( position );
+    mCrosshairFront->setRotation( rotation );
     mCrosshairFront->move( glm::vec3( 0, 0, -200 ) );
     mCrosshairFront->setScale( glm::vec3( 3 ) );
 
-    mCrosshairBack->setPosition( mShipModel->getPosition() );
-    mCrosshairBack->setRotation( mShipModel->getRotation() );
+    mCrosshairBack->setPosition( position );
+    mCrosshairBack->setRotation( rotation );
     mCrosshairBack->move( glm::vec3( 0, 0, -20 ) );
 }
 
@@ -166,4 +182,24 @@ void PlayerShip::setPosition( glm::core::type::vec3 position )
 {
     if( mShipModel )
         mShipModel->setPosition( position );
+}
+
+void PlayerShip::setDirection(glm::core::type::vec3 direction)
+{
+    direction *= -1;
+    mShipDirection = direction;
+    mShipLeft = glm::cross( direction, glm::vec3( 0.f, -1.f, 0.f ) );
+    mShipUp = glm::cross( direction, mShipLeft );
+
+    mShipDirection = glm::normalize( mShipDirection );
+    mShipUp = glm::normalize( mShipUp );
+    mShipLeft = glm::normalize( mShipLeft );
+
+    glm::mat3x3 directionMatrix( mShipLeft.x, mShipUp.x, mShipDirection.x,
+                                 mShipLeft.y, mShipUp.y, mShipDirection.y,
+                                 mShipLeft.z, mShipUp.z, mShipDirection.z );
+
+    mShipDirectionQuat = glm::toQuat( directionMatrix );
+    glm::normalize( mShipDirectionQuat );
+    mShipDirectionQuat = glm::inverse( mShipDirectionQuat );
 }

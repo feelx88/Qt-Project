@@ -16,30 +16,6 @@ CollisionShape::~CollisionShape()
     sShapes.erase( this );
 }
 
-float min( const float &x, const float &y, const float &z )
-{
-    if( x <= y && x <= z )
-        return x;
-    else if( y <= x && y <= z )
-        return y;
-    else if( z <= x && z <= y )
-        return z;
-    else
-        return x;
-}
-
-float max( const float &x, const float &y, const float &z )
-{
-    if( x >= y && x >= z )
-        return x;
-    else if( y >= x && y >= z )
-        return y;
-    else if( z >= x && z >= y )
-        return z;
-    else
-        return x;
-}
-
 bool CollisionShape::testCollision( CollisionShape *other )
 {
     if( mShapeType == COLLISION_SPHERE )
@@ -201,13 +177,13 @@ void CollisionShape::recalculateAABBs()
 
         AABB aabb;
 
-        aabb.aabbMin.x = min( a.x, b.x, c.x );
-        aabb.aabbMin.y = min( a.y, b.y, c.y );
-        aabb.aabbMin.z = min( a.z, b.z, c.z );
+        aabb.aabbMin.x = glm::min( a.x, b.x, c.x );
+        aabb.aabbMin.y = glm::min( a.y, b.y, c.y );
+        aabb.aabbMin.z = glm::min( a.z, b.z, c.z );
 
-        aabb.aabbMax.x = max( a.x, b.x, c.x );
-        aabb.aabbMax.y = max( a.y, b.y, c.y );
-        aabb.aabbMax.z = max( a.z, b.z, c.z );
+        aabb.aabbMax.x = glm::max( a.x, b.x, c.x );
+        aabb.aabbMax.y = glm::max( a.y, b.y, c.y );
+        aabb.aabbMax.z = glm::max( a.z, b.z, c.z );
 
         aabb.aabbMax += mNode->getPosition();
         aabb.aabbMin += mNode->getPosition();
