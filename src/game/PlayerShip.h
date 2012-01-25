@@ -56,7 +56,8 @@ protected:
 
     glm::vec3 mShipTiltAngle;
 
-    glm::vec3 mCurAcceleration;
+    float mCurAcceleration;
+    glm::vec3 mCurRotation;
 
     glm::vec3 mShipDirection;
 };

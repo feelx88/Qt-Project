@@ -65,6 +65,7 @@ def write_bmd(context, filepath):
 
     #convert to triangles
     bpy.ops.object.mode_set( mode = 'EDIT' )
+    bpy.ops.mesh.select_all( action='SELECT' )
     bpy.ops.mesh.quads_convert_to_tris()
     bpy.ops.object.mode_set( mode = 'OBJECT' )
 
@@ -80,7 +81,7 @@ def write_bmd(context, filepath):
 
     #Write object data
     file.write( struct.pack( 'ii', len( ob.data.faces ), 1 ) )
-    
+
     hasTex = False
 
     #512 byte texture name
@@ -89,13 +90,13 @@ def write_bmd(context, filepath):
         tex = ob.data.uv_textures[0].data[0].image
         texFile = os.path.basename( tex.filepath )
         tex.file_format = 'PNG'
-        
+
         if texFile == '' or not os.path.exists( path + os.path.sep + texFile ):
             bpy.context.scene.render.image_settings.file_format = 'PNG'
             bpy.context.scene.render.image_settings.color_mode = 'RGBA'
             texFile = tex.name + '.png'
             tex.save_render( filepath = path + os.path.sep + texFile )
-        
+
         texLen = len( texFile )
         for byte in range( 0, texLen ):
             file.write( struct.pack( 'c', bytes( texFile[byte], 'ascii' ) ) )
@@ -121,7 +122,7 @@ def write_bmd(context, filepath):
             if( hasTex ):
                 uvdata = ob.data.uv_textures[0].data[faceNum].uv[x]
                 file.write( struct.pack( 'ff', uvdata[0], 1 - uvdata[1] ) )
-            else
+            else:
                 file.write( struct.pack( 'ff', 0.0, 0.0 ) )
 
     file.close()
