@@ -71,6 +71,27 @@ def write_leveldata(context, filepath):
                 pos.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
                 pos.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
                 pos.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
+            if 'direction' in ob.keys():
+                elem = rootElem.appendElement( doc, 'DirectionChange' )
+                pos = elem.appendElement( doc, 'Position' )
+                pos.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
+                pos.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
+                pos.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
+
+                d = Vector()
+                d[xx] = 0;
+                d[yx] = 0;
+                d[zx] = 1;
+                d.rotate( ob.rotation_euler )
+
+                direction = elem.appendElement( doc, 'Direction' )
+                direction.appendTextElement( doc, 'X', str( d[xx] * xm ) )
+                direction.appendTextElement( doc, 'Y', str( d[yx] * ym ) )
+                direction.appendTextElement( doc, 'Z', str( d[zx] * zm ) )
+
+                rad = elem.appendTextElement( doc, 'Radius', str( ob.dimensions[0] )
+
+
             else:
                 #level geometry
                 elem = rootElem.appendElement( doc, 'Mesh' )
