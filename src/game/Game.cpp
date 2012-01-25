@@ -76,7 +76,7 @@ void Game::run()
 
     while( Clock::getTime() > mNextFrame && framesSkipped < maxFrameSkip )
     {
-        //CollisionShape::findCollisionPairs();
+        CollisionShape::findCollisionPairs();
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {
             if( mActionTriggered[x] )

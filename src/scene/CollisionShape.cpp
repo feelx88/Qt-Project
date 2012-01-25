@@ -61,22 +61,30 @@ bool CollisionShape::testCollision( CollisionShape *other )
     {
         if( other->mShapeType == COLLISION_SPHERE )
         {
-            for( std::vector<AABB>::iterator x = mMeshAABBs.begin();
-                 x != mMeshAABBs.end(); x++ )
+            glm::vec3 nodePos = other->getNode()->getPosition();
+
+            if( ( nodePos.x >= mObjectAabb.aabbMin.x &&
+                  nodePos.x <= mObjectAabb.aabbMax.x ) &&
+                ( nodePos.y >= mObjectAabb.aabbMin.y &&
+                  nodePos.y <= mObjectAabb.aabbMax.y ) &&
+                ( nodePos.z >= mObjectAabb.aabbMin.z &&
+                  nodePos.z <= mObjectAabb.aabbMax.z ) )
             {
-                AABB aabb = *x;
-                aabb.aabbMin -= other->mSphereRadius;
-                aabb.aabbMax += other->mSphereRadius;
+                for( std::vector<AABB>::iterator x = mMeshAABBs.begin();
+                     x != mMeshAABBs.end(); x++ )
+                {
+                    AABB aabb = *x;
+                    aabb.aabbMin -= other->mSphereRadius;
+                    aabb.aabbMax += other->mSphereRadius;
 
-                glm::vec3 nodePos = other->getNode()->getPosition();
-
-                if( ( nodePos.x >= aabb.aabbMin.x &&
-                      nodePos.x <= aabb.aabbMax.x ) &&
-                    ( nodePos.y >= aabb.aabbMin.y &&
-                      nodePos.y <= aabb.aabbMax.y ) &&
-                    ( nodePos.z >= aabb.aabbMin.z &&
-                      nodePos.z <= aabb.aabbMax.z ) )
-                    return true;
+                    if( ( nodePos.x >= aabb.aabbMin.x &&
+                          nodePos.x <= aabb.aabbMax.x ) &&
+                        ( nodePos.y >= aabb.aabbMin.y &&
+                          nodePos.y <= aabb.aabbMax.y ) &&
+                        ( nodePos.z >= aabb.aabbMin.z &&
+                          nodePos.z <= aabb.aabbMax.z ) )
+                        return true;
+                }
             }
         }
 
@@ -187,6 +195,9 @@ void CollisionShape::recalculateAABBs()
 
         aabb.aabbMax += mNode->getPosition();
         aabb.aabbMin += mNode->getPosition();
+
+        mObjectAabb.aabbMin = glm::min( mObjectAabb.aabbMin, aabb.aabbMin );
+        mObjectAabb.aabbMax = glm::max( mObjectAabb.aabbMax, aabb.aabbMax );
 
         mMeshAABBs.push_back( aabb );
     }

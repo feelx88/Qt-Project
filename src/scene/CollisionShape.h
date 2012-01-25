@@ -77,6 +77,7 @@ protected:
 
     std::vector<glm::vec3> mMeshVertices;
     std::vector<AABB> mMeshAABBs;
+    AABB mObjectAabb;
 
     static std::set<CollisionShape*> sShapes;
     static std::multimap<CollisionShape*, CollisionShape*> sShapePairs;
