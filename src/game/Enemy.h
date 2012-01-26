@@ -2,7 +2,9 @@
 #define ENEMY_H
 
 #include <string>
+#include <glm/glm.hpp>
 
+class Node;
 class GLNode;
 class Path;
 
@@ -15,14 +17,17 @@ public:
 
     void update();
 
-    void setPath( Path *path )
-    {
-        mPath = path;
-    }
+    void setPath( Path *path );
+
+    void setStartRadius( float rad );
+    void setStartPosition( glm::vec3 pos );
 
 protected:
     GLNode *mEnemyShip;
     Path *mPath;
+
+    Node *mStartTrigger;
+    bool mStart;
 
     int mHitPoints;
 };

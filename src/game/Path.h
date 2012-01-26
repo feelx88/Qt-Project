@@ -16,14 +16,19 @@ public:
         mPathNodes.push_back( node );
     }
 
+    void reset();
+
     glm::vec3 getNextPosition();
+    glm::vec3 getCurrentPosition();
 protected:
 
     glm::vec3 calculateBezierCurvePoint( int startIndex, float fraction );
 
     std::vector<glm::vec3> mPathNodes;
     unsigned int mCurPathIndex;
-    float mCurPosition;
+    float mCurFraction;
+    glm::vec3 mCurPosition;
+    bool mRecalcCurPosition;
 };
 
 #endif // PATH_H

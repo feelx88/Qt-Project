@@ -121,6 +121,35 @@ void Level::loadLevel(std::string fileName)
                 .nodeValue().toFloat();
     }
 
+    QDomNodeList dirChangers = doc.elementsByTagName( "DirectionChanger" );
+    for( int x = 0; x < dirChangers.size(); x++ )
+    {
+        QDomNode dirChanger = dirChangers.at( x );
+
+        DirectionChanger dC;
+
+        QDomNode pos = dirChanger.firstChildElement( "Position" );
+        dC.position.x = pos.firstChildElement( "X" ).firstChild()
+                .nodeValue().toFloat();
+        dC.position.y = pos.firstChildElement( "Y" ).firstChild()
+                .nodeValue().toFloat();
+        dC.position.z = pos.firstChildElement( "Z" ).firstChild()
+                .nodeValue().toFloat();
+
+        QDomNode dir = dirChanger.firstChildElement( "Direction" );
+        dC.direction.x = dir.firstChildElement( "X" ).firstChild()
+                .nodeValue().toFloat();
+        dC.direction.y = dir.firstChildElement( "Y" ).firstChild()
+                .nodeValue().toFloat();
+        dC.direction.z = dir.firstChildElement( "Z" ).firstChild()
+                .nodeValue().toFloat();
+
+        float rad = dirChanger.firstChildElement( "Radius" ).firstChild()
+                .nodeValue().toFloat();
+        dC.node = new Node( GLRenderer::getRootNode() );
+        dC.node->setCollisionShape( CollisionShape::newSphereShape( dC.node, rad ) );
+    }
+
     mPlayerShip = new PlayerShip( "raw/ship1.bmd", mCamera );
     mPlayerShip->setPosition( mPlayerStart );
 

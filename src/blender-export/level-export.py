@@ -64,15 +64,17 @@ def write_leveldata(context, filepath):
     #add data to dom
     for ob in bpy.context.scene.objects:
         if ob.type == 'MESH':
-            if 'player' in ob.keys():
+            if 'noexport' in ob.keys():
+                continue
+            elif 'player' in ob.keys():
                 #player start
                 elem = rootElem.appendElement( doc, 'Player' )
                 pos = elem.appendElement( doc, 'StartPosition' )
                 pos.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
                 pos.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
                 pos.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
-            if 'direction' in ob.keys():
-                elem = rootElem.appendElement( doc, 'DirectionChange' )
+            elif 'direction' in ob.keys():
+                elem = rootElem.appendElement( doc, 'DirectionChanger' )
                 pos = elem.appendElement( doc, 'Position' )
                 pos.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
                 pos.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
@@ -106,9 +108,8 @@ def write_leveldata(context, filepath):
                 #enemy paths
                 elem = rootElem.appendElement( doc, 'Enemy' )
                 elem.appendTextElement( doc, 'Name', ob.id_data['enemy'] )
-                numNodes = len( ob.data.splines[0].bezier_points )
-                if numNodes % 2 != 0:
-                    numNodes -= 1
+                numNodes = len( ob.data.splines[0].bezier_points ) - 1
+
                 for index in range( 0, numNodes ):
                     node = ob.data.splines[0].bezier_points[index]
                     point = elem.appendElement( doc, 'PathNode' )

@@ -1,7 +1,7 @@
 #include "Path.h"
 
 Path::Path()
-    : mCurPathIndex( 0 ), mCurPosition( 0.f )
+    : mCurPathIndex( 0 ), mCurFraction( 0.f ), mRecalcCurPosition( true )
 {
 }
 
@@ -9,22 +9,39 @@ Path::~Path()
 {
 }
 
+void Path::reset()
+{
+    mCurPathIndex = 0;
+    mCurFraction = 0.f;
+}
+
 glm::vec3 Path::getNextPosition()
 {
-    mCurPosition += 0.01f;
+    mCurFraction += 0.01f;
+    mRecalcCurPosition = true;
 
-    if( mCurPosition > 1.f )
+    return getCurrentPosition();
+}
+
+glm::core::type::vec3 Path::getCurrentPosition()
+{
+    if( mRecalcCurPosition )
     {
-        if( mCurPathIndex < mPathNodes.size() - 4 )
+        if( mCurFraction > 1.f )
         {
-            mCurPathIndex += 4;
-            mCurPosition = 0.f;
+            if( mCurPathIndex < mPathNodes.size() - 4 )
+            {
+                mCurPathIndex += 4;
+                mCurFraction = 0.f;
+            }
+            else
+                mCurFraction = 1.f;
         }
-        else
-            mCurPosition = 1.f;
+        mRecalcCurPosition = false;
+        return calculateBezierCurvePoint( mCurPathIndex, mCurFraction );
     }
-
-    return calculateBezierCurvePoint( mCurPathIndex, mCurPosition );
+    else
+        return mCurPosition;
 }
 
 glm::vec3 Path::calculateBezierCurvePoint(int startIndex, float fraction)

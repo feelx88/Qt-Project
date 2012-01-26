@@ -6,11 +6,13 @@
 #include "../scene/CollisionShape.h"
 #include "../game/Game.h"
 
+std::map<GLNode*, int> Weapon::sDamageMap;
+
 Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
                 int bulletCount, std::string bulletModelFileName )
     : mBulletCount( bulletCount ), mCurBullet( 0 ), mShipNode( shipNode ),
       mCoolDownTime( coolDownTime ), mAmmoLevel( 0 ), mInfiniteAmmo( true ),
-      mCoolDownLevel( coolDownTime ), mBulletSpeed( bulletSpeed )
+      mCoolDownLevel( coolDownTime ), mBulletSpeed( bulletSpeed ), mDamage( 1 )
 {
     for( int x = 0; x < mBulletCount; x++ )
     {
@@ -24,6 +26,8 @@ Weapon::Weapon( GLNode *shipNode, int coolDownTime, float bulletSpeed,
         bullet->setTag( Game::NODE_BULLET );
 
         mBullets.push_back( bullet );
+
+        sDamageMap.insert( std::make_pair( bullet, mDamage ) );
     }
 }
 
@@ -54,6 +58,28 @@ void Weapon::shoot()
     bullet->setRotation( mShipNode->getRotation() );
 
     bullet->show();
+}
+
+void Weapon::setDamage( int damage )
+{
+    for( int x = 0; x < mBulletCount; x++ )
+    {
+        GLNode *bullet = mBullets.at( x );
+        sDamageMap.erase( sDamageMap.find( bullet ) );
+        sDamageMap.insert( std::make_pair( bullet, damage  ) );
+    }
+    mDamage = damage;
+}
+
+int Weapon::getDamage( GLNode *node )
+{
+    int damage = 0;
+
+    std::map<GLNode*, int>::iterator x = sDamageMap.find( node );
+    if( x != sDamageMap.end() )
+        damage = x->second;
+
+    return damage;
 }
 
 void Weapon::update()

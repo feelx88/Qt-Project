@@ -15,6 +15,9 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
     //open file
     fstream file( fileName.c_str(), fstream::in | fstream::binary );
 
+    if( file.bad() )
+        throw "Error";
+
     //create buffers
     Buffer iBuffer( sizeof( int ), file );
     Buffer fBuffer( sizeof( float ), file );

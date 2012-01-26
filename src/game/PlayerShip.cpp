@@ -33,11 +33,13 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     mPrimaryWeapon = new Weapon( mShipModel, 150, 20.f, 30,
                                  "raw/primaryWeaponRay1.bmd" );
+    mPrimaryWeapon->setDamage( 1 );
     mSecondaryWeapon = new Weapon( mShipModel, 2000, 10.f, 2,
                                    "raw/secondaryWeaponBomb1.bmd" );
+    mSecondaryWeapon->setDamage( 5 );
 
     mSecondaryWeapon->setInfiniteAmmo( false );
-    mSecondaryWeapon->incrementAmmo( 3 );
+    mSecondaryWeapon->incrementAmmo( 5 );
 
     mCrosshairBack = new GLNode( GLRenderer::getRootNode() );
     mCrosshairFront = new GLNode( GLRenderer::getRootNode() );
@@ -84,11 +86,11 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
         mCurRotationMinus.x = 0;
         break;
     case ACTION_MOVE_LEFT:
-        mCurRotation += glm::vec3( 0, xyAcc, 0 );
+        mCurRotation += glm::vec3( 0, xyAcc, xyAcc * 5 );
         mCurRotationMinus.y = 0;
         break;
     case ACTION_MOVE_RIGHT:
-        mCurRotation -= glm::vec3( 0, xyAcc, 0 );
+        mCurRotation -= glm::vec3( 0, xyAcc, xyAcc * 5 );
         mCurRotationMinus.y = 0;
         break;
     case ACTION_FIRE_PRIMARY:

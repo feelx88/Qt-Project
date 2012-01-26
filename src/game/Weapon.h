@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 class GLNode;
 
@@ -26,6 +27,9 @@ public:
         mInfiniteAmmo = on;
     }
 
+    void setDamage( int damage );
+    static int getDamage( GLNode *node );
+
     void update();
 
 protected:
@@ -37,6 +41,9 @@ protected:
     bool mInfiniteAmmo;
 
     float mCoolDownLevel, mBulletSpeed;
+
+    int mDamage;
+    static std::map<GLNode*, int> sDamageMap;
 };
 
 #endif // WEAPON_H

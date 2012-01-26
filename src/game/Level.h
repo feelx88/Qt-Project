@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include "PlayerShip.h"
 
+class Node;
 class GLNode;
 class GLCameraNode;
 
@@ -15,6 +16,13 @@ class Enemy;
 class Level
 {
 public:
+
+    struct DirectionChanger
+    {
+        glm::vec3 position, direction;
+        Node *node;
+    };
+
     Level( GLCameraNode *camera );
     virtual ~Level();
 
@@ -34,6 +42,7 @@ protected:
     glm::vec3 mPlayerStart;
 
     std::vector<Enemy*> mEnemies;
+    std::vector<DirectionChanger> mDirectionChangers;
 
     PlayerShip *mPlayerShip;
     GLCameraNode *mCamera;
