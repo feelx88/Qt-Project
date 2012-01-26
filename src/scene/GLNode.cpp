@@ -122,7 +122,7 @@ std::vector<glm::vec3> GLNode::getVertices()
 {
     std::vector<glm::vec3> verts;
 
-    for( int x = 0; x < mFaceCount * 3; x += 3 )
+    for( unsigned int x = 0; x < mFaceCount * 3; x += 3 )
     {
         verts.push_back( glm::vec3( mVertices[x], mVertices[x + 1], mVertices[x + 2] ) );
     }

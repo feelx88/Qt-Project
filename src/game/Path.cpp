@@ -16,10 +16,12 @@ glm::vec3 Path::getNextPosition()
     if( mCurPosition > 1.f )
     {
         if( mCurPathIndex < mPathNodes.size() - 4 )
+        {
             mCurPathIndex += 4;
+            mCurPosition = 0.f;
+        }
         else
-            mCurPathIndex = 0;
-        mCurPosition = 0.f;
+            mCurPosition = 1.f;
     }
 
     return calculateBezierCurvePoint( mCurPathIndex, mCurPosition );

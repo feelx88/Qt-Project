@@ -61,6 +61,8 @@ win32 {
 LIBS += -lglu32
 }
 
+QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
+
 
 
 

@@ -22,7 +22,7 @@ protected:
     glm::vec3 calculateBezierCurvePoint( int startIndex, float fraction );
 
     std::vector<glm::vec3> mPathNodes;
-    int mCurPathIndex;
+    unsigned int mCurPathIndex;
     float mCurPosition;
 };
 

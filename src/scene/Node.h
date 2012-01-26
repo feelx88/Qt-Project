@@ -6,7 +6,7 @@
 
 #include <vector>
 
-class CollisionShape;
+#include "CollisionShape.h"
 
 class Node
 {

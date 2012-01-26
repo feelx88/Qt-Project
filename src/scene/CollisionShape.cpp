@@ -14,6 +14,7 @@ CollisionShape::CollisionShape( ShapeType shape )
 CollisionShape::~CollisionShape()
 {
     sShapes.erase( this );
+    mMeshAABBs.clear();
 }
 
 bool CollisionShape::testCollision( CollisionShape *other )

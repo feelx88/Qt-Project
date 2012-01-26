@@ -12,11 +12,10 @@
 #include "Weapon.h"
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
-    : mCamera( camera ), mCurAcceleration( 0.f ),
-      mSideAcceleration( 30.f ), mSideMinMaxSpeed( 10.f ),
-      mForwardAcceleration( 10.f ), mForwardMinSpeed( 3.f ),
+    : mCamera( camera ), mSideAcceleration( 30.f ), mSideMinMaxSpeed( 10.f ),
+      mForwardAcceleration( 10.f ), mForwardMinSpeed( -5.f ),
       mForwardMaxSpeed( 15.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
-      mMode( MODE_FIXED_DIRECTION )
+       mCurAcceleration( 0.f ), mMode( MODE_FIXED_DIRECTION )
 {
     mShipModel = new GLNode( GLRenderer::getRootNode() );
     BMDImport::loadFromFile( mShipModel, fileName );
@@ -99,6 +98,9 @@ void PlayerShip::action( PlayerShip::SHIP_ACTIONS action )
     case ACTION_FIRE_SECONDARY:
         if( mSecondaryWeapon )
             mSecondaryWeapon->shoot();
+        break;
+    case ACTION_COUNT:
+    default:
         break;
     }
 }

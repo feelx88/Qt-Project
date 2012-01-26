@@ -89,9 +89,7 @@ def write_leveldata(context, filepath):
                 direction.appendTextElement( doc, 'Y', str( d[yx] * ym ) )
                 direction.appendTextElement( doc, 'Z', str( d[zx] * zm ) )
 
-                rad = elem.appendTextElement( doc, 'Radius', str( ob.dimensions[0] )
-
-
+                elem.appendTextElement( doc, 'Radius', str( ob.dimensions[0] ) )
             else:
                 #level geometry
                 elem = rootElem.appendElement( doc, 'Mesh' )
