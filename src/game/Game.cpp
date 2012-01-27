@@ -65,7 +65,7 @@ void Game::init()
                                 glm::vec3( 0, 20, 10 ), glm::quat() );
 
     mActiveLevel = new Level( mCamera );
-    mActiveLevel->loadLevel( "data/Level/Level02/Level02.xml" );
+    mActiveLevel->loadLevel( "data/Level/Level01/Level01.xml" );
 
     mNextFrame = Clock::getTime();
 }
@@ -76,7 +76,7 @@ void Game::run()
 
     while( Clock::getTime() > mNextFrame && framesSkipped < maxFrameSkip )
     {
-        CollisionShape::findCollisionPairs();
+//        CollisionShape::findCollisionPairs();
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {
             if( mActionTriggered[x] )
