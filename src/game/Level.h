@@ -19,8 +19,10 @@ public:
 
     struct DirectionChanger
     {
-        glm::vec3 position, direction;
+        glm::vec3 direction;
         Node *node;
+        bool enabled;
+        PlayerShip::CONTROL_MODE mode;
     };
 
     Level( GLCameraNode *camera );

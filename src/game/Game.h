@@ -18,10 +18,11 @@ public:
     enum NodeTags
     {
         NODE_PLAYERSHIP = 1,
+        NODE_PLAYERSHIP_DIRECTION_CHANGER,
         NODE_LEVEL,
         NODE_BULLET,
         NODE_ENEMY,
-        NODE_ENEMY_SENSOR       //Used for starting enemy ships
+        NODE_ENEMY_SENSOR //Used for starting enemy ships
     };
 
     Game();

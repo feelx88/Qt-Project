@@ -15,27 +15,27 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mSideAcceleration( 30.f ), mSideMinMaxSpeed( 10.f ),
       mForwardAcceleration( 10.f ), mForwardMinSpeed( -5.f ),
       mForwardMaxSpeed( 15.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
-       mCurAcceleration( 0.f ), mMode( MODE_FIXED_DIRECTION )
+      mCurAcceleration( 0.f ), mMode( MODE_FIXED_DIRECTION )
 {
-    mShipModel = new GLNode( GLRenderer::getRootNode() );
-    BMDImport::loadFromFile( mShipModel, fileName );
+    mShipNode = new GLNode( GLRenderer::getRootNode() );
+    BMDImport::loadFromFile( mShipNode, fileName );
 
-    mShipModel->setTag( Game::NODE_PLAYERSHIP );
+    mShipNode->setTag( Game::NODE_PLAYERSHIP );
 
-    mShipModel->setPosition( glm::vec3( 0, 10, 50 ) );
+    mShipNode->setPosition( glm::vec3( 0, 10, 50 ) );
 
-    mShipModel->setCollisionShape( CollisionShape::newSphereShape( mShipModel, 2 ) );
+    mShipNode->setCollisionShape( CollisionShape::newSphereShape( mShipNode, 1 ) );
 
-    glm::vec3 position = mShipModel->getPosition();
+    glm::vec3 position = mShipNode->getPosition();
 
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 10, 10 ) );
 
-    mPrimaryWeapon = new Weapon( mShipModel, 150, 20.f, 30,
-                                 "raw/primaryWeaponRay1.bmd" );
+    mPrimaryWeapon = new Weapon( mShipNode, 150, 20.f, 30,
+                                 "data/Models/PrimaryWeapon/primaryWeaponRay1.bmd" );
     mPrimaryWeapon->setDamage( 1 );
-    mSecondaryWeapon = new Weapon( mShipModel, 2000, 10.f, 2,
-                                   "raw/secondaryWeaponBomb1.bmd" );
+    mSecondaryWeapon = new Weapon( mShipNode, 2000, 10.f, 2,
+                                   "data/Models/SecondaryWeapon/secondaryWeaponBomb1.bmd" );
     mSecondaryWeapon->setDamage( 5 );
 
     mSecondaryWeapon->setInfiniteAmmo( false );
@@ -44,8 +44,8 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     mCrosshairBack = new GLNode( GLRenderer::getRootNode() );
     mCrosshairFront = new GLNode( GLRenderer::getRootNode() );
 
-    BMDImport::loadFromFile( mCrosshairFront, "raw/crosshair.bmd" );
-    BMDImport::loadFromFile( mCrosshairBack, "raw/crosshair.bmd" );
+    BMDImport::loadFromFile( mCrosshairFront, "data/Models/Crosshair/crosshair.bmd" );
+    BMDImport::loadFromFile( mCrosshairBack, "data/Models/Crosshair/crosshair.bmd" );
 
     mCrosshairFront->setAlwasDrawToFront( true );
     mCrosshairBack->setAlwasDrawToFront( true );
@@ -55,7 +55,7 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
 PlayerShip::~PlayerShip()
 {
-    delete mShipModel;
+    delete mShipNode;
     delete mPrimaryWeapon;
     delete mSecondaryWeapon;
     delete mCrosshairFront;
@@ -115,7 +115,7 @@ void PlayerShip::update()
     const glm::vec3 yDir = glm::vec3( 0.f, 1.f, 0.f );
     const glm::vec3 zDir = glm::vec3( 0.f, 0.f, 1.f );
 
-    glm::vec3 position = mShipModel->getPosition();
+    glm::vec3 position = mShipNode->getPosition();
     glm::quat rotation;
 
     if( mMode == MODE_FIXED_DIRECTION )
@@ -139,11 +139,11 @@ void PlayerShip::update()
     mCurAcceleration = glm::clamp( mCurAcceleration,
                                    mForwardMinSpeed, mForwardMaxSpeed );
 
-    mShipModel->move( glm::vec3( 0, 0, -mCurAcceleration * timeFactor ) );
+    mShipNode->move( glm::vec3( 0, 0, -mCurAcceleration * timeFactor ) );
 
     rotation = glm::gtc::quaternion::rotate( rotation, mCurRotation.z, zDir );
 
-    mShipModel->setRotation( rotation );
+    mShipNode->setRotation( rotation );
 
     if( mMode == MODE_FREEFLIGHT )
         mCurRotation.z -= mCurRotationMinus.z * timeFactor;
@@ -184,8 +184,8 @@ void PlayerShip::update()
 
 void PlayerShip::setPosition( glm::core::type::vec3 position )
 {
-    if( mShipModel )
-        mShipModel->setPosition( position );
+    if( mShipNode )
+        mShipNode->setPosition( position );
 }
 
 void PlayerShip::setDirection(glm::core::type::vec3 direction)

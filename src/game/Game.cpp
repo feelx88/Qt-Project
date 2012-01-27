@@ -42,7 +42,7 @@ Game::~Game()
 
 void Game::init()
 {
-    QSettings settings( "raw/config.ini", QSettings::IniFormat );
+    QSettings settings( "data/config.ini", QSettings::IniFormat );
 
     mActionMap[PlayerShip::ACTION_MOVE_UP] =
             settings.value( "ActionMoveUp", Qt::Key_Up ).toInt();
@@ -65,7 +65,7 @@ void Game::init()
                                 glm::vec3( 0, 20, 10 ), glm::quat() );
 
     mActiveLevel = new Level( mCamera );
-    mActiveLevel->loadLevel( "raw/testlevel2/testlevel2.xml" );
+    mActiveLevel->loadLevel( "data/Level/Level02/Level02.xml" );
 
     mNextFrame = Clock::getTime();
 }

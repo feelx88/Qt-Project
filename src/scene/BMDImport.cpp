@@ -16,7 +16,7 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
     fstream file( fileName.c_str(), fstream::in | fstream::binary );
 
     if( file.bad() )
-        throw "Error";
+        throw new BMDException( fileName );
 
     //create buffers
     Buffer iBuffer( sizeof( int ), file );
@@ -29,7 +29,7 @@ bool BMDImport::loadFromFile( GLNode *node, std::string fileName )
             cBuffer.convertFromStream<char>() == 'd' )
         cBuffer.readFromStream();
     else
-        throw "Error";
+        throw new BMDException( fileName );
 
     int faceCount = iBuffer.convertFromStream<int>();
     int textureCount = iBuffer.convertFromStream<int>();

@@ -19,6 +19,9 @@ CollisionShape::~CollisionShape()
 
 bool CollisionShape::testCollision( CollisionShape *other )
 {
+    if( other == this )
+        return true;
+
     if( mShapeType == COLLISION_SPHERE )
     {
         if( other->mShapeType == COLLISION_SPHERE )
@@ -134,10 +137,10 @@ void CollisionShape::findCollisionPairs()
         for( y = x, y++; y != sShapes.end(); y++ )
         {
             CollisionShape *shape2 = *y;
+
             if( shape1->testCollision( shape2 ) )
             {
                 sShapePairs.insert( std::make_pair( shape1, shape2 ) );
-                sShapePairs.insert( std::make_pair( shape2, shape1 ) );
             }
         }
     }
@@ -151,7 +154,7 @@ bool CollisionShape::collisionOccured( CollisionShape *shape1,
     {
         CollisionShape *s1 = x->first;
         CollisionShape *s2 = x->second;
-        if( ( shape1 == s1 || shape1 == s2 ) && ( shape2 == s1 || shape2 == s2 ) )
+        if( ( shape1 == s1 && shape2 == s2 ) || ( shape1 == s2 && shape2 == s1 ) )
             return true;
     }
     return false;
@@ -166,6 +169,7 @@ std::vector<CollisionShape*> CollisionShape::shapesCollidingWith(
     {
         CollisionShape *s1 = x->first;
         CollisionShape *s2 = x->second;
+
         if( s1 == shape )
             ret.push_back( s2 );
         if( s2 == shape )

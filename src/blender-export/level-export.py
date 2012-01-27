@@ -17,6 +17,7 @@ import struct
 
 import os.path
 import xml.dom.minidom
+from mathutils import Vector
 
 def appendElement( self, document, nodeName ):
     node = document.createElement( nodeName )
@@ -91,18 +92,48 @@ def write_leveldata(context, filepath):
                 direction.appendTextElement( doc, 'Y', str( d[yx] * ym ) )
                 direction.appendTextElement( doc, 'Z', str( d[zx] * zm ) )
 
-                elem.appendTextElement( doc, 'Radius', str( ob.dimensions[0] ) )
+                elem.appendTextElement( doc, 'Radius', str( ob.dimensions[0] / 2 ) )
+
+                mode = 'Fixed'
+                if ob.id_data['direction'] == 'free':
+                    mode = 'Free'
+
+                elem.appendTextElement( doc, 'Mode', mode )
             else:
                 #level geometry
+                name = ob.name
+                if len( ob.users_group ) > 0:
+                    if( ob.users_group[0].name == 'NoCollision' ):
+                        if len( ob.users_group ) > 1:
+                            name = ob.users_group[1].name
+                    else:
+                        name = ob.users_group[0].name
+
+                if not os.path.exists( directory + name + '.bmd' ):
+                    bpy.ops.object.select_name( name = ob.name )
+                    bpy.ops.object.mode_set( mode = 'OBJECT' )
+                    bpy.ops.export_mesh.bmd( filepath = directory + name + '.bmd' )
+                    bpy.ops.object.select_all( action = 'DESELECT' )
+
                 elem = rootElem.appendElement( doc, 'Mesh' )
-                elem.appendTextElement( doc, 'File', ob.name + '.bmd' )
-                bpy.ops.object.select_name( name = ob.name )
-                bpy.ops.object.mode_set( mode = 'OBJECT' )
-                bpy.ops.export_mesh.bmd( filepath = directory + ob.name + '.bmd' )
-                bpy.ops.object.select_all( action = 'DESELECT' )
-                elem.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
-                elem.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
-                elem.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
+                elem.appendTextElement( doc, 'File', name + '.bmd' )
+
+                pos = elem.appendElement( doc, 'Position' )
+                pos.appendTextElement( doc, 'X', str( ob.location[xx] * xm ) )
+                pos.appendTextElement( doc, 'Y', str( ob.location[yx] * ym ) )
+                pos.appendTextElement( doc, 'Z', str( ob.location[zx] * zm ) )
+
+                rot = elem.appendElement( doc, 'Rotation' )
+                rot.appendTextElement( doc, 'X', str( ob.rotation_euler[xx] * xm ) )
+                rot.appendTextElement( doc, 'Y', str( ob.rotation_euler[yx] * ym ) )
+                rot.appendTextElement( doc, 'Z', str( ob.rotation_euler[zx] * zm ) )
+
+                noCollision = 'False'
+
+                for group in ob.users_group:
+                    if group.name == 'NoCollision':
+                        noCollision = 'True'
+                elem.appendTextElement( doc, 'NoCollision', noCollision )
         elif ob.type == 'CURVE':
             if ob.data.splines[0].type == 'BEZIER' and 'enemy' in ob.keys():
                 #enemy paths
@@ -112,28 +143,31 @@ def write_leveldata(context, filepath):
 
                 for index in range( 0, numNodes ):
                     node = ob.data.splines[0].bezier_points[index]
+                    nx = ob.location[xx] * xm
+                    ny = ob.location[yx] * ym
+                    nz = ob.location[zx] * zm
                     point = elem.appendElement( doc, 'PathNode' )
-                    point.appendTextElement( doc, 'X', str( node.co[xx] * xm ) )
-                    point.appendTextElement( doc, 'Y', str( node.co[yx] * ym ) )
-                    point.appendTextElement( doc, 'Z', str( node.co[zx] * zm ) )
+                    point.appendTextElement( doc, 'X', str( node.co[xx] * xm + nx ) )
+                    point.appendTextElement( doc, 'Y', str( node.co[yx] * ym + ny ) )
+                    point.appendTextElement( doc, 'Z', str( node.co[zx] * zm + nz) )
                     point = elem.appendElement( doc, 'PathNode' )
-                    point.appendTextElement( doc, 'X', str( node.handle_right[xx] * xm ) )
-                    point.appendTextElement( doc, 'Y', str( node.handle_right[yx] * ym ) )
-                    point.appendTextElement( doc, 'Z', str( node.handle_right[zx] * zm ) )
+                    point.appendTextElement( doc, 'X', str( node.handle_right[xx] * xm + nx ) )
+                    point.appendTextElement( doc, 'Y', str( node.handle_right[yx] * ym + ny ) )
+                    point.appendTextElement( doc, 'Z', str( node.handle_right[zx] * zm + nz ) )
                     node = ob.data.splines[0].bezier_points[index + 1]
                     point = elem.appendElement( doc, 'PathNode' )
-                    point.appendTextElement( doc, 'X', str( node.handle_left[xx] * xm ) )
-                    point.appendTextElement( doc, 'Y', str( node.handle_left[yx] * ym ) )
-                    point.appendTextElement( doc, 'Z', str( node.handle_left[zx] * zm ) )
+                    point.appendTextElement( doc, 'X', str( node.handle_left[xx] * xm + nx ) )
+                    point.appendTextElement( doc, 'Y', str( node.handle_left[yx] * ym + ny ) )
+                    point.appendTextElement( doc, 'Z', str( node.handle_left[zx] * zm + nz ) )
                     point = elem.appendElement( doc, 'PathNode' )
-                    point.appendTextElement( doc, 'X', str( node.co[xx] * xm ) )
-                    point.appendTextElement( doc, 'Y', str( node.co[yx] * ym ) )
-                    point.appendTextElement( doc, 'Z', str( node.co[zx] * zm ) )
+                    point.appendTextElement( doc, 'X', str( node.co[xx] * xm + nx ) )
+                    point.appendTextElement( doc, 'Y', str( node.co[yx] * ym + ny ) )
+                    point.appendTextElement( doc, 'Z', str( node.co[zx] * zm + nz ) )
 
     #write xml
     file = open( filepath, 'w+' )
-    #file.write( doc.toprettyxml() )
-    file.write( doc.toxml() )
+    file.write( doc.toprettyxml() )
+    #file.write( doc.toxml() )
     file.close()
     return {'FINISHED'}
 

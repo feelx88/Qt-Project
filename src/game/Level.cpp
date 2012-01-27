@@ -38,6 +38,21 @@ void Level::update()
          x != mEnemies.end(); x++ )
         (*x)->update();
     mPlayerShip->update();
+
+    for( unsigned int x = 0; x < mDirectionChangers.size(); x++ )
+    {
+        DirectionChanger dC = mDirectionChangers.at( x );
+        if( dC.enabled && CollisionShape::collisionOccured(
+                    mPlayerShip->getNode()->getCollisionShape(),
+                    dC.node->getCollisionShape() ) )
+        {
+            mPlayerShip->setDirection( dC.direction );
+
+            dC.enabled = false;
+
+            mPlayerShip->setFlightMode( dC.mode );
+        }
+    }
 }
 
 void Level::loadLevel(std::string fileName)
@@ -47,7 +62,13 @@ void Level::loadLevel(std::string fileName)
 
     QDomDocument doc;
     QFile *levelFile = new QFile( fileName.c_str() );
-    doc.setContent( levelFile, false );
+    levelFile->open( QFile::ReadOnly );
+    QString levelContent = levelFile->readAll();
+
+    levelContent = levelContent.replace( "\n", "" );
+    levelContent = levelContent.replace( "\t", "" );
+
+    doc.setContent( levelContent );
 
     QDomNodeList meshList = doc.elementsByTagName( "Mesh" );
     for( int x = 0; x < meshList.size(); x++ )
@@ -60,19 +81,43 @@ void Level::loadLevel(std::string fileName)
         BMDImport::loadFromFile( mesh, dir.path().toStdString() + "/" + file );
         mLevelMeshes.push_back( mesh );
 
-        glm::vec3 pos;
-
-        pos.x = meshNode.firstChildElement( "X" ).firstChild()
+        glm::vec3 p;
+        QDomNode pos = meshNode.firstChildElement( "Position" );
+        p.x = pos.firstChildElement( "X" ).firstChild()
                 .nodeValue().toFloat();
-        pos.y = meshNode.firstChildElement( "Y" ).firstChild()
+        p.y = pos.firstChildElement( "Y" ).firstChild()
                 .nodeValue().toFloat();
-        pos.z = meshNode.firstChildElement( "Z" ).firstChild()
+        p.z = pos.firstChildElement( "Z" ).firstChild()
                 .nodeValue().toFloat();
 
-        mesh->setPosition( pos );
+        glm::vec3 r;
+        QDomNode rot = meshNode.firstChildElement( "Rotation" );
+        r.x = rot.firstChildElement( "X" ).firstChild()
+                .nodeValue().toFloat();
+        r.y = rot.firstChildElement( "Y" ).firstChild()
+                .nodeValue().toFloat();
+        r.z = rot.firstChildElement( "Z" ).firstChild()
+                .nodeValue().toFloat();
 
-        CollisionShape *shape = CollisionShape::newMeshShape( mesh, mesh->getVertices() );
-        mesh->setCollisionShape( shape );
+        mesh->setPosition( p );
+        glm::quat rotation;
+
+        rotation = glm::rotate( rotation, r.x, glm::vec3( 1.f, 0.f, 0.f ) );
+        rotation = glm::rotate( rotation, r.y, glm::vec3( 0.f, 1.f, 0.f ) );
+        rotation = glm::rotate( rotation, r.z, glm::vec3( 0.f, 0.f, 1.f ) );
+
+        mesh->setRotation( rotation );
+
+        bool nC;
+        QString noCollision = meshNode.firstChildElement( "NoCollision" ).firstChild()
+                .nodeValue();
+        nC = noCollision == "True" ? true : false;
+
+        if( !nC )
+        {
+            CollisionShape *shape = CollisionShape::newMeshShape( mesh, mesh->getVertices() );
+            mesh->setCollisionShape( shape );
+        }
 
         mesh->setTag( Game::NODE_LEVEL );
     }
@@ -127,14 +172,19 @@ void Level::loadLevel(std::string fileName)
         QDomNode dirChanger = dirChangers.at( x );
 
         DirectionChanger dC;
+        dC.node = new Node( GLRenderer::getRootNode() );
+
+        glm::vec3 p;
 
         QDomNode pos = dirChanger.firstChildElement( "Position" );
-        dC.position.x = pos.firstChildElement( "X" ).firstChild()
+        p.x = pos.firstChildElement( "X" ).firstChild()
                 .nodeValue().toFloat();
-        dC.position.y = pos.firstChildElement( "Y" ).firstChild()
+        p.y = pos.firstChildElement( "Y" ).firstChild()
                 .nodeValue().toFloat();
-        dC.position.z = pos.firstChildElement( "Z" ).firstChild()
+        p.z = pos.firstChildElement( "Z" ).firstChild()
                 .nodeValue().toFloat();
+
+        dC.node->setPosition( p );
 
         QDomNode dir = dirChanger.firstChildElement( "Direction" );
         dC.direction.x = dir.firstChildElement( "X" ).firstChild()
@@ -146,11 +196,20 @@ void Level::loadLevel(std::string fileName)
 
         float rad = dirChanger.firstChildElement( "Radius" ).firstChild()
                 .nodeValue().toFloat();
-        dC.node = new Node( GLRenderer::getRootNode() );
+
+        QString mode = dirChanger.firstChildElement( "Mode" ).firstChild().nodeValue();
+        dC.mode = mode == "Free" ? PlayerShip::MODE_FREEFLIGHT :
+                    PlayerShip::MODE_FIXED_DIRECTION;
+
         dC.node->setCollisionShape( CollisionShape::newSphereShape( dC.node, rad ) );
+        dC.node->setTag( Game::NODE_PLAYERSHIP_DIRECTION_CHANGER );
+
+        dC.enabled = true;
+
+        mDirectionChangers.push_back( dC );
     }
 
-    mPlayerShip = new PlayerShip( "raw/ship1.bmd", mCamera );
+    mPlayerShip = new PlayerShip( "data/Models/PlayerSpaceship/ship1.bmd", mCamera );
     mPlayerShip->setPosition( mPlayerStart );
 
     delete levelFile;

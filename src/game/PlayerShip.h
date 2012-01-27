@@ -45,8 +45,18 @@ public:
 
     void setDirection( glm::vec3 direction );
 
+    void setFlightMode( CONTROL_MODE mode )
+    {
+        mMode = mode;
+    }
+
+    GLNode *getNode()
+    {
+        return mShipNode;
+    }
+
 protected:
-    GLNode *mShipModel;
+    GLNode *mShipNode;
     GLCameraNode *mCamera;
 
     Weapon *mPrimaryWeapon, *mSecondaryWeapon;
