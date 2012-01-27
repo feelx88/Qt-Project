@@ -7,6 +7,20 @@
 
 std::map<std::string,std::pair<QImage*, unsigned int> > GLNode::sTexturePool;
 
+GLNode::GLNode( Node *parent )
+    : Node( parent ), mTextureCount( 0 ), mZPass( false ), mColor( 0 ),
+      mTexEnvMode( GL_MODULATE )
+{
+    setColor( 1.f, 1.f, 1.f, 1.f );
+}
+
+GLNode::GLNode(Node *parent, const glm::core::type::vec3 &position, const glm::gtc::quaternion::quat &rotation)
+    : Node( parent, position, rotation ), mZPass( false ), mColor( 0 ),
+      mTexEnvMode( GL_MODULATE )
+{
+    setColor( 1.f, 1.f, 1.f, 1.f );
+}
+
 GLNode::~GLNode()
 {
     delete[] mVertices;
@@ -15,6 +29,8 @@ GLNode::~GLNode()
     delete[] mTextureFileNames;
     delete[] mTextures;
     delete[] mTextureHandles;
+
+    delete[] mColor;
 }
 
 void GLNode::init()
@@ -55,7 +71,8 @@ void GLNode::update()
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[0] );
     }
 
-    glColor3f( 0.5, 0.5, 0.5 );
+    glColor4fv( mColor );
+    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mTexEnvMode );
 
     glDrawArrays( GL_TRIANGLES, 0, mFaceCount * 3 );
 
@@ -129,6 +146,17 @@ std::vector<glm::vec3> GLNode::getVertices()
         verts.push_back( glm::vec3( mVertices[x], mVertices[x + 1], mVertices[x + 2] ) );
     }
     return verts;
+}
+
+void GLNode::setColor(float r, float g, float b, float a)
+{
+    if( mColor )
+        delete mColor;
+    mColor = new float[4];
+    mColor[0] = r;
+    mColor[1] = g;
+    mColor[2] = b;
+    mColor[3] = a;
 }
 
 void GLNode::clearTextures()

@@ -14,13 +14,9 @@ class QImage;
 class GLNode : public Node
 {
 public:
-    GLNode( Node* parent )
-        : Node( parent ), mTextureCount( 0 ), mZPass( false )
-    {}
+    GLNode( Node* parent );
 
-    GLNode( Node* parent, const glm::vec3& position, const glm::quat& rotation )
-        : Node( parent, position, rotation ), mZPass( false )
-    {}
+    GLNode( Node* parent, const glm::vec3& position, const glm::quat& rotation );
 
     virtual ~GLNode();
 
@@ -39,6 +35,13 @@ public:
 
     std::vector<glm::vec3> getVertices();
 
+    void setColor( float r, float g, float b, float a );
+
+    void setTexEnvMode( unsigned int mode )
+    {
+        mTexEnvMode = mode;
+    }
+
     static void clearTextures();
 
 protected:
@@ -49,9 +52,12 @@ protected:
     std::string *mTextureFileNames;
     QImage **mTextures;
 
-    static std::map<std::string,std::pair<QImage*, unsigned int> > sTexturePool;
-
     bool mZPass;
+
+    float *mColor;
+    unsigned int mTexEnvMode;
+
+    static std::map<std::string,std::pair<QImage*, unsigned int> > sTexturePool;
 };
 
 #endif // GLNODE_H

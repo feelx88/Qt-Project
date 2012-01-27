@@ -41,7 +41,8 @@ HEADERS  += src/ui/MainWindow.h \
     src/game/Weapon.h \
     src/scene/CollisionShape.h \
     src/game/Enemy.h \
-    src/game/Path.h
+    src/game/Path.h \
+    src/core/Utility.h
 
 FORMS    += src/ui/MainWindow.ui
 
