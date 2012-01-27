@@ -62,7 +62,7 @@ def write_leveldata(context, filepath, overwrite_existing, clean):
     doc.appendChild( rootElem )
 
     directory = os.path.dirname( filepath ) + '/'
-    
+
     if clean:
         for file in os.listdir( directory ):
             if re.search( '.*\.bmd$|.*.\.xml$|.*\.png$', file ) != None:
@@ -145,6 +145,13 @@ def write_leveldata(context, filepath, overwrite_existing, clean):
                 #enemy paths
                 elem = rootElem.appendElement( doc, 'Enemy' )
                 elem.appendTextElement( doc, 'Name', ob.id_data['enemy'] )
+
+                hp = 3
+                if 'hitpoints' in ob.keys():
+                    hp = ob.id_data['hitpoints']
+
+                elem.appendTextElement( doc, 'Hitpoints', str( hp ) )
+                elem.appendTextElement( doc, 'Looping', str( ob.data.splines[0].use_cyclic_u ) )
                 numNodes = len( ob.data.splines[0].bezier_points ) - 1
 
                 for index in range( 0, numNodes ):

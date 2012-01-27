@@ -19,6 +19,11 @@ public:
 
     void setPath( Path *path );
 
+    void setHitpoints( int hitpoints )
+    {
+        mHitPoints = hitpoints;
+    }
+
     void setStartRadius( float rad );
     void setStartPosition( glm::vec3 pos );
 
@@ -30,6 +35,9 @@ protected:
     bool mStart;
 
     int mHitPoints;
+
+    int mFlashTime;
+    bool mFlashing;
 };
 
 #endif // ENEMY_H

@@ -20,6 +20,12 @@ public:
 
     glm::vec3 getNextPosition();
     glm::vec3 getCurrentPosition();
+
+    void setLooping( bool looping )
+    {
+        mLooping = looping;
+    }
+
 protected:
 
     glm::vec3 calculateBezierCurvePoint( int startIndex, float fraction );
@@ -29,6 +35,8 @@ protected:
     float mCurFraction;
     glm::vec3 mCurPosition;
     bool mRecalcCurPosition;
+
+    bool mLooping;
 };
 
 #endif // PATH_H

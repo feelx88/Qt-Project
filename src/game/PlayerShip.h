@@ -71,7 +71,6 @@ protected:
     float mCurAcceleration;
     glm::vec3 mCurRotation, mCurRotationMinus;
 
-    glm::vec3 mShipDirection, mShipUp, mShipLeft;
     glm::quat mShipDirectionQuat;
 
     CONTROL_MODE mMode;

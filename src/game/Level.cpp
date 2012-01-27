@@ -128,6 +128,8 @@ void Level::loadLevel(std::string fileName)
         QDomNode enemy = enemies.at( x );
         Path *path = new Path();
 
+        glm::vec3 startPos;
+
         QDomNodeList pathNodes = enemy.childNodes();
         for( int y = 0; y < pathNodes.size(); y++ )
         {
@@ -145,11 +147,32 @@ void Level::loadLevel(std::string fileName)
                     .nodeValue().toFloat();
 
             path->addNode( pos );
+
+            if( y == 0 )
+                startPos = pos;
         }
+
+        int hp = 3;
+        QDomNode hitpoints = enemy.firstChildElement( "Hitpoints" );
+        if( !hitpoints.isNull() )
+            hp = hitpoints.firstChild().nodeValue().toInt();
+
+        bool looping = false;
+
+        QDomNode loop = enemy.firstChildElement( "Looping" );
+        if( !loop.isNull() )
+        {
+            if( loop.firstChild().nodeValue() == "True" )
+                looping = true;
+        }
+
+        path->setLooping( looping );
 
         Enemy *e = new Enemy( enemy.firstChildElement( "Name" ).firstChild()
                     .nodeValue().toStdString() );
         e->setPath( path );
+        e->setHitpoints( hp );
+        e->setStartPosition( startPos );
 
         mEnemies.push_back( e );
     }

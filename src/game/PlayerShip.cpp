@@ -1,6 +1,7 @@
 #include "PlayerShip.h"
 
 #include "../core/Clock.h"
+#include "../core/Utility.h"
 
 #include "../ui/GLRenderer.h"
 #include "../scene/GLNode.h"
@@ -189,20 +190,5 @@ void PlayerShip::setPosition( glm::core::type::vec3 position )
 
 void PlayerShip::setDirection(glm::core::type::vec3 direction)
 {
-    direction *= -1;
-    mShipDirection = direction;
-    mShipLeft = glm::cross( direction, glm::vec3( 0.f, -1.f, 0.f ) );
-    mShipUp = glm::cross( direction, mShipLeft );
-
-    mShipDirection = glm::normalize( mShipDirection );
-    mShipUp = glm::normalize( mShipUp );
-    mShipLeft = glm::normalize( mShipLeft );
-
-    glm::mat3x3 directionMatrix( mShipLeft.x, mShipUp.x, mShipDirection.x,
-                                 mShipLeft.y, mShipUp.y, mShipDirection.y,
-                                 mShipLeft.z, mShipUp.z, mShipDirection.z );
-
-    mShipDirectionQuat = glm::toQuat( directionMatrix );
-    glm::normalize( mShipDirectionQuat );
-    mShipDirectionQuat = glm::inverse( mShipDirectionQuat );
+    mShipDirectionQuat = Utility::directionToQuat( direction );
 }

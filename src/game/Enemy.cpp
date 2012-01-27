@@ -2,6 +2,9 @@
 #include "Path.h"
 #include "Game.h"
 
+#include "../core/Clock.h"
+#include "../core/Utility.h"
+
 #include "../ui/GLRenderer.h"
 #include "../scene/GLNode.h"
 #include "../scene/BMDImport.h"
@@ -13,7 +16,7 @@ Enemy::Enemy( std::string filename )
     :  mStart( false ), mHitPoints( 3 )
 {
     mEnemyShip = new GLNode( GLRenderer::getRootNode() );
-    BMDImport::loadFromFile( mEnemyShip, filename );
+    BMDImport::loadFromFile( mEnemyShip, "data/Models/" + filename );
     mEnemyShip->setTag( Game::NODE_ENEMY );
 
     mEnemyShip->setCollisionShape( CollisionShape::newSphereShape( mEnemyShip, 4.f ) );
@@ -22,7 +25,7 @@ Enemy::Enemy( std::string filename )
 
     mStartTrigger = new Node( GLRenderer::getRootNode() );
     mStartTrigger->setCollisionShape(
-                CollisionShape::newSphereShape( mStartTrigger, 150.f ) );
+                CollisionShape::newSphereShape( mStartTrigger, 100.f ) );
     mStartTrigger->setTag( Game::NODE_ENEMY_SENSOR );
 }
 
@@ -38,7 +41,12 @@ void Enemy::update()
         return;
 
     if( mStart )
-        mEnemyShip->setPosition( mPath->getNextPosition() );
+    {
+        glm::vec3 cur = mPath->getCurrentPosition();
+        glm::vec3 next = mPath->getNextPosition();
+        mEnemyShip->setPosition( cur );
+        mEnemyShip->setRotation( Utility::directionToQuat( next - cur ) );
+    }
 
     std::vector<CollisionShape*> shapes =
             CollisionShape::shapesCollidingWith( mEnemyShip->getCollisionShape() );
@@ -46,7 +54,20 @@ void Enemy::update()
     {
         Node *node = shapes.at( x )->getNode();
         if( node->getTag() == Game::NODE_BULLET )
+        {
             mHitPoints -= Weapon::getDamage( dynamic_cast<GLNode*>( node ) );
+            mFlashTime = Clock::getTime();
+            mEnemyShip->setColor( 0.1, 0.1, 0.1, 1 );
+            mEnemyShip->setTexEnvMode( GL_ADD );
+            mFlashing = true;
+        }
+    }
+
+    if( Clock::getTime() > mFlashTime + Clock::ticksPerSecond / 2 && mFlashing )
+    {
+        mFlashing = false;
+        mEnemyShip->setColor( 1, 1, 1, 1 );
+        mEnemyShip->setTexEnvMode( GL_MODULATE );
     }
 
     shapes =

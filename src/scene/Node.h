@@ -100,6 +100,11 @@ public:
         mVisible = visible;
     }
 
+    bool isVisible()
+    {
+        return mVisible;
+    }
+
     void setCollisionShape( CollisionShape *shape )
     {
         mCollisionShape = shape;
