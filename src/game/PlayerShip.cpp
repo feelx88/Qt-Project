@@ -13,8 +13,8 @@
 
 PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     : mCamera( camera ), mSideAcceleration( 30.f ), mSideMinMaxSpeed( 10.f ),
-      mForwardAcceleration( 10.f ), mForwardMinSpeed( -5.f ),
-      mForwardMaxSpeed( 15.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
+      mForwardAcceleration( 10.f ), mForwardMinSpeed( 5.f ),
+      mForwardMaxSpeed( 20.f ), mShipTiltAngle( glm::vec3( 10.f, -10.f, -30.f ) ),
       mCurAcceleration( 0.f ), mMode( MODE_FIXED_DIRECTION )
 {
     mShipNode = new GLNode( GLRenderer::getRootNode() );
@@ -31,10 +31,10 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
     mCamera->setLookAt( position );
     mCamera->setPosition( position + glm::vec3( 0, 10, 10 ) );
 
-    mPrimaryWeapon = new Weapon( mShipNode, 150, 20.f, 30,
+    mPrimaryWeapon = new Weapon( mShipNode, 150, 150.f, 30,
                                  "data/Models/PrimaryWeapon/primaryWeaponRay1.bmd" );
     mPrimaryWeapon->setDamage( 1 );
-    mSecondaryWeapon = new Weapon( mShipNode, 2000, 10.f, 2,
+    mSecondaryWeapon = new Weapon( mShipNode, 2000, 80.f, 2,
                                    "data/Models/SecondaryWeapon/secondaryWeaponBomb1.bmd" );
     mSecondaryWeapon->setDamage( 5 );
 
@@ -118,8 +118,7 @@ void PlayerShip::update()
     glm::vec3 position = mShipNode->getPosition();
     glm::quat rotation;
 
-    if( mMode == MODE_FIXED_DIRECTION )
-        rotation = mShipDirectionQuat;
+    rotation = mShipDirectionQuat;
 
     if( mMode == MODE_FREEFLIGHT )
     {

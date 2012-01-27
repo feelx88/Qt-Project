@@ -55,6 +55,8 @@ void GLNode::update()
         glBindTexture( GL_TEXTURE_2D, mTextureHandles[0] );
     }
 
+    glColor3f( 0.5, 0.5, 0.5 );
+
     glDrawArrays( GL_TRIANGLES, 0, mFaceCount * 3 );
 
     glDisableClientState( GL_VERTEX_ARRAY );

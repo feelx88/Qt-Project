@@ -18,6 +18,7 @@ import struct
 import os.path
 import xml.dom.minidom
 from mathutils import Vector
+import re
 
 def appendElement( self, document, nodeName ):
     node = document.createElement( nodeName )
@@ -34,7 +35,7 @@ def appendTextElement( self, document, nodeName, text ):
 #def switchToObjectMode():
 #    if bpy.context.object
 
-def write_leveldata(context, filepath):
+def write_leveldata(context, filepath, overwrite_existing, clean):
     print("running write_leveldata...")
 
     #prepare axes
@@ -61,6 +62,11 @@ def write_leveldata(context, filepath):
     doc.appendChild( rootElem )
 
     directory = os.path.dirname( filepath ) + '/'
+    
+    if clean:
+        for file in os.listdir( directory ):
+            if re.search( '.*\.bmd$|.*.\.xml$|.*\.png$', file ) != None:
+                os.remove( directory + file )
 
     #add data to dom
     for ob in bpy.context.scene.objects:
@@ -109,7 +115,7 @@ def write_leveldata(context, filepath):
                     else:
                         name = ob.users_group[0].name
 
-                if not os.path.exists( directory + name + '.bmd' ):
+                if overwrite_existing or not os.path.exists( directory + name + '.bmd' ):
                     bpy.ops.object.select_name( name = ob.name )
                     bpy.ops.object.mode_set( mode = 'OBJECT' )
                     bpy.ops.export_mesh.bmd( filepath = directory + name + '.bmd' )
@@ -193,11 +199,16 @@ class ExportLevel(bpy.types.Operator, ExportHelper):
 
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    #use_setting = BoolProperty(
-    #        name="Example Boolean",
-    #        description="Example Tooltip",
-    #        default=True,
-    #        )
+    overwrite_existing = BoolProperty(
+            name="Owerwrite existing bmd files",
+            description="",
+            default=True,
+            )
+    clean = BoolProperty(
+            name="Clean directory",
+            description="Remove all .bmd, .xml and .png files from directory",
+            default=False,
+            )
 
     #type = EnumProperty(
     #        name="Example Enum",
@@ -212,12 +223,12 @@ class ExportLevel(bpy.types.Operator, ExportHelper):
         return True#context.active_object is not None
 
     def execute(self, context):
-        return write_leveldata(context, self.filepath)
+        return write_leveldata(context, self.filepath, self.overwrite_existing, self.clean)
 
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_export(self, context):
-    self.layout.operator(ExportLevel.bl_idname, text="BMD Export")
+    self.layout.operator(ExportLevel.bl_idname, text="Level Export")
 
 
 def register():

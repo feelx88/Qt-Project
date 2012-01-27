@@ -89,6 +89,6 @@ void Weapon::update()
     for( int x = 0; x < mBulletCount; x++ )
     {
         GLNode *bullet = mBullets.at( x );
-        bullet->move( glm::vec3( 0.f, 0.f, -mBulletSpeed ) );
+        bullet->move( glm::vec3( 0.f, 0.f, -mBulletSpeed * Game::frameRateMultiplicator ) );
     }
 }

@@ -3,6 +3,36 @@
 	<DirectionChanger>
 		<Position>
 			<X>
+				355.2583312988281
+			</X>
+			<Y>
+				204.0250244140625
+			</Y>
+			<Z>
+				-153.10055541992188
+			</Z>
+		</Position>
+		<Direction>
+			<X>
+				1.0
+			</X>
+			<Y>
+				0.0
+			</Y>
+			<Z>
+				1.6292068494294654e-07
+			</Z>
+		</Direction>
+		<Radius>
+			39.13304138183594
+		</Radius>
+		<Mode>
+			Free
+		</Mode>
+	</DirectionChanger>
+	<DirectionChanger>
+		<Position>
+			<X>
 				-107.91288757324219
 			</X>
 			<Y>
@@ -279,7 +309,7 @@
 				0.0
 			</Y>
 			<Z>
-				7.8891801834106445
+				132.8575897216797
 			</Z>
 		</StartPosition>
 	</Player>
