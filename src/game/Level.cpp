@@ -6,6 +6,8 @@
 #include "Path.h"
 
 #include "../ui/GLRenderer.h"
+#include "../ui/MainWindow.h"
+
 #include "../scene/GLNode.h"
 #include "../scene/GLCameraNode.h"
 #include "../scene/BMDImport.h"
@@ -53,6 +55,16 @@ void Level::update()
             mPlayerShip->setFlightMode( dC.mode );
         }
     }
+
+    /*std::vector<CollisionShape*> shapes = CollisionShape::shapesCollidingWith(
+                mPlayerShip->getNode()->getCollisionShape() );
+    for( unsigned int x = 0; x < shapes.size(); x++ )
+    {
+        Node *node = shapes.at( x )->getNode();
+        if( node->getTag() == Game::NODE_ENEMY ||node->getTag() == Game::NODE_LEVEL  )
+            GLRenderer::sMainWindow->lost();
+    }*/
+
 }
 
 void Level::loadLevel(std::string fileName)

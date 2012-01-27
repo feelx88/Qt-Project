@@ -25,7 +25,7 @@ PlayerShip::PlayerShip( std::string fileName, GLCameraNode *camera )
 
     mShipNode->setPosition( glm::vec3( 0, 10, 50 ) );
 
-    mShipNode->setCollisionShape( CollisionShape::newSphereShape( mShipNode, 1 ) );
+    mShipNode->setCollisionShape( CollisionShape::newSphereShape( mShipNode, 0.5 ) );
 
     glm::vec3 position = mShipNode->getPosition();
 

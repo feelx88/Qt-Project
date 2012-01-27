@@ -3,6 +3,8 @@
 
 #include <QtOpenGL/QGLWidget>
 
+class MainWindow;
+
 class QKeyEvent;
 class QEvent;
 
@@ -27,8 +29,9 @@ public:
     void keyReleaseEvent( QKeyEvent *evt );
 
     void start();
-
     void stop();
+
+    static MainWindow *sMainWindow;
 
 protected:
     //Initialize the drawing surface

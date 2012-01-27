@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mTimer->setSingleShot( false );
     mTimer->setInterval( 0 );
     connect( mTimer, SIGNAL(timeout()), mRenderer, SLOT(updateGL()) );
+
+    mRenderer->sMainWindow = this;
 }
 
 MainWindow::~MainWindow()
@@ -79,7 +81,30 @@ void MainWindow::on_spielverlassen_clicked()
 
 void MainWindow::on_spielstarten_clicked()
 {
-    ui->stackedWidget->setCurrentIndex( 4 );
-    mRenderer->start();
+    ui->stackedWidget->setCurrentIndex( 5 );
     mTimer->start();
+    mRenderer->start();
+    showFullScreen();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    mRenderer->stop();
+    mTimer->stop();
+    showNormal();
+    ui->stackedWidget->setCurrentIndex( 0 );
+}
+
+void MainWindow::lost()
+{
+    ui->stackedWidget->setCurrentIndex( 4 );
+    showNormal();
+}
+
+void MainWindow::end()
+{
+    ui->stackedWidget->setCurrentIndex( 0 );
+    mTimer->stop();
+    mRenderer->stop();
+    showNormal();
 }

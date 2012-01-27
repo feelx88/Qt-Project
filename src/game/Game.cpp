@@ -79,11 +79,12 @@ void Game::run()
         CollisionShape::findCollisionPairs();
         for( int x = 0; x < PlayerShip::ACTION_COUNT; x++ )
         {
-            if( mActionTriggered[x] )
+            if( mActionTriggered[x] && mActiveLevel )
                 mActiveLevel->action( (PlayerShip::SHIP_ACTIONS)x );
         }
 
-        mActiveLevel->update();
+        if( mActiveLevel )
+            mActiveLevel->update();
 
         mNextFrame += frameLength;
         framesSkipped++;

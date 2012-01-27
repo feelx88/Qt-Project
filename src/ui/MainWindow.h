@@ -22,6 +22,9 @@ public:
     void keyPressEvent( QKeyEvent *evt );
     void keyReleaseEvent( QKeyEvent *evt );
 
+    void lost();
+    void end();
+
 private slots:
     void on_neuesspiel_2_clicked();
 
@@ -38,6 +41,8 @@ private slots:
     void on_spielverlassen_clicked();
 
     void on_spielstarten_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -41,7 +41,10 @@ public:
     {
         for( std::vector<Node*>::iterator x = mChildren.begin();
              x != mChildren.end(); x++ )
-            (*x)->update();
+        {
+            if( *x )
+                (*x)->update();
+        }
     }
 
     void setPosition( const glm::vec3& position )

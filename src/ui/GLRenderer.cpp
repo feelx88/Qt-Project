@@ -1,4 +1,5 @@
 #include "GLRenderer.h"
+#include "MainWindow.h"
 
 #include <GL/glu.h>
 
@@ -8,9 +9,10 @@
 #include "../scene/Node.h"
 
 Node* GLRenderer::sRootNode = 0;
+MainWindow *GLRenderer::sMainWindow = 0;
 
 GLRenderer::GLRenderer(QWidget *parent)
-    : QGLWidget(parent), oldNSec( 0 )
+    : QGLWidget(parent), mGame( 0 ), oldNSec( 0 )
 {
     sRootNode = new Node( 0 );
     setAutoBufferSwap( true );
@@ -24,12 +26,16 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::keyPressEvent( QKeyEvent *evt )
 {
-    mGame->processKeyEvents( evt, true );
+    if( mGame )
+        mGame->processKeyEvents( evt, true );
 }
 
 void GLRenderer::keyReleaseEvent(QKeyEvent *evt)
 {
-    mGame->processKeyEvents( evt, false );
+    if( evt->key() == Qt::Key_Escape )
+        sMainWindow->end();
+    if( mGame )
+        mGame->processKeyEvents( evt, false );
 }
 
 void GLRenderer::initializeGL()
