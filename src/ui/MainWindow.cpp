@@ -1,11 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include <QTimer>
-
 #include "../ui/GLRenderer.h"
-
-QTimer* timer;
 
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),
@@ -20,12 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     mRenderer = findChild<GLRenderer*>( "renderer" );
 
     //Set Timer for repainting the graphics
-    timer = new QTimer( this );
-    timer->setSingleShot( false );
-    timer->setInterval( 0 );
-    connect( timer, SIGNAL(timeout()), mRenderer, SLOT(updateGL()) );
-
-    timer->start();
+    mTimer = new QTimer( this );
+    mTimer->setSingleShot( false );
+    mTimer->setInterval( 0 );
+    connect( mTimer, SIGNAL(timeout()), mRenderer, SLOT(updateGL()) );
 }
 
 MainWindow::~MainWindow()
@@ -81,4 +75,11 @@ void MainWindow::on_zurueck_3_clicked()
 void MainWindow::on_spielverlassen_clicked()
 {
     close();
+}
+
+void MainWindow::on_spielstarten_clicked()
+{
+    ui->stackedWidget->setCurrentIndex( 4 );
+    mRenderer->start();
+    mTimer->start();
 }

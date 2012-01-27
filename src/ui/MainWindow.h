@@ -5,6 +5,7 @@
 #include "src/ui/GLRenderer.h"
 
 #include <QKeyEvent>
+#include <QTimer>
 
 namespace Ui {
     class MainWindow;
@@ -36,11 +37,15 @@ private slots:
 
     void on_spielverlassen_clicked();
 
+    void on_spielstarten_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     //Main renderer
     GLRenderer *mRenderer;
+
+    QTimer *mTimer;
 };
 
 #endif // MAINWINDOW_H

@@ -26,6 +26,10 @@ public:
     void keyPressEvent( QKeyEvent *evt );
     void keyReleaseEvent( QKeyEvent *evt );
 
+    void start();
+
+    void stop();
+
 protected:
     //Initialize the drawing surface
     void initializeGL();

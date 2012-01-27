@@ -10,7 +10,7 @@
 Node* GLRenderer::sRootNode = 0;
 
 GLRenderer::GLRenderer(QWidget *parent)
-    : QGLWidget(parent), mGame( new Game() ), oldNSec( 0 )
+    : QGLWidget(parent), oldNSec( 0 )
 {
     sRootNode = new Node( 0 );
     setAutoBufferSwap( true );
@@ -39,8 +39,6 @@ void GLRenderer::initializeGL()
     glCullFace( GL_BACK );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-    mGame->init();
 }
 
 void GLRenderer::resizeGL(int w, int h)
@@ -60,6 +58,9 @@ void GLRenderer::resizeGL(int w, int h)
 
 void GLRenderer::paintGL()
 {
+    if( !mGame )
+        return;
+
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glLoadIdentity();
@@ -67,6 +68,17 @@ void GLRenderer::paintGL()
     mGame->run();
 
     sRootNode->update();
+}
+
+void GLRenderer::start()
+{
+    mGame = new Game();
+    mGame->init();
+}
+
+void GLRenderer::stop()
+{
+    delete mGame;
 }
 
 /* Nice effect :D, at setinterval(10)
