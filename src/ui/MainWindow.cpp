@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->stackedWidget->setCurrentIndex(0);
+
     //Get Renderer from ui
     mRenderer = findChild<GLRenderer*>( "renderer" );
 
@@ -41,4 +43,42 @@ void MainWindow::keyReleaseEvent(QKeyEvent *evt)
 {
     if( mRenderer )
         mRenderer->keyReleaseEvent( evt );
+}
+
+void MainWindow::on_neuesspiel_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+//Zurueck-Button bei Fenster Neues Spiel
+void MainWindow::on_zurueck_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_optionen_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_credits_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+//Zurueck-Button bei Fenster credits
+void MainWindow::on_zurueck_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+//Zurueck-Button bei Fenster optionen
+void MainWindow::on_zurueck_3_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_spielverlassen_clicked()
+{
+    close();
 }
