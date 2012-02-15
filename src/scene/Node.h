@@ -23,7 +23,7 @@ public:
     Node( Node* parent, const glm::vec3& position, const glm::quat& rotation,
           const glm::vec3 scale = glm::vec3( 1.f ) )
         : mPosition( position ), mScale( scale ), mRotation( rotation ),
-          mCollisionShape( 0 ), mVisible( true ), mTag( 0 )
+          mParent( parent ), mCollisionShape( 0 ), mVisible( true ), mTag( 0 )
     {
         if( parent )
             parent->addChild( this );
@@ -33,6 +33,8 @@ public:
     {
         if( mCollisionShape )
             delete mCollisionShape;
+        if( mParent )
+            mParent->removeChild( this );
     }
 
     virtual void init(){}
@@ -86,6 +88,16 @@ public:
     void addChild( Node *child )
     {
         mChildren.push_back( child );
+    }
+
+    void removeChild( Node *child )
+    {
+        for( std::vector<Node*>::iterator x = mChildren.begin();
+             x != mChildren.end(); x++ )
+        {
+            if( *x == child )
+                mChildren.erase( x );
+        }
     }
 
     void hide()

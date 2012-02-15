@@ -37,7 +37,7 @@ Enemy::~Enemy()
 
 void Enemy::update()
 {
-    if( !mEnemyShip || !mPath )
+    if( mHitPoints <= 0  || !mEnemyShip || !mPath )
         return;
 
     if( mStart )
@@ -60,6 +60,9 @@ void Enemy::update()
             mEnemyShip->setColor( 0.1, 0.1, 0.1, 1 );
             mEnemyShip->setTexEnvMode( GL_ADD );
             mFlashing = true;
+
+            if( mHitPoints <= 0 )
+                mEnemyShip->setPosition( glm::vec3( 0, 10000, 0 ) );
         }
     }
 

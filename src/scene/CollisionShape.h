@@ -55,6 +55,16 @@ public:
         return mNode;
     }
 
+    AABB getObjectAABB()
+    {
+        return mObjectAabb;
+    }
+
+    std::vector<AABB> getMeshAABBS()
+    {
+        return mMeshAABBs;
+    }
+
     static CollisionShape *newSphereShape( Node *node, float radius );
     static CollisionShape *newMeshShape( Node *node, std::vector<glm::vec3> verts );
 

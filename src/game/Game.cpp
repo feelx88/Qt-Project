@@ -36,8 +36,6 @@ Game::~Game()
     delete mActiveLevel;
 
     delete mCamera;
-
-    GLNode::clearTextures();
 }
 
 void Game::init()

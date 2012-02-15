@@ -182,24 +182,24 @@ std::vector<CollisionShape*> CollisionShape::shapesCollidingWith(
 void CollisionShape::recalculateAABBs()
 {
     mMeshAABBs.clear();
-    for( unsigned int x = 0; x < mMeshVertices.size() - 3; x++ )
+
+    glm::vec3 position = mNode->getPosition();
+
+    for( unsigned int x = 0; x < mMeshVertices.size() - 3; x += 3 )
     {
-        glm::vec3 &a = mMeshVertices.at( x + 0 );
-        glm::vec3 &b = mMeshVertices.at( x + 1 );
-        glm::vec3 &c = mMeshVertices.at( x + 2 );
+        glm::vec3 a = mMeshVertices.at( x + 0 ) + position;
+        glm::vec3 b = mMeshVertices.at( x + 1 ) + position;
+        glm::vec3 c = mMeshVertices.at( x + 2 ) + position;
 
         AABB aabb;
 
-        aabb.aabbMin.x = glm::min( a.x, b.x, c.x );
         aabb.aabbMin.y = glm::min( a.y, b.y, c.y );
+        aabb.aabbMin.x = glm::min( a.x, b.x, c.x );
         aabb.aabbMin.z = glm::min( a.z, b.z, c.z );
 
         aabb.aabbMax.x = glm::max( a.x, b.x, c.x );
         aabb.aabbMax.y = glm::max( a.y, b.y, c.y );
         aabb.aabbMax.z = glm::max( a.z, b.z, c.z );
-
-        aabb.aabbMax += mNode->getPosition();
-        aabb.aabbMin += mNode->getPosition();
 
         mObjectAabb.aabbMin = glm::min( mObjectAabb.aabbMin, aabb.aabbMin );
         mObjectAabb.aabbMax = glm::max( mObjectAabb.aabbMax, aabb.aabbMax );

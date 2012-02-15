@@ -56,16 +56,16 @@ void Level::update()
         }
     }
 
-    /*std::vector<CollisionShape*> shapes = CollisionShape::shapesCollidingWith(
+    std::vector<CollisionShape*> shapes = CollisionShape::shapesCollidingWith(
                 mPlayerShip->getNode()->getCollisionShape() );
     for( unsigned int x = 0; x < shapes.size(); x++ )
     {
         Node *node = shapes.at( x )->getNode();
         if( node->getTag() == Game::NODE_ENEMY ||node->getTag() == Game::NODE_LEVEL  )
             GLRenderer::sMainWindow->lost();
-    }*/
+    }
 
-}
+ }
 
 void Level::loadLevel(std::string fileName)
 {

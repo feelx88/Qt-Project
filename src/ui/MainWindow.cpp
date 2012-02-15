@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "../scene/GLNode.h"
 
 #include "../ui/GLRenderer.h"
 
@@ -76,6 +77,7 @@ void MainWindow::on_zurueck_3_clicked()
 
 void MainWindow::on_spielverlassen_clicked()
 {
+    GLNode::clearTextures();
     close();
 }
 
