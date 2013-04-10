@@ -14,7 +14,7 @@ CollisionShape::CollisionShape( ShapeType shape )
 CollisionShape::~CollisionShape()
 {
     sShapes.erase( this );
-    mMeshAABBs.clear();
+    mCollisionTris.clear();
 }
 
 bool CollisionShape::testCollision( CollisionShape *other )
@@ -74,20 +74,24 @@ bool CollisionShape::testCollision( CollisionShape *other )
                 ( nodePos.z >= mObjectAabb.aabbMin.z &&
                   nodePos.z <= mObjectAabb.aabbMax.z ) )
             {
-                for( std::vector<AABB>::iterator x = mMeshAABBs.begin();
-                     x != mMeshAABBs.end(); x++ )
+                for( std::vector<CollisionTriangle>::iterator x = mCollisionTris.begin();
+                     x != mCollisionTris.end(); x++ )
                 {
-                    AABB aabb = *x;
-                    aabb.aabbMin -= other->mSphereRadius;
-                    aabb.aabbMax += other->mSphereRadius;
+                    CollisionTriangle &tri = *x;
+                    tri.aabb.aabbMin -= other->mSphereRadius;
+                    tri.aabb.aabbMax += other->mSphereRadius;
 
-                    if( ( nodePos.x >= aabb.aabbMin.x &&
-                          nodePos.x <= aabb.aabbMax.x ) &&
-                        ( nodePos.y >= aabb.aabbMin.y &&
-                          nodePos.y <= aabb.aabbMax.y ) &&
-                        ( nodePos.z >= aabb.aabbMin.z &&
-                          nodePos.z <= aabb.aabbMax.z ) )
-                        return true;
+                    if( ( nodePos.x >= tri.aabb.aabbMin.x &&
+                          nodePos.x <= tri.aabb.aabbMax.x ) &&
+                        ( nodePos.y >= tri.aabb.aabbMin.y &&
+                          nodePos.y <= tri.aabb.aabbMax.y ) &&
+                        ( nodePos.z >= tri.aabb.aabbMin.z &&
+                          nodePos.z <= tri.aabb.aabbMax.z ) )
+                    {
+                        glm::vec3 normal = glm::cross( tri.a - tri.b, tri.b - tri.c );
+                        if( glm::dot( normal + nodePos - nodePos, mNode->getPosition() - nodePos ) <= 0.f )
+                            return true;
+                    }
                 }
             }
         }
@@ -181,7 +185,7 @@ std::vector<CollisionShape*> CollisionShape::shapesCollidingWith(
 
 void CollisionShape::recalculateAABBs()
 {
-    mMeshAABBs.clear();
+    mCollisionTris.clear();
 
     glm::vec3 position = mNode->getPosition();
 
@@ -191,19 +195,19 @@ void CollisionShape::recalculateAABBs()
         glm::vec3 b = mMeshVertices.at( x + 1 ) + position;
         glm::vec3 c = mMeshVertices.at( x + 2 ) + position;
 
-        AABB aabb;
+        CollisionTriangle tri;
 
-        aabb.aabbMin.y = glm::min( a.y, b.y, c.y );
-        aabb.aabbMin.x = glm::min( a.x, b.x, c.x );
-        aabb.aabbMin.z = glm::min( a.z, b.z, c.z );
+        tri.aabb.aabbMin.y = glm::min( a.y, b.y, c.y );
+        tri.aabb.aabbMin.x = glm::min( a.x, b.x, c.x );
+        tri.aabb.aabbMin.z = glm::min( a.z, b.z, c.z );
 
-        aabb.aabbMax.x = glm::max( a.x, b.x, c.x );
-        aabb.aabbMax.y = glm::max( a.y, b.y, c.y );
-        aabb.aabbMax.z = glm::max( a.z, b.z, c.z );
+        tri.aabb.aabbMax.x = glm::max( a.x, b.x, c.x );
+        tri.aabb.aabbMax.y = glm::max( a.y, b.y, c.y );
+        tri.aabb.aabbMax.z = glm::max( a.z, b.z, c.z );
 
-        mObjectAabb.aabbMin = glm::min( mObjectAabb.aabbMin, aabb.aabbMin );
-        mObjectAabb.aabbMax = glm::max( mObjectAabb.aabbMax, aabb.aabbMax );
+        mObjectAabb.aabbMin = glm::min( mObjectAabb.aabbMin, tri.aabb.aabbMin );
+        mObjectAabb.aabbMax = glm::max( mObjectAabb.aabbMax, tri.aabb.aabbMax );
 
-        mMeshAABBs.push_back( aabb );
+        mCollisionTris.push_back( tri );
     }
 }

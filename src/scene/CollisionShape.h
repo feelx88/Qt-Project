@@ -20,8 +20,13 @@ public:
 
     struct AABB
     {
-        glm::vec3 aabbMin;
-        glm::vec3 aabbMax;
+        glm::vec3 aabbMin, aabbMax;
+    };
+
+    struct CollisionTriangle
+    {
+        glm::vec3 a, b, c;
+        AABB aabb;
     };
 
     CollisionShape( ShapeType shape );
@@ -36,11 +41,6 @@ public:
     void setMeshVertices( std::vector<glm::vec3> verts )
     {
         mMeshVertices = verts;
-    }
-
-    void setMeshAABBs( std::vector<AABB> aabbs )
-    {
-        mMeshAABBs = aabbs;
     }
 
     bool testCollision( CollisionShape *other );
@@ -58,11 +58,6 @@ public:
     AABB getObjectAABB()
     {
         return mObjectAabb;
-    }
-
-    std::vector<AABB> getMeshAABBS()
-    {
-        return mMeshAABBs;
     }
 
     static CollisionShape *newSphereShape( Node *node, float radius );
@@ -85,8 +80,8 @@ protected:
 
     float mSphereRadius;
 
+    std::vector<CollisionTriangle> mCollisionTris;
     std::vector<glm::vec3> mMeshVertices;
-    std::vector<AABB> mMeshAABBs;
     AABB mObjectAabb;
 
     static std::set<CollisionShape*> sShapes;

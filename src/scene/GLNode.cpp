@@ -88,62 +88,6 @@ void GLNode::update()
     glDepthFunc( GL_LESS );
 
     glPopMatrix();
-
-    if( mCollisionShape )
-    {
-        /*CollisionShape::AABB aabb = mCollisionShape->getObjectAABB();
-
-        glBegin( GL_LINES );
-        glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMin.z );
-        glVertex3f( aabb.aabbMin.x, aabb.aabbMax.y, aabb.aabbMin.z );
-
-        glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMin.z );
-        glVertex3f( aabb.aabbMax.x, aabb.aabbMin.y, aabb.aabbMin.z );
-
-        glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMin.z );
-        glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMax.z );
-
-        glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMax.z );
-        glVertex3f( aabb.aabbMin.x, aabb.aabbMax.y, aabb.aabbMax.z );
-
-        glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMax.z );
-        glVertex3f( aabb.aabbMax.x, aabb.aabbMin.y, aabb.aabbMax.z );
-
-        glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMax.z );
-        glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMin.z );
-
-        glEnd();*/
-
-        std::vector<CollisionShape::AABB> mMeshAABBs = mCollisionShape->getMeshAABBS();
-
-        for( std::vector<CollisionShape::AABB>::iterator x = mMeshAABBs.begin();
-             x != mMeshAABBs.end(); x++ )
-        {
-            CollisionShape::AABB aabb = *x;
-
-            glBegin( GL_LINES );
-
-            glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMin.z );
-            glVertex3f( aabb.aabbMin.x, aabb.aabbMax.y, aabb.aabbMin.z );
-
-            glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMin.z );
-            glVertex3f( aabb.aabbMax.x, aabb.aabbMin.y, aabb.aabbMin.z );
-
-            glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMin.z );
-            glVertex3f( aabb.aabbMin.x, aabb.aabbMin.y, aabb.aabbMax.z );
-
-            glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMax.z );
-            glVertex3f( aabb.aabbMin.x, aabb.aabbMax.y, aabb.aabbMax.z );
-
-            glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMax.z );
-            glVertex3f( aabb.aabbMax.x, aabb.aabbMin.y, aabb.aabbMax.z );
-
-            glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMax.z );
-            glVertex3f( aabb.aabbMax.x, aabb.aabbMax.y, aabb.aabbMin.z );
-
-            glEnd();
-        }
-    }
 }
 
 void GLNode::setData( unsigned int faceCount, unsigned int textureCount,
